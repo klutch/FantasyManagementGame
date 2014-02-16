@@ -4,11 +4,13 @@ var WorldRenderer = function(world)
   this.maxSpritePool = 4096;
   this.world = world;
   this.container = new PIXI.DisplayObjectContainer();
-  this.container.position.x = renderer.view.width * 0.5;
-  this.container.position.y = renderer.view.height * 0.5;
+  this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
+  this.container.position.x = this.halfScreen.x;
+  this.container.position.y = this.halfScreen.y;
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
   this.spritePool = [];
   this.spriteCounter = 0;
+  this.camera = new Camera(0, 0);
   
   for (var i = 0; i < this.maxSpritePool; i++)
   {
@@ -16,8 +18,11 @@ var WorldRenderer = function(world)
   }
 };
 
-WorldRenderer.prototype.render = function(focusI, focusJ, focusHalfWidth, focusHalfHeight)
+WorldRenderer.prototype.render = function(focusHalfWidth, focusHalfHeight)
 {
+  var gridI = this.camera.getGridI();
+  var gridJ = this.camera.getGridJ();
+  
   this.spriteCounter = 0;
   
   while (this.container.children.length > 0)
@@ -25,9 +30,9 @@ WorldRenderer.prototype.render = function(focusI, focusJ, focusHalfWidth, focusH
     this.container.removeChild(this.container.getChildAt(0));
   }
   
-  for(var i = focusI - focusHalfWidth; i < focusI + focusHalfWidth; i++)
+  for(var i = gridI - focusHalfWidth; i < gridI + focusHalfWidth; i++)
   {
-    for (var j = focusJ - focusHalfHeight; j < focusJ + focusHalfHeight; j++)
+    for (var j = gridJ - focusHalfHeight; j < gridJ + focusHalfHeight; j++)
     {
       var sprite = this.spritePool[this.spriteCounter];
       var tile = world.getTile(i, j);
@@ -42,3 +47,11 @@ WorldRenderer.prototype.render = function(focusI, focusJ, focusHalfWidth, focusH
     }
   }
 };
+
+WorldRenderer.prototype.moveCamera = function(x, y)
+{
+  this.camera.position.x = x;
+  this.camera.position.y = y;
+  this.container.position.x = -x + this.halfScreen.x;
+  this.container.position.y = -y + this.halfScreen.y;
+}

@@ -7,7 +7,6 @@ var renderer;
 var world;
 var worldRenderer;
 var inputManager;
-var focus;
 
 // Initialize
 function initialize()
@@ -16,7 +15,6 @@ function initialize()
   stage = new PIXI.Stage(0x66FF99);
   renderer = PIXI.autoDetectRenderer(1024, 640);
   document.body.appendChild(renderer.view);
-  focus = new PIXI.Point(0, 0);
   
   // Initialize world
   world = new World();
@@ -43,21 +41,21 @@ function initialize()
 // Handle input
 function handleInput()
 {
-  if (inputManager.keysPressed[65] && !inputManager.keysPressedLastFrame[65])
+  if (inputManager.keysPressed[65])
   {
-    focus.x--;
+    worldRenderer.moveCamera(worldRenderer.camera.position.x - 1, worldRenderer.camera.position.y);
   }
-  if (inputManager.keysPressed[68] && !inputManager.keysPressedLastFrame[68])
+  if (inputManager.keysPressed[68])
   {
-    focus.x++;
+    worldRenderer.moveCamera(worldRenderer.camera.position.x + 1, worldRenderer.camera.position.y);
   }
-  if (inputManager.keysPressed[83] && !inputManager.keysPressedLastFrame[83])
+  if (inputManager.keysPressed[83])
   {
-    focus.y++;
+    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y + 1);
   }
-  if (inputManager.keysPressed[87] && !inputManager.keysPressedLastFrame[87])
+  if (inputManager.keysPressed[87])
   {
-    focus.y--;
+    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y - 1);
   }
   
   inputManager.update();
@@ -71,7 +69,7 @@ function loop()
   
   // Draw
   requestAnimFrame(loop);
-  worldRenderer.render(focus.x, focus.y, 8, 8);
+  worldRenderer.render(8, 8);
   renderer.render(stage);
 }
 
