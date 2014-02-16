@@ -96,9 +96,9 @@ function loop()
   handleInput();
   
   // Draw
-  requestAnimFrame(loop);
-  worldRenderer.render(31, 19);
+  worldRenderer.render();
   renderer.render(stage);
+  requestAnimFrame(loop);
 }
 
 window.onload = initialize;

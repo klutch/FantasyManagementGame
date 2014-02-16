@@ -32,6 +32,16 @@ World.prototype.getChunkJ = function(j)
   return Math.floor(j / chunkSize);
 };
 
+World.prototype.getGridI = function(x)
+{
+  return Math.floor(x / tileSize);
+};
+
+World.prototype.getGridJ = function(y)
+{
+  return Math.floor(y / tileSize);
+};
+
 World.prototype.getTile = function(i, j)
 {
   var chunkI = this.getChunkI(i);
