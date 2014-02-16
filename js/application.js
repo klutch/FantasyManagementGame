@@ -10,6 +10,7 @@ var inputManager;
 var fps;
 var fpsText;
 var lastLoop = new Date();
+var tileSize = 16;
 
 // Initialize
 function initialize()
@@ -95,7 +96,7 @@ function loop()
   
   // Draw
   requestAnimFrame(loop);
-  worldRenderer.render(8, 8);
+  worldRenderer.render(31, 19);
   renderer.render(stage);
 }
 

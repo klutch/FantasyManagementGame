@@ -1,16 +1,15 @@
 // Camera class
 var Camera = function(x, y)
 {
-  this.cellSize = 32;
   this.position = new PIXI.Point(x, y);
 };
 
 Camera.prototype.getGridI = function()
 {
-  return Math.floor(this.position.x / this.cellSize);
+  return Math.floor(this.position.x / tileSize);
 };
 
 Camera.prototype.getGridJ = function()
 {
-  return Math.floor(this.position.y / this.cellSize);
+  return Math.floor(this.position.y / tileSize);
 };

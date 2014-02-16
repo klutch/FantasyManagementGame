@@ -30,15 +30,15 @@ WorldRenderer.prototype.render = function(focusHalfWidth, focusHalfHeight)
     this.container.removeChild(this.container.getChildAt(0));
   }
   
-  for(var i = gridI - focusHalfWidth; i < gridI + focusHalfWidth; i++)
+  for(var i = gridI - focusHalfWidth; i <= gridI + focusHalfWidth; i++)
   {
-    for (var j = gridJ - focusHalfHeight; j < gridJ + focusHalfHeight; j++)
+    for (var j = gridJ - focusHalfHeight; j <= gridJ + focusHalfHeight; j++)
     {
       var sprite = this.spritePool[this.spriteCounter];
       var tile = world.getTile(i, j);
       
-      sprite.position.x = 32 * i;
-      sprite.position.y = 32 * j;
+      sprite.position.x = tileSize * i;
+      sprite.position.y = tileSize * j;
       sprite.setTexture(tile.texture);
       
       this.container.addChild(sprite);
