@@ -2,7 +2,7 @@
 var WorldRenderer = function(world)
 {
   this.maxTileSpritePool = chunkSize * chunkSize;
-  this.maxChunkSpritePool = 16;
+  this.maxChunkSpritePool = 25;
   this.world = world;
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
@@ -35,7 +35,7 @@ WorldRenderer.prototype.render = function()
   var focusGridJ = world.getGridJ(this.camera.position.y);
   var focusChunkI = world.getChunkI(focusGridI);
   var focusChunkJ = world.getChunkJ(focusGridJ);
-  var chunkRadius = 1;
+  var chunkRadius = 2;
   var startChunkI = focusChunkI - chunkRadius;
   var endChunkI = focusChunkI + chunkRadius;
   var startChunkJ = focusChunkJ - chunkRadius;
