@@ -9,10 +9,10 @@ var WorldRenderer = function(world)
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
   this.chunkTexturePool = [];
-  this.numActiveChunks = 0;
+  this.activeChunkPoolIndices = []; // array of indices used (for chunkSprite and chunkTexture pools)
   this.spriteCounter = 0;
   this.camera = new Camera(0, 0);
-  this.chunkSprites = [];
+  this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
   this.container.position.y = this.halfScreen.y;
@@ -35,23 +35,48 @@ WorldRenderer.prototype.render = function()
   var focusChunkI = world.getChunkI(focusGridI);
   var focusChunkJ = world.getChunkJ(focusGridJ);
   var chunkRadius = 1;
+  var startChunkI = focusChunkI - chunkRadius;
+  var endChunkI = focusChunkI + chunkRadius;
+  var startChunkJ = focusChunkJ - chunkRadius;
+  var endChunkJ = focusChunkJ + chunkRadius;
   
-  // TODO: Clear chunks that aren't needed anymore
+  this.clearChunksOutside(startChunkI, endChunkI, startChunkJ, endChunkJ);
   
-  for(var chunkI = focusChunkI - chunkRadius; chunkI <= focusChunkI + chunkRadius; chunkI++)
+  for(var chunkI = startChunkI; chunkI <= endChunkI; chunkI++)
   {
-    for(var chunkJ = focusChunkJ - chunkRadius; chunkJ <= focusChunkJ + chunkRadius; chunkJ++)
+    for(var chunkJ = startChunkJ; chunkJ <= endChunkJ; chunkJ++)
     {
       this.container.addChild(this.getChunkSprite(chunkI, chunkJ));
     }
   }
 };
 
-WorldRenderer.prototype.clearContainer = function()
+WorldRenderer.prototype.clearChunksOutside = function(startChunkI, endChunkI, startChunkJ, endChunkJ)
 {
-  while (this.container.children.length > 0)
+  for (var chunkI in this.chunkSprites)
   {
-    this.container.removeChild(this.container.getChildAt(0));
+    if (this.chunkSprites.hasOwnProperty(chunkI)) // JAVASCRIPT IS SO (&@!#%&*(@#! INTUITIVE!! D:
+    {
+      for (var chunkJ in this.chunkSprites[chunkI])
+      {
+        if (this.chunkSprites[chunkI].hasOwnProperty(chunkJ))
+        {
+          if (chunkI < startChunkI || chunkI > endChunkI || chunkJ < startChunkJ || chunkJ > endChunkJ)
+          {
+            var chunkSprite = this.chunkSprites[chunkI][chunkJ];
+            
+            this.container.removeChild(chunkSprite);
+            delete this.chunkSprites[chunkI][chunkJ];
+            delete this.activeChunkPoolIndices[this.getActiveChunkPoolIndex(chunkSprite)];
+            
+            if (_.size(this.chunkSprites[chunkI]) == 0)
+            {
+              delete this.chunkSprites[chunkI];
+            }
+          }
+        }
+      }
+    }
   }
 };
 
@@ -59,7 +84,7 @@ WorldRenderer.prototype.getChunkSprite = function(chunkI, chunkJ)
 {
   if (this.chunkSprites[chunkI] == null)
   {
-    this.chunkSprites[chunkI] = [];
+    this.chunkSprites[chunkI] = {};
   }
   if (this.chunkSprites[chunkI][chunkJ] == null)
   {
@@ -69,10 +94,34 @@ WorldRenderer.prototype.getChunkSprite = function(chunkI, chunkJ)
   return this.chunkSprites[chunkI][chunkJ];
 };
 
+WorldRenderer.prototype.getUnusedChunkPoolIndex = function()
+{
+  var index = 0;
+  
+  while (this.activeChunkPoolIndices[index])
+  {
+    index++;
+  }
+  
+  return index;
+};
+
+WorldRenderer.prototype.getActiveChunkPoolIndex = function(chunkSprite)
+{
+  for (var i = 0; i < this.activeChunkPoolIndices.length; i++)
+  {
+    if (this.activeChunkPoolIndices[i] == chunkSprite)
+    {
+      return i;
+    }
+  }
+};
+
 WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 {
-  var renderTexture = this.chunkTexturePool[this.numActiveChunks];
-  var chunkSprite = this.chunkSpritePool[this.numActiveChunks];
+  var chunkPoolIndex = this.getUnusedChunkPoolIndex();
+  var renderTexture = this.chunkTexturePool[chunkPoolIndex];
+  var chunkSprite = this.chunkSpritePool[chunkPoolIndex];
   var numActiveTileSprites = 0;
   
   for (var i = 0; i < chunkSize; i++)
@@ -98,7 +147,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
   chunkSprite.position.x = chunkI * chunkSize * tileSize;
   chunkSprite.position.y = chunkJ * chunkSize * tileSize;
   
-  this.numActiveChunks++;
+  this.activeChunkPoolIndices[chunkPoolIndex] = chunkSprite;
   
   return chunkSprite;
 };
