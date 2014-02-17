@@ -6,6 +6,8 @@ var WorldRenderer = function(world)
   this.world = world;
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
+  this.dirtTextures = [];
+  this.grassTextures = [];
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
   this.chunkTexturePool = [];
@@ -17,6 +19,16 @@ var WorldRenderer = function(world)
   this.container.position.x = this.halfScreen.x;
   this.container.position.y = this.halfScreen.y;
   
+  // Preload tile textures
+  this.preloadTextures();
+  
+  // Load textures
+  for (var i = 0; i < 4; i++)
+  {
+    this.dirtTextures[i] = PIXI.Texture.fromImage("img/dirt_" + i + ".png");
+    this.grassTextures[i] = PIXI.Texture.fromImage("img/grass_" + i + ".png");
+  }
+  
   for (var i = 0; i < this.maxTileSpritePool; i++)
   {
     this.tileSpritePool[i] = new PIXI.Sprite(this.blankTexture);
@@ -26,6 +38,30 @@ var WorldRenderer = function(world)
     this.chunkSpritePool[i] = new PIXI.Sprite(this.blankTexture);
     this.chunkTexturePool[i] = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
   }
+};
+
+// Preload textures
+WorldRenderer.prototype.preloadTextures = function()
+{
+  var textures = [];
+  
+  for (var i = 0; i < 4; i++)
+  {
+    textures.push("img/dirt_" + i + ".png");
+    textures.push("img/grass_" + i + ".png");
+  }
+  
+  PIXI.AssetLoader(textures, false);
+};
+
+// Get texture given a tile type
+// TODO: This method will have to be changed later to not assume all tile types
+// have 4 texture variants.
+WorldRenderer.prototype.getTileTexture = function(type)
+{
+  var index = Math.floor(Math.random() * 4);
+  
+  return type == TileType.Dirt ? this.dirtTextures[index] : this.grassTextures[index];
 };
 
 // Render
@@ -139,7 +175,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tile = this.world.getTile(tileI, tileJ);
       var tileSprite = this.tileSpritePool[numActiveTileSprites];
       
-      tileSprite.setTexture(tile.texture);
+      tileSprite.setTexture(this.getTileTexture(tile.type));
       tileSprite.position.x = i * tileSize;
       tileSprite.position.y = j * tileSize;
       

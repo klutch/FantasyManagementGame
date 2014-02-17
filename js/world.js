@@ -1,7 +1,13 @@
+// Tile type enum
+var TileType = Object.freeze({
+  Grass: 0,
+  Dirt: 1
+});
+
 // Tile class
-var Tile = function(texture, i, j)
+var Tile = function(type, i, j)
 {
-  this.texture = texture;
+  this.type = type;
   this.i = i;
   this.j = j;
 };
@@ -11,15 +17,6 @@ var World = function()
 {
   this.tiles = [];
   this.chunks = [];
-  this.dirtTextures = [];
-  this.grassTextures = [];
-  
-  // Load textures
-  for (var i = 0; i < 4; i++)
-  {
-    this.dirtTextures[i] = PIXI.Texture.fromImage("img/dirt_" + i + ".png");
-    this.grassTextures[i] = PIXI.Texture.fromImage("img/grass_" + i + ".png");
-  }
 };
 
 World.prototype.getChunkI = function(i)
@@ -84,8 +81,7 @@ World.prototype.generateChunk = function(chunkI, chunkJ)
 World.prototype.generateTile = function(i, j)
 {
   var isDirt = Math.random() >= 0.5;
-  var index = Math.floor(Math.random() * 4);
-  var texture = isDirt ? this.dirtTextures[index] : this.grassTextures[index];
+  var type = isDirt ? TileType.Dirt : TileType.Grass;
   
   // Temporary check
   if (this.tiles[i][j] != null)
@@ -93,5 +89,5 @@ World.prototype.generateTile = function(i, j)
     alert('WARNING: generating a tile, when one already exists! ('+i + ", " +j+")");
   }
   
-  return new Tile(texture, i, j);
+  return new Tile(type, i, j);
 };
