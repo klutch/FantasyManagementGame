@@ -1,4 +1,4 @@
-// World renderer class
+// WorldRenderer constructor
 var WorldRenderer = function(world)
 {
   this.maxTileSpritePool = chunkSize * chunkSize;
@@ -28,6 +28,7 @@ var WorldRenderer = function(world)
   }
 };
 
+// Render
 WorldRenderer.prototype.render = function()
 {
   var focusGridI = world.getGridI(this.camera.position.x);
@@ -51,6 +52,7 @@ WorldRenderer.prototype.render = function()
   }
 };
 
+// Clear chunks outside a given range
 WorldRenderer.prototype.clearChunksOutside = function(startChunkI, endChunkI, startChunkJ, endChunkJ)
 {
   for (var chunkI in this.chunkSprites)
@@ -80,6 +82,7 @@ WorldRenderer.prototype.clearChunksOutside = function(startChunkI, endChunkI, st
   }
 };
 
+// Get a chunk sprite (either cached, or generate new one)
 WorldRenderer.prototype.getChunkSprite = function(chunkI, chunkJ)
 {
   if (this.chunkSprites[chunkI] == null)
@@ -94,6 +97,7 @@ WorldRenderer.prototype.getChunkSprite = function(chunkI, chunkJ)
   return this.chunkSprites[chunkI][chunkJ];
 };
 
+// Get an unused index from the chunk pool
 WorldRenderer.prototype.getUnusedChunkPoolIndex = function()
 {
   var index = 0;
@@ -106,6 +110,7 @@ WorldRenderer.prototype.getUnusedChunkPoolIndex = function()
   return index;
 };
 
+// Get a chunk pool index, given a chunk sprite
 WorldRenderer.prototype.getActiveChunkPoolIndex = function(chunkSprite)
 {
   for (var i = 0; i < this.activeChunkPoolIndices.length; i++)
@@ -117,6 +122,7 @@ WorldRenderer.prototype.getActiveChunkPoolIndex = function(chunkSprite)
   }
 };
 
+// Generate a chunk sprite by rendering tiles to it
 WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 {
   var chunkPoolIndex = this.getUnusedChunkPoolIndex();
@@ -152,6 +158,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
   return chunkSprite;
 };
 
+// Move the camera to a given position
 WorldRenderer.prototype.moveCamera = function(x, y)
 {
   this.camera.position.x = x;
