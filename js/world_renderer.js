@@ -13,7 +13,7 @@ var WorldRenderer = function(world)
   this.chunkTexturePool = [];
   this.activeChunkPoolIndices = []; // array of indices used (for chunkSprite and chunkTexture pools)
   this.spriteCounter = 0;
-  this.camera = new Camera(0, 0);
+  this.camera = new Camera(0, 0, 1);
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
@@ -185,3 +185,13 @@ WorldRenderer.prototype.moveCamera = function(x, y)
   this.container.position.x = -x + this.halfScreen.x;
   this.container.position.y = -y + this.halfScreen.y;
 }
+
+// Zoom camera
+WorldRenderer.prototype.zoomCamera = function(deltaY)
+{
+  var scale = Math.min(Math.max(this.camera.scale + deltaY, 0.5), 2);
+  
+  this.camera.scale = scale;
+  this.container.scale.x = scale;
+  this.container.scale.y = scale;
+};

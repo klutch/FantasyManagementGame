@@ -49,6 +49,10 @@ function finishInitializing()
     e = e || window.event;
     inputManager.onKeyUp(e.keyCode);
   };
+  $('canvas').mousewheel(function(e)
+  {
+    worldRenderer.zoomCamera(e.deltaY * 0.1);
+  });
   
   // FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];

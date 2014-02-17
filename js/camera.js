@@ -1,15 +1,6 @@
 // Camera class
-var Camera = function(x, y)
+var Camera = function(x, y, scale)
 {
   this.position = new PIXI.Point(x, y);
-};
-
-Camera.prototype.getGridI = function()
-{
-  return Math.floor(this.position.x / tileSize);
-};
-
-Camera.prototype.getGridJ = function()
-{
-  return Math.floor(this.position.y / tileSize);
+  this.scale = scale;
 };
