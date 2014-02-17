@@ -12,6 +12,7 @@ var fpsText;
 var lastLoop = new Date();
 var tileSize = 16;
 var chunkSize = 16;
+var isLoaded = false;
 
 // Initialize
 function initialize()
@@ -21,6 +22,16 @@ function initialize()
   renderer = PIXI.autoDetectRenderer(1024, 640);
   document.body.appendChild(renderer.view);
   
+  // Start preloading
+  startPreloading();
+  
+  // Start main loop
+  requestAnimFrame(loop);
+}
+
+// Finish initializing (after preloading has finished)
+function finishInitializing()
+{
   // Initialize world
   world = new World();
   worldRenderer = new WorldRenderer(world);
@@ -44,8 +55,24 @@ function initialize()
   fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "black" });
   stage.addChild(fpsText);
   
-  // Start main loop
-  requestAnimFrame(loop);
+  isLoaded = true;
+}
+
+// Start preloading
+function startPreloading()
+{
+  var assets = [];
+  var loader;
+  
+  for (var i = 0; i < 4; i++)
+  {
+    assets.push("img/dirt_" + i + ".png");
+    assets.push("img/grass_" + i + ".png");
+  }
+  
+  loader = new PIXI.AssetLoader(assets);
+  loader.onComplete = finishInitializing;
+  loader.load();
 }
 
 // Update fps
@@ -90,14 +117,17 @@ function handleInput()
 
 // Game loop
 function loop()
-{ 
-  // Update
-  updateFps();
-  handleInput();
-  
-  // Draw
-  worldRenderer.render();
-  renderer.render(stage);
+{
+  if (isLoaded)
+  {
+    // Update
+    updateFps();
+    handleInput();
+
+    // Draw
+    worldRenderer.render();
+    renderer.render(stage);
+  }
   requestAnimFrame(loop);
 }
 

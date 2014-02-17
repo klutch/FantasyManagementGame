@@ -19,9 +19,6 @@ var WorldRenderer = function(world)
   this.container.position.x = this.halfScreen.x;
   this.container.position.y = this.halfScreen.y;
   
-  // Preload tile textures
-  this.preloadTextures();
-  
   // Load textures
   for (var i = 0; i < 4; i++)
   {
@@ -38,20 +35,6 @@ var WorldRenderer = function(world)
     this.chunkSpritePool[i] = new PIXI.Sprite(this.blankTexture);
     this.chunkTexturePool[i] = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
   }
-};
-
-// Preload textures
-WorldRenderer.prototype.preloadTextures = function()
-{
-  var textures = [];
-  
-  for (var i = 0; i < 4; i++)
-  {
-    textures.push("img/dirt_" + i + ".png");
-    textures.push("img/grass_" + i + ".png");
-  }
-  
-  PIXI.AssetLoader(textures, false);
 };
 
 // Get texture given a tile type
