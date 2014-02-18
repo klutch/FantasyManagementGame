@@ -5,11 +5,11 @@ var TileType = Object.freeze({
 });
 
 // Tile class
-var Tile = function(type, i, j)
+var Tile = function(type, walkable, movementCost)
 {
   this.type = type;
-  this.i = i;
-  this.j = j;
+  this.walkable = walkable;
+  this.movementCost = movementCost;
 };
 
 // World class
@@ -89,5 +89,5 @@ World.prototype.generateTile = function(i, j)
     alert('WARNING: generating a tile, when one already exists! ('+i + ", " +j+")");
   }
   
-  return new Tile(type, i, j);
+  return new Tile(type, true, 10);
 };
