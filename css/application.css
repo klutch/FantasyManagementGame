@@ -2,11 +2,29 @@
 Copyright 2014 Graeme Collins
 */
 
+html
+{
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 body
 {
-  margin: 2em;
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
   font-size: 0.8em;
   font-family: "Trebuchet MS";
   color: #fff;
-  background: #000;
+}
+
+#container
+{
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
 }

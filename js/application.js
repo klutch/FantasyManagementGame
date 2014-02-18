@@ -2,6 +2,8 @@
  * Copyright 2014 Graeme Collins
  */
 
+var containerWidth;
+var containerHeight;
 var stage;
 var renderer;
 var world;
@@ -18,9 +20,11 @@ var isLoaded = false;
 function initialize()
 {
   // Initialize Pixi
+  containerWidth = $('#container').width();
+  containerHeight = $('#container').height();
   stage = new PIXI.Stage(0x66FF99);
-  renderer = PIXI.autoDetectRenderer(1024, 640);
-  document.body.appendChild(renderer.view);
+  renderer = PIXI.autoDetectRenderer(containerWidth, containerHeight);
+  $('#container').append(renderer.view);
   
   // Start preloading
   startPreloading();

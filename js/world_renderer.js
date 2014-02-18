@@ -2,7 +2,7 @@
 var WorldRenderer = function(world)
 {
   this.maxTileSpritePool = chunkSize * chunkSize;
-  this.maxChunkSpritePool = 25;
+  this.maxChunkSpritePool = 256;
   this.world = world;
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
@@ -49,6 +49,18 @@ WorldRenderer.prototype.getTileTexture = function(type)
   return type == TileType.Dirt ? this.dirtTextures[index] : this.grassTextures[index];
 };
 
+// Get number of chunks to show on the x axis
+WorldRenderer.prototype.getChunkBufferX = function()
+{
+  return Math.ceil((containerWidth / (chunkSize * tileSize * this.camera.scale.x)) * 0.5);
+};
+
+// Get number of chunks to show on the y axis
+WorldRenderer.prototype.getChunkBufferY = function()
+{
+  return Math.ceil((containerHeight / (chunkSize * tileSize * this.camera.scale.y)) * 0.5);
+};
+
 // Update
 WorldRenderer.prototype.update = function()
 {
@@ -65,11 +77,14 @@ WorldRenderer.prototype.render = function()
   var focusGridJ = world.getGridJ(this.camera.position.y);
   var focusChunkI = world.getChunkI(focusGridI);
   var focusChunkJ = world.getChunkJ(focusGridJ);
-  var chunkRadius = 2;
-  var startChunkI = focusChunkI - chunkRadius;
-  var endChunkI = focusChunkI + chunkRadius;
-  var startChunkJ = focusChunkJ - chunkRadius;
-  var endChunkJ = focusChunkJ + chunkRadius;
+  var chunkBufferX = this.getChunkBufferX();
+  var chunkBufferY = this.getChunkBufferY();
+  var startChunkI = focusChunkI - chunkBufferX;
+  var endChunkI = focusChunkI + chunkBufferX;
+  var startChunkJ = focusChunkJ - chunkBufferY;
+  var endChunkJ = focusChunkJ + chunkBufferY;
+  
+  //console.log("chunkBufferX: "+ chunkBufferX + ", chunkBufferY: " + chunkBufferY);
   
   this.clearChunksOutside(startChunkI, endChunkI, startChunkJ, endChunkJ);
   
@@ -193,8 +208,6 @@ WorldRenderer.prototype.moveCamera = function(x, y)
 {
   this.camera.position.x = x;
   this.camera.position.y = y;
-  //this.container.position.x = -x + this.halfScreen.x;
-  //this.container.position.y = -y + this.halfScreen.y;
 }
 
 // Zoom camera
@@ -204,6 +217,4 @@ WorldRenderer.prototype.zoomCamera = function(deltaY)
   
   this.camera.scale.x = scale;
   this.camera.scale.y = scale;
-  //this.container.scale.x = scale;
-  //this.container.scale.y = scale;
 };
