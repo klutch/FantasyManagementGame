@@ -88,8 +88,9 @@ function generateNoiseSprite()
     {
       var n = (perlinNoise.fbm(i, j, 8, 0.8, 0.6, 2) + 1) * 0.5;  // convert from [-1, 1] to [0, 1];
       var sprite = new PIXI.Sprite(pixelTexture);
+      var c = Math.floor(n * 255).toString(16);
       
-      sprite.tint = n * 255;
+      sprite.tint = '0x' + c + c + c;
       renderTexture.render(sprite, new PIXI.Point(i, j));
     }
   }
