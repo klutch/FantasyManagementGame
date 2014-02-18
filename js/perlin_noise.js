@@ -47,9 +47,9 @@ PerlinNoise.prototype.get = function(x, y)
   var relY = noiseY - gridJ;
   
   // Get gradients
-  var g00 = this.gradients[gridI][gridJ];
-  var g10 = this.gradients[(gridI + 1) % this.gridWidth][gridJ];
-  var g01 = this.gradients[gridI][(gridJ + 1) % this.gridHeight];
+  var g00 = this.gradients[gridI % this.gridWidth][gridJ % this.gridWidth];
+  var g10 = this.gradients[(gridI + 1) % this.gridWidth][gridJ % this.gridWidth];
+  var g01 = this.gradients[gridI % this.gridWidth][(gridJ + 1) % this.gridHeight];
   var g11 = this.gradients[(gridI + 1) % this.gridWidth][(gridJ + 1) % this.gridHeight];
   
   // Calculate noise contributions from each corner
@@ -64,4 +64,20 @@ PerlinNoise.prototype.get = function(x, y)
   var nxy = nx0 * (1 - this.weight(relY)) + nx1 * this.weight(relY);
   
   return nxy;
+};
+
+// Fractional brownian motion
+PerlinNoise.prototype.fbm = function(x, y, count, frequency, gain, lacunarity)
+{
+  var total = 0;
+  var amplitude = gain;
+  
+  for (var i = 0; i < count; i++)
+  {
+    total += this.get(x * frequency, y * frequency) * amplitude;
+    frequency *= lacunarity;
+    amplitude *= gain;
+  }
+  
+  return total;
 };

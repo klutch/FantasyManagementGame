@@ -86,7 +86,7 @@ function generateNoiseSprite()
   {
     for (var j = 0; j < textureSize; j++)
     {
-      var n = (perlinNoise.get(i, j) + 1) * 0.5;  // convert from [-1, 1] to [0, 1];
+      var n = (perlinNoise.fbm(i, j, 8, 0.8, 0.6, 2) + 1) * 0.5;  // convert from [-1, 1] to [0, 1];
       var sprite = new PIXI.Sprite(pixelTexture);
       
       sprite.tint = n * 255;
