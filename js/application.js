@@ -36,6 +36,7 @@ function finishInitializing()
   world = new World();
   worldRenderer = new WorldRenderer(world);
   stage.addChild(worldRenderer.container);
+  stage.addChild(worldRenderer.camera);
   
   // Initialize input manager
   inputManager = new InputManager();
@@ -127,6 +128,7 @@ function loop()
     // Update
     updateFps();
     handleInput();
+    worldRenderer.update();
 
     // Draw
     worldRenderer.render();

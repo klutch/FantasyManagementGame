@@ -13,7 +13,9 @@ var WorldRenderer = function(world)
   this.chunkTexturePool = [];
   this.activeChunkPoolIndices = []; // array of indices used (for chunkSprite and chunkTexture pools)
   this.spriteCounter = 0;
-  this.camera = new Camera(0, 0, 1);
+  this.camera = new PIXI.DisplayObjectContainer();
+  this.camera.position.x = 0;
+  this.camera.position.y = 0;
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
@@ -45,6 +47,15 @@ WorldRenderer.prototype.getTileTexture = function(type)
   var index = Math.floor(Math.random() * 4);
   
   return type == TileType.Dirt ? this.dirtTextures[index] : this.grassTextures[index];
+};
+
+// Update
+WorldRenderer.prototype.update = function()
+{
+  this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
+  this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
+  this.container.scale.x = this.camera.scale.x;
+  this.container.scale.y = this.camera.scale.y;
 };
 
 // Render
@@ -182,16 +193,17 @@ WorldRenderer.prototype.moveCamera = function(x, y)
 {
   this.camera.position.x = x;
   this.camera.position.y = y;
-  this.container.position.x = -x + this.halfScreen.x;
-  this.container.position.y = -y + this.halfScreen.y;
+  //this.container.position.x = -x + this.halfScreen.x;
+  //this.container.position.y = -y + this.halfScreen.y;
 }
 
 // Zoom camera
 WorldRenderer.prototype.zoomCamera = function(deltaY)
 {
-  var scale = Math.min(Math.max(this.camera.scale + deltaY, 0.5), 2);
+  var scale = Math.min(Math.max(this.camera.scale.x + deltaY, 0.5), 2);
   
-  this.camera.scale = scale;
-  this.container.scale.x = scale;
-  this.container.scale.y = scale;
+  this.camera.scale.x = scale;
+  this.camera.scale.y = scale;
+  //this.container.scale.x = scale;
+  //this.container.scale.y = scale;
 };
