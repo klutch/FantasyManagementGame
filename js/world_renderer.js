@@ -6,23 +6,29 @@ var WorldRenderer = function(world)
   this.world = world;
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
-  this.desertTextures = [
-    PIXI.Texture.fromImage("img/desert_0.png")
+  this.plainsTextures = [
+    PIXI.Texture.fromImage("img/plains_0.png")
   ];
   this.forestTextures = [
     PIXI.Texture.fromImage("img/forest_0.png")
   ];
-  this.plainsTextures = [
-    PIXI.Texture.fromImage("img/plains_0.png")
+  this.swampTextures = [
+    PIXI.Texture.fromImage("img/swamp_0.png")
+  ];
+  this.mountainsTextures = [
+    PIXI.Texture.fromImage("img/mountains_0.png")
+  ];
+  this.hillsTextures = [
+    PIXI.Texture.fromImage("img/hills_0.png")
   ];
   this.snowTextures = [
     PIXI.Texture.fromImage("img/snow_0.png")
   ];
-  this.swampTextures = [
-    PIXI.Texture.fromImage("img/swamp_0.png")
+  this.desertTextures = [
+    PIXI.Texture.fromImage("img/desert_0.png")
   ];
-  this.tundraTextures = [
-    PIXI.Texture.fromImage("img/tundra_0.png")
+  this.waterTextures = [
+    PIXI.Texture.fromImage("img/water_0.png")
   ];
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
@@ -51,29 +57,37 @@ var WorldRenderer = function(world)
 // Get texture given a tile type
 WorldRenderer.prototype.getTileTexture = function(type)
 {
-  if (type == TileType.Desert)
+  if (type == TileType.Plains)
   {
-    return this.desertTextures[0];
+    return this.plainsTextures[0];
   }
   else if (type == TileType.Forest)
   {
     return this.forestTextures[0];
   }
-  else if (type == TileType.Plains)
+  else if (type == TileType.Swamp)
   {
-    return this.plainsTextures[0];
+    return this.swampTextures[0];
+  }
+  else if (type == TileType.Mountains)
+  {
+    return this.mountainsTextures[0];
+  }
+  else if (type == TileType.Hills)
+  {
+    return this.hillsTextures[0];
   }
   else if (type == TileType.Snow)
   {
     return this.snowTextures[0];
   }
-  else if (type == TileType.Swamp)
+  else if (type == TileType.Desert)
   {
-    return this.swampTextures[0];
+    return this.desertTextures[0];
   }
-  else if (type == TileType.Tundra)
+  else if (type == TileType.Water)
   {
-    return this.tundraTextures[0];
+    return this.waterTextures[0];
   }
 };
 

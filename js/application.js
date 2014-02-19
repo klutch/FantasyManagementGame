@@ -74,12 +74,14 @@ function startPreloading()
   var loader;
   
   assets.push("img/blank.png");
-  assets.push("img/desert_0.png");
-  assets.push("img/forest_0.png");
   assets.push("img/plains_0.png");
-  assets.push("img/snow_0.png");
+  assets.push("img/forest_0.png");
   assets.push("img/swamp_0.png");
-  assets.push("img/tundra_0.png");
+  assets.push("img/mountains_0.png");
+  assets.push("img/hills_0.png");
+  assets.push("img/snow_0.png");
+  assets.push("img/desert_0.png");
+  assets.push("img/water_0.png");
   
   loader = new PIXI.AssetLoader(assets);
   loader.onComplete = finishInitializing;

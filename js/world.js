@@ -2,10 +2,12 @@
 var TileType = Object.freeze({
   Desert: 0,
   Plains: 1,
-  Tundra: 2,
-  Snow: 3,
-  Forest: 4,
-  Swamp: 5
+  Hills: 2,
+  Mountains: 3,
+  Snow: 4,
+  Forest: 5,
+  Swamp: 6,
+  Water: 7
 });
 
 // Tile class

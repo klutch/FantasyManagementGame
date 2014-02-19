@@ -125,16 +125,22 @@ Noise.prototype.cell = function(x, y)
 }
 
 // Fractional brownian motion
-Noise.prototype.fbm = function(x, y, count, frequency, gain, lacunarity, noiseMethod)
+Noise.prototype.fbm = function(x, y, noiseMethod, options = {})
 {
   var total = 0;
-  var amplitude = gain;
+  var amplitude;
   
-  for (var i = 0; i < count; i++)
+  options["iterations"] = options["iterations"] || 1;
+  options["frequency"] = options["frequency"] || 1.4;
+  options["gain"] = options["gain"] || 0.6;
+  options["lacunarity"]  = options["lacunarity"] || 1.8;
+  amplitude = options["gain"];
+  
+  for (var i = 0; i < options["iterations"]; i++)
   {
-    total += (noiseMethod.call(this, x * frequency, y * frequency) * 2 - 1) * amplitude;
-    frequency *= lacunarity;
-    amplitude *= gain;
+    total += (noiseMethod.call(this, x * options["frequency"], y * options["frequency"]) * 2 - 1) * amplitude;
+    options["frequency"] *= options["lacunarity"];
+    amplitude *= options["gain"];
   }
   
   total = (total + 1) * 0.5;
