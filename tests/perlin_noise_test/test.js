@@ -71,7 +71,7 @@ function handleInput()
 // Generate noise sprite
 function generateNoiseSprite()
 {
-  var textureSize = 512;
+  var textureSize = 256;
   var renderTexture = new PIXI.RenderTexture(textureSize, textureSize);
   var noiseSprite;
   
@@ -86,7 +86,7 @@ function generateNoiseSprite()
   {
     for (var j = 0; j < textureSize; j++)
     {
-      var n = (noise.perlin(i, j) + 1) * 0.5;
+      var n = noise.perlin(i, j);
       var sprite = new PIXI.Sprite(pixelTexture);
       var c;
       

@@ -45,7 +45,6 @@ Noise.prototype.perlinWeight = function(x)
 
 // Perlin noise algorithm (slightly modified from 'Simplex Noise Demystified')
 // http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// returns a number between [-1, 1]
 Noise.prototype.perlin = function(x, y)
 {
   // Modify x and y values, otherwise we'll always be dealing with whole numbers
@@ -77,7 +76,7 @@ Noise.prototype.perlin = function(x, y)
   var nx1 = n01 * (1 - this.perlinWeight(relX)) + n11 * this.perlinWeight(relX);
   var nxy = nx0 * (1 - this.perlinWeight(relY)) + nx1 * this.perlinWeight(relY);
   
-  return nxy;
+  return (nxy + 1) * 0.5;
 };
 
 // Cell noise algorithm
