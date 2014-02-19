@@ -86,7 +86,7 @@ function generateNoiseSprite()
   {
     for (var j = 0; j < textureSize; j++)
     {
-      var n = (noise.perlin(i, j) + 1) * 0.5;
+      var n = (noise.cell(i, j) + 1) * 0.5;
       var sprite = new PIXI.Sprite(pixelTexture);
       var c;
       
