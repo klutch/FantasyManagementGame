@@ -132,10 +132,12 @@ Noise.prototype.fbm = function(x, y, count, frequency, gain, lacunarity, noiseMe
   
   for (var i = 0; i < count; i++)
   {
-    total += noiseMethod(x * frequency, y * frequency) * amplitude;
+    total += (noiseMethod.call(this, x * frequency, y * frequency) * 2 - 1) * amplitude;
     frequency *= lacunarity;
     amplitude *= gain;
   }
+  
+  total = (total + 1) * 0.5;
   
   return total;
 };

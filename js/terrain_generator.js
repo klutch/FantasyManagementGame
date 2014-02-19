@@ -38,9 +38,21 @@ var TerrainGenerator = function(seed)
 
 TerrainGenerator.prototype.getTile = function(x, y)
 {
-  var moisture = this.noise.cell(x, y);
-  var temperature = this.noise.perlin(x, y);
-  var tileType = this.getTileType(moisture, temperature);
+  var moisture;
+  var temperature;
+  var tileType;
+  
+  // Calculate moisture
+  moisture = this.noise.fbm(x, y, 8, 1.2, 0.6, 1.2, this.noise.perlin);
+  //moisture = this.noise.fbm((x + moisture) * 1.2, (y + moisture) * -1.2, 2, 1.4, 0.6, 1.8, this.noise.cell);
+  moisture = Math.max(Math.min(moisture, 1), 0);
+  
+  // Calculate temperature
+  temperature = this.noise.fbm(x, y, 2, 1.4, 0.8, 1.2, this.noise.cell);
+  temperature = Math.max(Math.min(temperature, 1), 0);
+  
+  // Get tile type
+  tileType = this.getTileType(moisture, temperature);
   
   return new Tile(tileType, true, 10);
 };

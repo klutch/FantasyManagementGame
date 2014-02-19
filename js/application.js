@@ -108,19 +108,19 @@ function handleInput()
 {
   if (inputManager.keysPressed[65])
   {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x - 1, worldRenderer.camera.position.y);
+    worldRenderer.moveCamera(worldRenderer.camera.position.x - 5, worldRenderer.camera.position.y);
   }
   if (inputManager.keysPressed[68])
   {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x + 1, worldRenderer.camera.position.y);
+    worldRenderer.moveCamera(worldRenderer.camera.position.x + 5, worldRenderer.camera.position.y);
   }
   if (inputManager.keysPressed[83])
   {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y + 1);
+    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y + 5);
   }
   if (inputManager.keysPressed[87])
   {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y - 1);
+    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y - 5);
   }
   
   inputManager.update();
