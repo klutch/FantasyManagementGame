@@ -1,9 +1,9 @@
-var Noise = function(seed)
+var Noise = function(seed, perlinGridWidth, perlinGridHeight, cellGridWidth, cellGridHeight)
 {
-  this.perlinGridWidth = 64;
-  this.perlinGridHeight = 64;
-  this.cellGridWidth = 64;  // worley
-  this.cellGridHeight = 64; // worley
+  this.perlinGridWidth = perlinGridWidth;
+  this.perlinGridHeight = perlinGridHeight;
+  this.cellGridWidth = cellGridWidth;  // worley
+  this.cellGridHeight = cellGridHeight; // worley
   this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
   this.perlinGradients = [];
   this.cellGradients = [];
@@ -60,10 +60,10 @@ Noise.prototype.perlin = function(x, y)
   var relY = noiseY - gridJ;
   
   // Get gradients
-  var g00 = this.perlinGradients[gridI % this.perlinGridWidth][gridJ % this.perlinGridHeight];
-  var g10 = this.perlinGradients[(gridI + 1) % this.perlinGridWidth][gridJ % this.perlinGridHeight];
-  var g01 = this.perlinGradients[gridI % this.perlinGridWidth][(gridJ + 1) % this.perlinGridHeight];
-  var g11 = this.perlinGradients[(gridI + 1) % this.perlinGridWidth][(gridJ + 1) % this.perlinGridHeight];
+  var g00 = this.perlinGradients[gridI & (this.perlinGridWidth-1)][gridJ & (this.perlinGridHeight-1)];
+  var g10 = this.perlinGradients[(gridI + 1) & (this.perlinGridWidth-1)][gridJ & (this.perlinGridHeight-1)];
+  var g01 = this.perlinGradients[gridI & (this.perlinGridWidth-1)][(gridJ + 1) & (this.perlinGridHeight-1)];
+  var g11 = this.perlinGradients[(gridI + 1) & (this.perlinGridWidth-1)][(gridJ + 1) & (this.perlinGridHeight-1)];
   
   // Calculate noise contributions from each corner
   var n00 = this.dot(g00, [relX, relY]);

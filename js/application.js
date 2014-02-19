@@ -73,11 +73,13 @@ function startPreloading()
   var assets = [];
   var loader;
   
-  for (var i = 0; i < 4; i++)
-  {
-    assets.push("img/dirt_" + i + ".png");
-    assets.push("img/grass_" + i + ".png");
-  }
+  assets.push("img/blank.png");
+  assets.push("img/desert_0.png");
+  assets.push("img/forest_0.png");
+  assets.push("img/plains_0.png");
+  assets.push("img/snow_0.png");
+  assets.push("img/swamp_0.png");
+  assets.push("img/tundra_0.png");
   
   loader = new PIXI.AssetLoader(assets);
   loader.onComplete = finishInitializing;

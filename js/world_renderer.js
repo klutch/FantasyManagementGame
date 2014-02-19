@@ -6,8 +6,24 @@ var WorldRenderer = function(world)
   this.world = world;
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
-  this.dirtTextures = [];
-  this.grassTextures = [];
+  this.desertTextures = [
+    PIXI.Texture.fromImage("img/desert_0.png")
+  ];
+  this.forestTextures = [
+    PIXI.Texture.fromImage("img/forest_0.png")
+  ];
+  this.plainsTextures = [
+    PIXI.Texture.fromImage("img/plains_0.png")
+  ];
+  this.snowTextures = [
+    PIXI.Texture.fromImage("img/snow_0.png")
+  ];
+  this.swampTextures = [
+    PIXI.Texture.fromImage("img/swamp_0.png")
+  ];
+  this.tundraTextures = [
+    PIXI.Texture.fromImage("img/tundra_0.png")
+  ];
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
   this.chunkTexturePool = [];
@@ -21,13 +37,6 @@ var WorldRenderer = function(world)
   this.container.position.x = this.halfScreen.x;
   this.container.position.y = this.halfScreen.y;
   
-  // Load textures
-  for (var i = 0; i < 4; i++)
-  {
-    this.dirtTextures[i] = PIXI.Texture.fromImage("img/dirt_" + i + ".png");
-    this.grassTextures[i] = PIXI.Texture.fromImage("img/grass_" + i + ".png");
-  }
-  
   for (var i = 0; i < this.maxTileSpritePool; i++)
   {
     this.tileSpritePool[i] = new PIXI.Sprite(this.blankTexture);
@@ -40,13 +49,32 @@ var WorldRenderer = function(world)
 };
 
 // Get texture given a tile type
-// TODO: This method will have to be changed later to not assume all tile types
-// have 4 texture variants.
 WorldRenderer.prototype.getTileTexture = function(type)
 {
-  var index = Math.floor(Math.random() * 4);
-  
-  return type == TileType.Dirt ? this.dirtTextures[index] : this.grassTextures[index];
+  if (type == TileType.Desert)
+  {
+    return this.desertTextures[0];
+  }
+  else if (type == TileType.Forest)
+  {
+    return this.forestTextures[0];
+  }
+  else if (type == TileType.Plains)
+  {
+    return this.plainsTextures[0];
+  }
+  else if (type == TileType.Snow)
+  {
+    return this.snowTextures[0];
+  }
+  else if (type == TileType.Swamp)
+  {
+    return this.swampTextures[0];
+  }
+  else if (type == TileType.Tundra)
+  {
+    return this.tundraTextures[0];
+  }
 };
 
 // Get number of chunks to show on the x axis

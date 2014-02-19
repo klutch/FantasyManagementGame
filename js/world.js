@@ -1,7 +1,11 @@
 // Tile type enum
 var TileType = Object.freeze({
-  Grass: 0,
-  Dirt: 1
+  Desert: 0,
+  Plains: 1,
+  Tundra: 2,
+  Snow: 3,
+  Forest: 4,
+  Swamp: 5
 });
 
 // Tile class
@@ -13,10 +17,12 @@ var Tile = function(type, walkable, movementCost)
 };
 
 // World class
-var World = function()
+var World = function(seed)
 {
+  this.seed = seed;
   this.tiles = [];
   this.chunks = [];
+  this.terrainGenerator = new TerrainGenerator(seed);
 };
 
 World.prototype.getChunkI = function(i)
@@ -80,14 +86,11 @@ World.prototype.generateChunk = function(chunkI, chunkJ)
 
 World.prototype.generateTile = function(i, j)
 {
-  var isDirt = Math.random() >= 0.5;
-  var type = isDirt ? TileType.Dirt : TileType.Grass;
-  
   // Temporary check
   if (this.tiles[i][j] != null)
   {
     alert('WARNING: generating a tile, when one already exists! ('+i + ", " +j+")");
   }
   
-  return new Tile(type, true, 10);
+  return this.terrainGenerator.getTile(i, j);
 };
