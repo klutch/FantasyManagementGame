@@ -7,7 +7,9 @@ var WorldRenderer = function(world)
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
   this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
   this.plainsTextures = [
-    PIXI.Texture.fromImage("img/plains_0.png")
+    PIXI.Texture.fromImage("img/plains_0.png"),
+    PIXI.Texture.fromImage("img/plains_1.png"),
+    PIXI.Texture.fromImage("img/plains_2.png")
   ];
   this.forestTextures = [
     PIXI.Texture.fromImage("img/forest_0.png")
@@ -59,7 +61,7 @@ WorldRenderer.prototype.getTileTexture = function(type)
 {
   if (type == TileType.Plains)
   {
-    return this.plainsTextures[0];
+    return this.plainsTextures[Math.floor(Math.random()*this.plainsTextures.length)];
   }
   else if (type == TileType.Forest)
   {

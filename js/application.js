@@ -75,6 +75,8 @@ function startPreloading()
   
   assets.push("img/blank.png");
   assets.push("img/plains_0.png");
+  assets.push("img/plains_1.png");
+  assets.push("img/plains_2.png");
   assets.push("img/forest_0.png");
   assets.push("img/swamp_0.png");
   assets.push("img/mountains_0.png");
