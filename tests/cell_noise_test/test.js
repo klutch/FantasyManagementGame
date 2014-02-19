@@ -71,7 +71,7 @@ function handleInput()
 // Generate noise sprite
 function generateNoiseSprite()
 {
-  var textureSize = 512;
+  var textureSize = 256;
   var renderTexture = new PIXI.RenderTexture(textureSize, textureSize);
   var noiseSprite;
   
@@ -86,12 +86,13 @@ function generateNoiseSprite()
   {
     for (var j = 0; j < textureSize; j++)
     {
-      var n = (noise.cell(i, j) + 1) * 0.5;
+      var n = noise.cell(i, j);
       var sprite = new PIXI.Sprite(pixelTexture);
       var c;
       
       // Create color hex string
-      c = Math.floor(n * 255).toString(16)
+      c = Math.floor(n * 255).toString(16);
+      c = c.length < 2 ? ('0' + c) : c;
       
       // Draw pixel sprite
       sprite.tint = '0x' + c + c + c;

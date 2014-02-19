@@ -91,7 +91,8 @@ function generateNoiseSprite()
       var c;
       
       // Create color hex string
-      c = Math.floor(n * 255).toString(16)
+      c = Math.floor(n * 255).toString(16);
+      c = c.length < 2 ? ('0' + c) : c;
       
       // Draw pixel sprite
       sprite.tint = '0x' + c + c + c;

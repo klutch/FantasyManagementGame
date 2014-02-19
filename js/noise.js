@@ -2,10 +2,13 @@ var Noise = function(seed)
 {
   this.perlinGridWidth = 64;
   this.perlinGridHeight = 64;
+  this.cellGridWidth = 64;  // worley
+  this.cellGridHeight = 64; // worley
   this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
   this.perlinGradients = [];
+  this.cellGradients = [];
   
-  // Create perlin gradient grid
+  // Create perlin gradients
   for (var i = 0; i < this.perlinGridWidth; i++)
   {
     this.perlinGradients[i] = [];
@@ -13,6 +16,17 @@ var Noise = function(seed)
     for (var j = 0; j < this.perlinGridHeight; j++)
     {
       this.perlinGradients[i][j] = [this.rng() * 2 - 1, this.rng() * 2 - 1];
+    }
+  }
+  
+  // Create cell (worley) gradients
+  for (var i = 0; i < this.cellGridWidth; i++)
+  {
+    this.cellGradients[i] = [];
+    
+    for (var j = 0; j < this.cellGridHeight; j++)
+    {
+      this.cellGradients[i][j] = [this.rng() * 2 - 1, this.rng() * 2 - 1];
     }
   }
 };
@@ -65,6 +79,51 @@ Noise.prototype.perlin = function(x, y)
   
   return nxy;
 };
+
+// Cell noise algorithm
+Noise.prototype.cell = function(x, y)
+{
+  var result;
+  
+  // Scale down position
+  var noiseX = x / this.cellGridWidth;
+  var noiseY = y / this.cellGridHeight;
+  
+  // Get grid cell
+  var gridI = Math.floor(noiseX);
+  var gridJ = Math.floor(noiseY);
+  
+  // Get position inside cell
+  var relX = noiseX - gridI;
+  var relY = noiseY - gridJ;
+  
+  // Find closest point
+  var closest = 9999999;
+  for (var i = -2; i < 3; i++)
+  {
+    for (var j = -2; j < 3; j++)
+    {
+      var cellGridI = (gridI + i) & (this.cellGridWidth - 1);
+      var cellGridJ = (gridJ + j) & (this.cellGridHeight - 1);
+      var featurePointX = this.cellGradients[cellGridI][cellGridJ][0] + i;
+      var featurePointY = this.cellGradients[cellGridI][cellGridJ][1] + j;
+      var diff;
+      var distance;
+      
+      diff = [featurePointX - relX, featurePointY - relY];
+      distance = this.dot(diff, diff);
+      
+      if (distance < closest)
+      {
+        closest = distance;
+      }
+    }
+  }
+  
+  // Take the square root, and return between [0, 1]
+  result = Math.sqrt(closest);
+  return Math.max(Math.min(result, 1), 0);
+}
 
 // Fractional brownian motion
 Noise.prototype.fbm = function(x, y, count, frequency, gain, lacunarity, noiseMethod)
