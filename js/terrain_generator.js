@@ -53,7 +53,7 @@ TerrainGenerator.prototype.getTile = function(x, y)
   // Get tile type
   tileType = this.getTileType(moisture, elevation);
   
-  return new Tile(tileType, true, 10);
+  return new Tile(tileType, true, 10, elevation);
 };
 
 TerrainGenerator.prototype.getTileType = function(moisture, elevation)

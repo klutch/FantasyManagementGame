@@ -11,11 +11,12 @@ var TileType = Object.freeze({
 });
 
 // Tile class
-var Tile = function(type, walkable, movementCost)
+var Tile = function(type, walkable, movementCost, elevation)
 {
   this.type = type;
   this.walkable = walkable;
   this.movementCost = movementCost;
+  this.elevation = elevation;
 };
 
 // World class

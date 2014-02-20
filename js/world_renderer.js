@@ -12,7 +12,8 @@ var WorldRenderer = function(world)
     PIXI.Texture.fromImage("img/plains_2.png")
   ];
   this.forestTextures = [
-    PIXI.Texture.fromImage("img/forest_0.png")
+    PIXI.Texture.fromImage("img/forest_0.png"),
+    PIXI.Texture.fromImage("img/forest_1.png")
   ];
   this.swampTextures = [
     PIXI.Texture.fromImage("img/swamp_0.png")
@@ -65,7 +66,7 @@ WorldRenderer.prototype.getTileTexture = function(type)
   }
   else if (type == TileType.Forest)
   {
-    return this.forestTextures[0];
+    return this.forestTextures[Math.floor(Math.random()*this.forestTextures.length)];
   }
   else if (type == TileType.Swamp)
   {
@@ -227,10 +228,22 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tileJ = chunkJ * chunkSize + j;
       var tile = this.world.getTile(tileI, tileJ);
       var tileSprite = this.tileSpritePool[numActiveTileSprites];
+      var c;
       
       tileSprite.setTexture(this.getTileTexture(tile.type));
       tileSprite.position.x = i * tileSize;
       tileSprite.position.y = j * tileSize;
+      
+      if (tile.type != TileType.Water)
+      {
+        c = Math.floor((tile.elevation + 1) * 0.5 * 255).toString(16)
+        c = c.length < 2 ? ('0' + c) : c;
+        tileSprite.tint = '0x' + c + c + c;
+      }
+      else
+      {
+        tileSprite.tint = 0xFFFFFF;
+      }
       
       renderTexture.render(tileSprite, tileSprite.position);
       
