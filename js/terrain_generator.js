@@ -15,17 +15,19 @@ var TerrainGenerator = function(seed)
     new PIXI.Rectangle(0.7, 0.2, 0.1, 0.1)
   ];
   this.mountainsRects = [
-    new PIXI.Rectangle(0, 0.8, 0.3, 0.1),
+    new PIXI.Rectangle(0.2, 0.8, 0.1, 0.1),
     new PIXI.Rectangle(0, 0.9, 1, 0.1),
-    new PIXI.Rectangle(0.8, 0.7, 0.2, 0.2)
+    new PIXI.Rectangle(0.8, 0.8, 0.2, 0.1)
   ];
   this.hillsRects = [
     new PIXI.Rectangle(0, 0.6, 0.4, 0.2),
-    new PIXI.Rectangle(0.4, 0.6, 0.4, 0.1)
+    new PIXI.Rectangle(0.4, 0.6, 0.4, 0.1),
+    new PIXI.Rectangle(0.7, 0.7, 0.3, 0.1),
+    new PIXI.Rectangle(0, 0.8, 0.2, 0.1)
   ];
   this.snowRects = [
     new PIXI.Rectangle(0.3, 0.8, 0.5, 0.1),
-    new PIXI.Rectangle(0.4, 0.7, 0.4, 0.1)
+    new PIXI.Rectangle(0.4, 0.7, 0.3, 0.1)
   ];
   this.desertRects = [
     new PIXI.Rectangle(0, 0, 0.3, 0.3)
