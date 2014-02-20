@@ -2,17 +2,17 @@ var TerrainGenerator = function(seed)
 {
   this.noise = new Noise(seed, 32, 32, 64, 64);
   this.plainsRects = [
-    new PIXI.Rectangle(0, 0.3, 0.4, 0.3),
-    new PIXI.Rectangle(0.3, 0, 0.1, 0.3)
+    new PIXI.Rectangle(0, 0.3, 0.5, 0.3),
+    new PIXI.Rectangle(0.3, 0, 0.2, 0.3)
   ];
   this.forestRects = [
-    new PIXI.Rectangle(0.4, 0, 0.1, 0.6),
-    new PIXI.Rectangle(0.5, 0.4, 0.5, 0.2),
+    new PIXI.Rectangle(0.5, 0, 0.1, 0.6),
+    new PIXI.Rectangle(0.6, 0.3, 0.4, 0.3),
     new PIXI.Rectangle(0.8, 0.6, 0.2, 0.1)
   ];
   this.swampRects = [
-    new PIXI.Rectangle(0.5, 0, 0.2, 0.4),
-    new PIXI.Rectangle(0.7, 0.2, 0.1, 0.2)
+    new PIXI.Rectangle(0.6, 0.1, 0.1, 0.2),
+    new PIXI.Rectangle(0.7, 0.2, 0.1, 0.1)
   ];
   this.mountainsRects = [
     new PIXI.Rectangle(0, 0.8, 0.3, 0.1),
@@ -32,7 +32,8 @@ var TerrainGenerator = function(seed)
   ];
   this.waterRects = [
     new PIXI.Rectangle(0.7, 0, 0.3, 0.2),
-    new PIXI.Rectangle(0.8, 0.2, 0.2, 0.2)
+    new PIXI.Rectangle(0.8, 0.2, 0.2, 0.1),
+    new PIXI.Rectangle(0.6, 0, 0.1, 0.1)
   ];
 };
 
