@@ -85,10 +85,24 @@ function startPreloading()
   assets.push("img/snow_0.png");
   assets.push("img/desert_0.png");
   assets.push("img/water_0.png");
+  for (var i = 1; i <= 64; i++)
+  {
+    assets.push("img/player_castle_" + i + ".png");
+  }
   
   loader = new PIXI.AssetLoader(assets);
   loader.onComplete = finishInitializing;
   loader.load();
+}
+
+// Get random integer between values
+function getRandomInt(a, b)
+{
+  var lowest = Math.min(a, b);
+  var highest = Math.max(a, b);
+  var range = highest - lowest;
+  
+  return Math.floor(Math.random() * range + lowest);
 }
 
 // Update fps

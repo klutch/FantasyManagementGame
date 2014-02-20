@@ -7,7 +7,8 @@ var TileType = Object.freeze({
   Snow: 4,
   Forest: 5,
   Swamp: 6,
-  Water: 7
+  Water: 7,
+  PlayerCastle: 8
 });
 
 // Tile class
@@ -26,6 +27,10 @@ var World = function(seed)
   this.tiles = [];
   this.chunks = [];
   this.terrainGenerator = new TerrainGenerator(seed);
+  this.playerCastleX = 0;
+  this.playerCastleY = 0;
+  
+  this.generatePlayerCastle();
 };
 
 World.prototype.getChunkI = function(i)
@@ -96,4 +101,55 @@ World.prototype.generateTile = function(i, j)
   }
   
   return this.terrainGenerator.getTile(i, j);
+};
+
+World.prototype.generatePlayerCastle = function()
+{
+  var found = false;
+  
+  while (!found)
+  {
+    var randRadius = getRandomInt(1800, 2200);
+    var randAngle = Math.random() * Math.PI * 2;
+    var randX = Math.floor(Math.cos(randAngle) * randRadius);
+    var randY = Math.floor(Math.sin(randAngle) * randRadius);
+    var giveUp = false;
+    
+    for (var i = randX; i < randX + 8; i++)
+    {
+      for (var j = randY; j < randY + 8; j++)
+      {
+        var tile = this.getTile(i, j);
+        
+        if (tile.type != TileType.Plains)
+        {
+          giveUp = true;
+          break;
+        }
+      }
+      if (giveUp)
+      {
+        break;
+      }
+    }
+    
+    if (!giveUp)
+    {
+      found = true;
+      this.playerCastleX = randX;
+      this.playerCastleY = randY;
+    }
+  }
+  
+  for (var i = 0; i < 8; i++)
+  {
+    for (var j = 0; j < 8; j++)
+    {
+      var tile = this.getTile(this.playerCastleX + i, this.playerCastleY + j);
+      
+      tile.type = TileType.PlayerCastle;
+      tile.castleTextureI = i;
+      tile.castleTextureJ = j;
+    }
+  }
 };

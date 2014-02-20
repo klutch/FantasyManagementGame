@@ -33,14 +33,19 @@ var WorldRenderer = function(world)
   this.waterTextures = [
     PIXI.Texture.fromImage("img/water_0.png")
   ];
+  this.playerCastleTextures = [];
+  for (var i = 1; i <= 64; i++)
+  {
+    this.playerCastleTextures.push(PIXI.Texture.fromImage("img/player_castle_" + i + ".png"));
+  }
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
   this.chunkTexturePool = [];
   this.activeChunkPoolIndices = []; // array of indices used (for chunkSprite and chunkTexture pools)
   this.spriteCounter = 0;
   this.camera = new PIXI.DisplayObjectContainer();
-  this.camera.position.x = 0;
-  this.camera.position.y = 0;
+  this.camera.position.x = (this.world.playerCastleX + 4) * tileSize;
+  this.camera.position.y = (this.world.playerCastleY + 4) * tileSize;
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
@@ -57,9 +62,11 @@ var WorldRenderer = function(world)
   }
 };
 
-// Get texture given a tile type
-WorldRenderer.prototype.getTileTexture = function(type)
+// Get texture given a tile
+WorldRenderer.prototype.getTileTexture = function(tile)
 {
+  var type = tile.type;
+  
   if (type == TileType.Plains)
   {
     return this.plainsTextures[Math.floor(Math.random()*this.plainsTextures.length)];
@@ -91,6 +98,14 @@ WorldRenderer.prototype.getTileTexture = function(type)
   else if (type == TileType.Water)
   {
     return this.waterTextures[0];
+  }
+  else if (type == TileType.PlayerCastle)
+  {
+    var i = tile.castleTextureI;
+    var j = tile.castleTextureJ;
+    var num = j * 8 + i;
+    
+    return this.playerCastleTextures[num];
   }
 };
 
@@ -230,7 +245,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tileSprite = this.tileSpritePool[numActiveTileSprites];
       var c;
       
-      tileSprite.setTexture(this.getTileTexture(tile.type));
+      tileSprite.setTexture(this.getTileTexture(tile));
       tileSprite.position.x = i * tileSize;
       tileSprite.position.y = j * tileSize;
       
