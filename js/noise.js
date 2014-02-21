@@ -1,5 +1,6 @@
-var Noise = function(seed, options = {})
+var Noise = function(seed, options)
 {
+  options = options || {};
   this.perlinGridWidth = options.perlinGridWidth || 32;
   this.perlinGridHeight = options.perlinGridHeight || 32;
   this.cellGridWidth = options.cellGridWidth || 32;  // worley
@@ -122,11 +123,13 @@ Noise.prototype.cell = function(x, y)
   // Take the square root, and return between [0, 1]
   result = Math.sqrt(closest);
   return Math.max(Math.min(result, 1), 0);
-}
+};
 
 // Fractional brownian motion
-Noise.prototype.fbm = function(x, y, noiseMethod, options = {})
+Noise.prototype.fbm = function(x, y, noiseMethod, options)
 {
+  options = options || {};
+  
   var total = 0;
   var amplitude;
   
