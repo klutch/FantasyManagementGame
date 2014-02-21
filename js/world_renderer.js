@@ -5,39 +5,6 @@ var WorldRenderer = function(world)
   this.maxChunkSpritePool = 256;
   this.world = world;
   this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
-  this.blankTexture = PIXI.Texture.fromImage("img/blank.png");
-  this.plainsTextures = [
-    PIXI.Texture.fromImage("img/plains_0.png"),
-    PIXI.Texture.fromImage("img/plains_1.png"),
-    PIXI.Texture.fromImage("img/plains_2.png")
-  ];
-  this.forestTextures = [
-    PIXI.Texture.fromImage("img/forest_0.png"),
-    PIXI.Texture.fromImage("img/forest_1.png")
-  ];
-  this.swampTextures = [
-    PIXI.Texture.fromImage("img/swamp_0.png")
-  ];
-  this.mountainsTextures = [
-    PIXI.Texture.fromImage("img/mountains_0.png")
-  ];
-  this.hillsTextures = [
-    PIXI.Texture.fromImage("img/hills_0.png")
-  ];
-  this.snowTextures = [
-    PIXI.Texture.fromImage("img/snow_0.png")
-  ];
-  this.desertTextures = [
-    PIXI.Texture.fromImage("img/desert_0.png")
-  ];
-  this.waterTextures = [
-    PIXI.Texture.fromImage("img/water_0.png")
-  ];
-  this.playerCastleTextures = [];
-  for (var i = 1; i <= 64; i++)
-  {
-    this.playerCastleTextures.push(PIXI.Texture.fromImage("img/player_castle_" + i + ".png"));
-  }
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
   this.chunkTexturePool = [];
@@ -53,11 +20,11 @@ var WorldRenderer = function(world)
   
   for (var i = 0; i < this.maxTileSpritePool; i++)
   {
-    this.tileSpritePool[i] = new PIXI.Sprite(this.blankTexture);
+    this.tileSpritePool[i] = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.blank));
   }
   for (var i = 0; i < this.maxChunkSpritePool; i++)
   {
-    this.chunkSpritePool[i] = new PIXI.Sprite(this.blankTexture);
+    this.chunkSpritePool[i] = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.blank));
     this.chunkTexturePool[i] = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
   }
 };
@@ -66,38 +33,39 @@ var WorldRenderer = function(world)
 WorldRenderer.prototype.getTileTexture = function(tile)
 {
   var type = tile.type;
+  var assetPath;
   
   if (type == TileType.Plains)
   {
-    return this.plainsTextures[Math.floor(Math.random()*this.plainsTextures.length)];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.plains[Math.floor(Math.random()*assetPathManager.textureAssetPaths.plains.length)]);
   }
   else if (type == TileType.Forest)
   {
-    return this.forestTextures[Math.floor(Math.random()*this.forestTextures.length)];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.forest[Math.floor(Math.random()*assetPathManager.textureAssetPaths.forest.length)]);
   }
   else if (type == TileType.Swamp)
   {
-    return this.swampTextures[0];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.swamp[Math.floor(Math.random()*assetPathManager.textureAssetPaths.swamp.length)]);
   }
   else if (type == TileType.Mountains)
   {
-    return this.mountainsTextures[0];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.mountains[Math.floor(Math.random()*assetPathManager.textureAssetPaths.mountains.length)]);
   }
   else if (type == TileType.Hills)
   {
-    return this.hillsTextures[0];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.hills[Math.floor(Math.random()*assetPathManager.textureAssetPaths.hills.length)]);
   }
   else if (type == TileType.Snow)
   {
-    return this.snowTextures[0];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.snow[Math.floor(Math.random()*assetPathManager.textureAssetPaths.snow.length)]);
   }
   else if (type == TileType.Desert)
   {
-    return this.desertTextures[0];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.desert[Math.floor(Math.random()*assetPathManager.textureAssetPaths.desert.length)]);
   }
   else if (type == TileType.Water)
   {
-    return this.waterTextures[0];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.water[Math.floor(Math.random()*assetPathManager.textureAssetPaths.water.length)]);
   }
   else if (type == TileType.PlayerCastle)
   {
@@ -105,7 +73,7 @@ WorldRenderer.prototype.getTileTexture = function(tile)
     var j = tile.castleTextureJ;
     var num = j * 8 + i;
     
-    return this.playerCastleTextures[num];
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.playerCastle[num]);
   }
 };
 

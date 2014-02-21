@@ -15,6 +15,7 @@ var lastLoop = new Date();
 var tileSize = 16;
 var chunkSize = 16;
 var isLoaded = false;
+var assetPathManager = new AssetPathManager();
 
 // Initialize
 function initialize()
@@ -27,7 +28,7 @@ function initialize()
   $('#container').append(renderer.view);
   
   // Start preloading
-  startPreloading();
+  assetPathManager.preload(finishInitializing);
   
   // Start main loop
   requestAnimFrame(loop);
@@ -65,34 +66,6 @@ function finishInitializing()
   stage.addChild(fpsText);
   
   isLoaded = true;
-}
-
-// Start preloading
-function startPreloading()
-{
-  var assets = [];
-  var loader;
-  
-  assets.push("img/blank.png");
-  assets.push("img/plains_0.png");
-  assets.push("img/plains_1.png");
-  assets.push("img/plains_2.png");
-  assets.push("img/forest_0.png");
-  assets.push("img/forest_1.png");
-  assets.push("img/swamp_0.png");
-  assets.push("img/mountains_0.png");
-  assets.push("img/hills_0.png");
-  assets.push("img/snow_0.png");
-  assets.push("img/desert_0.png");
-  assets.push("img/water_0.png");
-  for (var i = 1; i <= 64; i++)
-  {
-    assets.push("img/player_castle_" + i + ".png");
-  }
-  
-  loader = new PIXI.AssetLoader(assets);
-  loader.onComplete = finishInitializing;
-  loader.load();
 }
 
 // Get random integer between values
