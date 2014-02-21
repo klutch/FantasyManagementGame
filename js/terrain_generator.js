@@ -1,6 +1,6 @@
 var TerrainGenerator = function(seed)
 {
-  this.noise = new Noise(seed, 32, 32, 64, 64);
+  this.noise = new Noise(seed, {perlinGridWidth: 32, perlinGridHeight: 32, cellGridWidth: 64, cellGridHeight: 64});
   this.plainsRects = [
     new PIXI.Rectangle(0, 0.3, 0.5, 0.3),
     new PIXI.Rectangle(0.3, 0, 0.2, 0.3)
