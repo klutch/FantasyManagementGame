@@ -64,6 +64,18 @@ function finishInitializing()
     worldRenderer.debugGridI = world.getGridI(e.pageX + worldRenderer.camera.position.x - worldRenderer.halfScreen.x);
     worldRenderer.debugGridJ = world.getGridJ(e.pageY + worldRenderer.camera.position.y - worldRenderer.halfScreen.y);
   });
+  $('canvas').click(function(e)
+  {
+    var tile = world.getTile(worldRenderer.debugGridI, worldRenderer.debugGridJ);
+    var debugString = 
+        "Tile at (" + worldRenderer.debugGridI + ", " + worldRenderer.debugGridJ + ")\n" +
+        "\ttype: " + tile.type + "\n" +
+        "\tfeatureId: " + tile.featureId + "\n" +
+        "\tfeatureTextureI: " + tile.featureTextureI + "\n" +
+        "\tfeatureTextureJ: " + tile.featureTextureJ;
+    
+    alert(debugString);
+  });
   
   // FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
