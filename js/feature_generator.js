@@ -97,9 +97,13 @@ FeatureGenerator.prototype.checkTerrainType = function(tileType, tileI, tileJ, w
   {
     for (var j = 0; j < height; j++)
     {
-      var tile = this.world.getTile(tileI + i, tileI + j);
+      var tile = this.world.getTile(tileI + i, tileJ + j);
       
       if (tile.type != tileType)
+      {
+        return false;
+      }
+      if (tile.featureId != null)
       {
         return false;
       }
