@@ -61,19 +61,6 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   
   // Create feature
   feature = this.world.createFeature(FeatureType.PlayerCastle, this.world.playerCastleX, this.world.playerCastleY, 8, 8);
-  
-  // Hook feature up to tiles
-  /*for (var i = 0; i < 8; i++)
-  {
-    for (var j = 0; j < 8; j++)
-    {
-      var tile = this.world.getTile(this.world.playerCastleX + i, this.world.playerCastleY + j);
-      
-      tile.featureId = feature.id;
-      tile.featureTextureI = i;
-      tile.featureTextureJ = j;
-    }
-  }*/
 };
 
 // Try to generate a feature at a given tile

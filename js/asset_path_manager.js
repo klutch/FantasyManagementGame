@@ -2,6 +2,7 @@ var AssetPathManager = function()
 {
   this.textureAssetPaths = {};
   this.textureAssetPaths.blank = "img/blank.png";
+  this.textureAssetPaths.debugTileSelection = "img/selected_tile.png";
   this.textureAssetPaths.fog = "img/fog_0.png";
   this.textureAssetPaths.plains = [
     "img/plains_0.png",

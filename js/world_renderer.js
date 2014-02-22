@@ -17,6 +17,11 @@ var WorldRenderer = function(world)
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
   this.container.position.y = this.halfScreen.y;
+  this.debugGridI = 0;
+  this.debugGridJ = 0;
+  this.debugSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.debugTileSelection));
+  
+  this.container.addChild(this.debugSelection);
   
   for (var i = 0; i < this.maxTileSpritePool; i++)
   {
@@ -108,6 +113,8 @@ WorldRenderer.prototype.update = function()
   this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
   this.container.scale.x = this.camera.scale.x;
   this.container.scale.y = this.camera.scale.y;
+  this.debugSelection.position.x = this.debugGridI * tileSize;
+  this.debugSelection.position.y = this.debugGridJ * tileSize;
 };
 
 // Render
@@ -124,13 +131,15 @@ WorldRenderer.prototype.render = function()
   var startChunkJ = focusChunkJ - chunkBufferY;
   var endChunkJ = focusChunkJ + chunkBufferY;
   
+  // Clear offscreen chunks
   this.clearChunksOutside(startChunkI, endChunkI, startChunkJ, endChunkJ);
   
+  // Draw chunks
   for(var chunkI = startChunkI; chunkI <= endChunkI; chunkI++)
   {
     for(var chunkJ = startChunkJ; chunkJ <= endChunkJ; chunkJ++)
     {
-      this.container.addChild(this.getChunkSprite(chunkI, chunkJ));
+      this.container.addChildAt(this.getChunkSprite(chunkI, chunkJ), 0);
     }
   }
 };

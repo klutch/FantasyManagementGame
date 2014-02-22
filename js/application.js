@@ -59,6 +59,11 @@ function finishInitializing()
   {
     worldRenderer.zoomCamera(e.deltaY * 0.1);
   });
+  $('canvas').mousemove(function(e)
+  {
+    worldRenderer.debugGridI = world.getGridI(e.pageX + worldRenderer.camera.position.x - worldRenderer.halfScreen.x);
+    worldRenderer.debugGridJ = world.getGridJ(e.pageY + worldRenderer.camera.position.y - worldRenderer.halfScreen.y);
+  });
   
   // FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
