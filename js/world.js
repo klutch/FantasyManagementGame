@@ -7,9 +7,7 @@ var TileType = Object.freeze({
   Snow: 4,
   Forest: 5,
   Swamp: 6,
-  Water: 7,
-  PlayerCastle: 8,
-  TownDwelling: 9
+  Water: 7
 });
 
 // Tile class
@@ -21,17 +19,41 @@ var Tile = function(type, walkable, movementCost, elevation)
   this.elevation = elevation;
 };
 
+// Feature type enum
+var FeatureType = Object.freeze({
+  PlayerCastle: 0,
+  Dwelling: 1
+});
+
+// Dwelling type enum
+var DwellingType = Object.freeze({
+  Town: 0
+});
+
+// Feature class
+var Feature = function(id, type, tileI, tileJ, width, height)
+{
+  this.id = id;
+  this.type = type;
+  this.tileI = tileI;
+  this.tileJ = tileJ;
+  this.width = width;
+  this.height = height;
+};
+
 // World class
 var World = function(seed)
 {
   this.seed = seed;
   this.tiles = [];
   this.chunks = [];
-  this.terrainGenerator = new TerrainGenerator(seed);
+  this.features = [];
+  this.terrainGenerator = new TerrainGenerator(this, seed);
+  this.featureGenerator = new FeatureGenerator(this, seed);
   this.playerCastleX = 0;
   this.playerCastleY = 0;
   
-  this.generatePlayerCastle();
+  this.featureGenerator.generatePlayerCastle();
 };
 
 World.prototype.getChunkI = function(i)
@@ -80,77 +102,32 @@ World.prototype.generateChunk = function(chunkI, chunkJ)
     {
       var realI = chunkSize * chunkI + i;
       var realJ = chunkSize * chunkJ + j;
+      var feature;
       
       if (this.tiles[realI] == null)
       {
         this.tiles[realI] = [];
       }
       
-      this.tiles[realI][realJ] = this.generateTile(realI, realJ);
+      // Temporary check
+      if (this.tiles[realI][realJ] != null)
+      {
+        alert('WARNING: generating a tile, when one already exists! ('+ realI + ", " + realJ +")");
+      }
+      
+      // Generate tile
+      this.tiles[realI][realJ] = this.terrainGenerator.getTile(realI, realJ);
     }
   }
   
   return true;
 };
 
-World.prototype.generateTile = function(i, j)
+World.prototype.createFeature = function(featureType, x, y, width, height)
 {
-  // Temporary check
-  if (this.tiles[i][j] != null)
-  {
-    alert('WARNING: generating a tile, when one already exists! ('+i + ", " +j+")");
-  }
+  var id = this.features.length;
+  var feature = new Feature(id, featureType, x, y, width, height);
   
-  return this.terrainGenerator.getTile(i, j);
-};
-
-World.prototype.generatePlayerCastle = function()
-{
-  var found = false;
-  
-  while (!found)
-  {
-    var randRadius = getRandomInt(1800, 2200);
-    var randAngle = Math.random() * Math.PI * 2;
-    var randX = Math.floor(Math.cos(randAngle) * randRadius);
-    var randY = Math.floor(Math.sin(randAngle) * randRadius);
-    var giveUp = false;
-    
-    for (var i = randX; i < randX + 8; i++)
-    {
-      for (var j = randY; j < randY + 8; j++)
-      {
-        var tile = this.getTile(i, j);
-        
-        if (tile.type != TileType.Plains)
-        {
-          giveUp = true;
-          break;
-        }
-      }
-      if (giveUp)
-      {
-        break;
-      }
-    }
-    
-    if (!giveUp)
-    {
-      found = true;
-      this.playerCastleX = randX;
-      this.playerCastleY = randY;
-    }
-  }
-  
-  for (var i = 0; i < 8; i++)
-  {
-    for (var j = 0; j < 8; j++)
-    {
-      var tile = this.getTile(this.playerCastleX + i, this.playerCastleY + j);
-      
-      tile.type = TileType.PlayerCastle;
-      tile.castleTextureI = i;
-      tile.castleTextureJ = j;
-    }
-  }
+  this.features[id] = feature;
+  return feature;
 };

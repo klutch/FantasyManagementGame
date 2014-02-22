@@ -11,8 +11,8 @@ var WorldRenderer = function(world)
   this.activeChunkPoolIndices = []; // array of indices used (for chunkSprite and chunkTexture pools)
   this.spriteCounter = 0;
   this.camera = new PIXI.DisplayObjectContainer();
-  this.camera.position.x = (this.world.playerCastleX + 4) * tileSize;
-  this.camera.position.y = (this.world.playerCastleY + 4) * tileSize;
+  this.camera.position.x = (this.world.playerCastleX + 4) * 16;
+  this.camera.position.y = (this.world.playerCastleY + 4) * 16;
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
@@ -67,11 +67,14 @@ WorldRenderer.prototype.getTileTexture = function(tile)
   {
     return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.water[Math.floor(Math.random()*assetPathManager.textureAssetPaths.water.length)]);
   }
-  else if (type == TileType.PlayerCastle)
+};
+
+// Get texture given a feature
+WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ)
+{
+  if (feature.type == FeatureType.PlayerCastle)
   {
-    var i = tile.castleTextureI;
-    var j = tile.castleTextureJ;
-    var num = j * 8 + i;
+    var num = textureJ * feature.width + textureI;
     
     return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.playerCastle[num]);
   }
@@ -213,6 +216,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tileSprite = this.tileSpritePool[numActiveTileSprites];
       var c;
       
+      // Render terrain tile
       tileSprite.setTexture(this.getTileTexture(tile));
       tileSprite.position.x = i * tileSize;
       tileSprite.position.y = j * tileSize;
@@ -229,6 +233,15 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       }
       
       renderTexture.render(tileSprite, tileSprite.position);
+      
+      // Render feature tile
+      if (tile.featureId != null)
+      {
+        var feature = this.world.features[tile.featureId];
+        
+        tileSprite.setTexture(this.getFeatureTexture(feature, tile.featureTextureI, tile.featureTextureJ));
+        renderTexture.render(tileSprite, tileSprite.position);
+      }
       
       numActiveTileSprites++;
     }
