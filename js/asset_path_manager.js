@@ -31,7 +31,7 @@ var AssetPathManager = function()
     "img/water_0.png"
   ];
   this.textureAssetPaths.playerCastle = [];
-  for (var i = 1; i <= 64; i++)
+  for (var i = 0; i < 64; i++)
   {
     this.textureAssetPaths.playerCastle.push("img/player_castle_" + i + ".png");
   }
