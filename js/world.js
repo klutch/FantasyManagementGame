@@ -46,7 +46,6 @@ var World = function(seed)
 {
   this.seed = seed;
   this.tiles = [];
-  this.chunks = [];
   this.features = [];
   this.terrainGenerator = new TerrainGenerator(this, seed);
   this.featureGenerator = new FeatureGenerator(this, seed);
@@ -78,49 +77,17 @@ World.prototype.getGridJ = function(y)
 
 World.prototype.getTile = function(i, j)
 {
-  var chunkI = this.getChunkI(i);
-  var chunkJ = this.getChunkJ(j);
-  
-  // Check for chunk existance
-  if (this.chunks[chunkI] == null)
+  if (this.tiles[i] == null)
   {
-    this.chunks[chunkI] = [];
+    this.tiles[i] = [];
   }
-  if (this.chunks[chunkI][chunkJ] == null)
+  if (this.tiles[i][j] == null)
   {
-    this.chunks[chunkI][chunkJ] = this.generateChunk(chunkI, chunkJ);
+    this.tiles[i][j] = this.terrainGenerator.getTile(i, j);
+    this.featureGenerator.tryGenerateAt(i, j);
   }
   
   return this.tiles[i][j];
-};
-
-World.prototype.generateChunk = function(chunkI, chunkJ)
-{
-  for (var i = 0; i < chunkSize; i++)
-  {
-    for (var j = 0; j < chunkSize; j++)
-    {
-      var realI = chunkSize * chunkI + i;
-      var realJ = chunkSize * chunkJ + j;
-      var feature;
-      
-      if (this.tiles[realI] == null)
-      {
-        this.tiles[realI] = [];
-      }
-      
-      // Temporary check
-      if (this.tiles[realI][realJ] != null)
-      {
-        alert('WARNING: generating a tile, when one already exists! ('+ realI + ", " + realJ +")");
-      }
-      
-      // Generate tile
-      this.tiles[realI][realJ] = this.terrainGenerator.getTile(realI, realJ);
-    }
-  }
-  
-  return true;
 };
 
 World.prototype.createFeature = function(featureType, x, y, width, height)
@@ -129,5 +96,23 @@ World.prototype.createFeature = function(featureType, x, y, width, height)
   var feature = new Feature(id, featureType, x, y, width, height);
   
   this.features[id] = feature;
+  
+  for (var i = 0; i < width; i++)
+  {
+    for (var j = 0; j < height; j++)
+    {
+      var tile = this.getTile(x + i, y + j);
+      
+      if (tile == null)
+      {
+        alert('what the fuck: ' + (x+i) + ", " + (y + j));
+      }
+      
+      tile.featureId = id;
+      tile.featureTextureI = i;
+      tile.featureTextureJ = j;
+    }
+  }
+  
   return feature;
 };

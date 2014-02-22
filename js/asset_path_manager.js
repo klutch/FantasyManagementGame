@@ -35,6 +35,12 @@ var AssetPathManager = function()
   {
     this.textureAssetPaths.playerCastle.push("img/player_castle_" + i + ".png");
   }
+  this.textureAssetPaths.town = [
+    "img/town_0.png",
+    "img/town_1.png",
+    "img/town_2.png",
+    "img/town_3.png"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

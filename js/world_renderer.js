@@ -78,6 +78,15 @@ WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ
     
     return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.playerCastle[num]);
   }
+  else if (feature.type == FeatureType.Dwelling)
+  {
+    if (feature.dwellingType == DwellingType.Town)
+    {
+      var num = textureJ * feature.width + textureI;
+      
+      return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.town[num]);
+    }
+  }
 };
 
 // Get number of chunks to show on the x axis
@@ -114,8 +123,6 @@ WorldRenderer.prototype.render = function()
   var endChunkI = focusChunkI + chunkBufferX;
   var startChunkJ = focusChunkJ - chunkBufferY;
   var endChunkJ = focusChunkJ + chunkBufferY;
-  
-  //console.log("chunkBufferX: "+ chunkBufferX + ", chunkBufferY: " + chunkBufferY);
   
   this.clearChunksOutside(startChunkI, endChunkI, startChunkJ, endChunkJ);
   
