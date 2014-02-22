@@ -103,11 +103,6 @@ World.prototype.createFeature = function(featureType, x, y, width, height)
     {
       var tile = this.getTile(x + i, y + j);
       
-      if (tile == null)
-      {
-        alert('what the fuck: ' + (x+i) + ", " + (y + j));
-      }
-      
       tile.featureId = id;
       tile.featureTextureI = i;
       tile.featureTextureJ = j;
