@@ -58,6 +58,9 @@ var AssetPathManager = function()
   {
     this.textureAssetPaths.tavern.push("img/tavern_" + i + ".png");
   }
+  this.textureAssetPaths.road = [
+    "img/road_0.png"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

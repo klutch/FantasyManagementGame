@@ -7,7 +7,8 @@ var TileType = Object.freeze({
   Snow: 4,
   Forest: 5,
   Swamp: 6,
-  Water: 7
+  Water: 7,
+  Road: 8
 });
 
 // Tile class

@@ -38,7 +38,6 @@ var WorldRenderer = function(world)
 WorldRenderer.prototype.getTileTexture = function(tile)
 {
   var type = tile.type;
-  var assetPath;
   
   if (type == TileType.Plains)
   {
@@ -71,6 +70,10 @@ WorldRenderer.prototype.getTileTexture = function(tile)
   else if (type == TileType.Water)
   {
     return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.water[Math.floor(Math.random()*assetPathManager.textureAssetPaths.water.length)]);
+  }
+  else if (type == TileType.Road)
+  {
+    return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.road[0]);
   }
 };
 

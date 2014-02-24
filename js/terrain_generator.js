@@ -44,7 +44,14 @@ TerrainGenerator.prototype.getTile = function(x, y)
 {
   var moisture;
   var elevation;
+  var road;
   var tileType;
+  var movementCost = 10;
+  var walkable = true;
+  
+  // Get road value
+  // This is garbage... garbage garbage garbage
+  //road = this.noise.fbm(x, y, this.noise.cellEdge, {iterations: 2, frequency: 1, gain: 0.8, lacunarity: 2, modifyRange: false, ignoreAmplitude: true});
   
   // Calculate moisture
   moisture = this.noise.fbm(x, y, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
@@ -54,10 +61,18 @@ TerrainGenerator.prototype.getTile = function(x, y)
   elevation = this.noise.fbm(x, y, this.noise.cell, {iterations: 4, frequency: 1.4, gain: 1, lacunarity: 1.2});
   elevation = Math.max(Math.min(elevation, 1), 0);
   
-  // Get tile type
-  tileType = this.getTileType(moisture, elevation);
+  // Determine tile type and other properties
+  /*if (road > 0)
+  {
+    tileType = TileType.Road;
+    movementCost = 5;
+  }
+  else
+  {*/
+    tileType = this.getTileType(moisture, elevation);
+  //}
   
-  return new Tile(tileType, true, 10, elevation);
+  return new Tile(tileType, walkable, movementCost, elevation);
 };
 
 TerrainGenerator.prototype.getTileType = function(moisture, elevation)
