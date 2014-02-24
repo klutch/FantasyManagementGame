@@ -27,7 +27,8 @@ var FeatureType = Object.freeze({
 
 // Dwelling type enum
 var DwellingType = Object.freeze({
-  Town: 0
+  Town: 0,
+  Grove: 1
 });
 
 // Feature class

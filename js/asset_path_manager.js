@@ -42,6 +42,12 @@ var AssetPathManager = function()
     "img/town_2.png",
     "img/town_3.png"
   ];
+  this.textureAssetPaths.grove = [
+    "img/grove_0.png",
+    "img/grove_1.png",
+    "img/grove_2.png",
+    "img/grove_3.png"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

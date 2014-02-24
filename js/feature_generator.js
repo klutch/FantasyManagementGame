@@ -81,6 +81,16 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
         feature.dwellingType = DwellingType.Town;
       }
     }
+    if (tile.type == TileType.Forest)
+    {
+      if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
+      {
+        // Create grove
+        var feature = this.world.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
+        
+        feature.dwellingType = DwellingType.Grove;
+      }
+    }
   }
 }
 

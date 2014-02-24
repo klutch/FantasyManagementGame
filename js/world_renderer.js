@@ -77,19 +77,21 @@ WorldRenderer.prototype.getTileTexture = function(tile)
 // Get texture given a feature
 WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ)
 {
+  var num = textureJ * feature.width + textureI;
+  
   if (feature.type == FeatureType.PlayerCastle)
   {
-    var num = textureJ * feature.width + textureI;
-    
     return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.playerCastle[num]);
   }
   else if (feature.type == FeatureType.Dwelling)
   {
     if (feature.dwellingType == DwellingType.Town)
     {
-      var num = textureJ * feature.width + textureI;
-      
       return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.town[num]);
+    }
+    else if (feature.dwellingType == DwellingType.Grove)
+    {
+      return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.grove[num]);
     }
   }
 };
@@ -134,12 +136,20 @@ WorldRenderer.prototype.render = function()
   // Clear offscreen chunks
   this.clearChunksOutside(startChunkI, endChunkI, startChunkJ, endChunkJ);
   
-  // Draw chunks
+  // Ensure necessary chunks exist
   for(var chunkI = startChunkI; chunkI <= endChunkI; chunkI++)
   {
     for(var chunkJ = startChunkJ; chunkJ <= endChunkJ; chunkJ++)
     {
-      this.container.addChildAt(this.getChunkSprite(chunkI, chunkJ), 0);
+      if (this.chunkSprites[chunkI] == null)
+      {
+        this.chunkSprites[chunkI] = {};
+      }
+      if (this.chunkSprites[chunkI][chunkJ] == null)
+      {
+        this.chunkSprites[chunkI][chunkJ] = this.generateChunkSprite(chunkI, chunkJ);
+        this.container.addChildAt(this.chunkSprites[chunkI][chunkJ], 0);
+      }
     }
   }
 };
@@ -172,21 +182,6 @@ WorldRenderer.prototype.clearChunksOutside = function(startChunkI, endChunkI, st
       }
     }
   }
-};
-
-// Get a chunk sprite (either cached, or generate new one)
-WorldRenderer.prototype.getChunkSprite = function(chunkI, chunkJ)
-{
-  if (this.chunkSprites[chunkI] == null)
-  {
-    this.chunkSprites[chunkI] = {};
-  }
-  if (this.chunkSprites[chunkI][chunkJ] == null)
-  {
-    this.chunkSprites[chunkI][chunkJ] = this.generateChunkSprite(chunkI, chunkJ);
-  }
-  
-  return this.chunkSprites[chunkI][chunkJ];
 };
 
 // Get an unused index from the chunk pool
