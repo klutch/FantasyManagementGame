@@ -94,6 +94,13 @@ WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ
       return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.grove[num]);
     }
   }
+  else if (feature.type == FeatureType.Dungeon)
+  {
+    if (feature.dungeonType == DungeonType.Cave)
+    {
+      return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.cave[num]);
+    }
+  }
 };
 
 // Get number of chunks to show on the x axis

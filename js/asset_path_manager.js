@@ -48,6 +48,11 @@ var AssetPathManager = function()
     "img/grove_2.png",
     "img/grove_3.png"
   ];
+  this.textureAssetPaths.cave = [];
+  for (var i = 0; i < 9; i++)
+  {
+    this.textureAssetPaths.cave.push("img/cave_dungeon_" + i + ".png");
+  }
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

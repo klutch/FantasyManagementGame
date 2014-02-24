@@ -22,13 +22,19 @@ var Tile = function(type, walkable, movementCost, elevation)
 // Feature type enum
 var FeatureType = Object.freeze({
   PlayerCastle: 0,
-  Dwelling: 1
+  Dwelling: 1,
+  Dungeon: 2
 });
 
 // Dwelling type enum
 var DwellingType = Object.freeze({
   Town: 0,
   Grove: 1
+});
+
+// Dungeon type enum
+var DungeonType = Object.freeze({
+  Cave: 0
 });
 
 // Feature class

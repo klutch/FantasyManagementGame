@@ -5,6 +5,8 @@ var FeatureGenerator = function(world, seed)
   this.seed = seed;
   this.dwellingGridSize = 512;
   this.dwellingGrid = [];
+  this.dungeonGridSize = 512;
+  this.dungeonGrid = [];
   this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
   
   // Create dwelling grid
@@ -15,6 +17,17 @@ var FeatureGenerator = function(world, seed)
     for (var j = 0; j < this.dwellingGridSize; j++)
     {
       this.dwellingGrid[i][j] = (this.rng() > 0.998 ? 1 : 0);
+    }
+  }
+  
+  // Create dungeon grid
+  for (var i = 0; i < this.dungeonGridSize; i++)
+  {
+    this.dungeonGrid[i] = [];
+    
+    for (var j = 0; j < this.dungeonGridSize; j++)
+    {
+      this.dungeonGrid[i][j] = (this.rng() > 0.999 ? 1 : 0);
     }
   }
 };
@@ -92,12 +105,31 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       }
     }
   }
+  else if (this.getDungeonValue(tileI, tileJ) == 1)
+  {
+    if (tile.type == TileType.Plains || tile.type == TileType.Forest)
+    {
+      if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 3))
+      {
+        // Create cave dungeon
+        var feature = this.world.createFeature(FeatureType.Dungeon, tileI, tileJ, 3, 3);
+        
+        feature.dungeonType = DungeonType.Cave;
+      }
+    }
+  }
 }
 
 // Get value from dwelling grid
 FeatureGenerator.prototype.getDwellingValue = function(x, y)
 {
   return this.dwellingGrid[x & (this.dwellingGridSize - 1)][y & (this.dwellingGridSize - 1)];
+};
+
+// Get value from dungeon grid
+FeatureGenerator.prototype.getDungeonValue = function(x, y)
+{
+  return this.dungeonGrid[x & (this.dungeonGridSize - 1)][y & (this.dungeonGridSize - 1)];
 };
 
 // Check terrain type given a location and a grid size
