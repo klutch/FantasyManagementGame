@@ -17,7 +17,7 @@ var FeatureGenerator = function(world, seed)
     this.dwellingGrid[i] = [];
     for (var j = 0; j < this.dwellingGridSize; j++)
     {
-      this.dwellingGrid[i][j] = (this.rng() > 0.999 ? 1 : 0);
+      this.dwellingGrid[i][j] = (this.rng() > 0.9995 ? 1 : 0);
     }
   }
   
@@ -27,7 +27,7 @@ var FeatureGenerator = function(world, seed)
     this.dungeonGrid[i] = [];
     for (var j = 0; j < this.dungeonGridSize; j++)
     {
-      this.dungeonGrid[i][j] = (this.rng() > 0.998 ? 1 : 0);
+      this.dungeonGrid[i][j] = (this.rng() > 0.9995 ? 1 : 0);
     }
   }
   
@@ -37,7 +37,7 @@ var FeatureGenerator = function(world, seed)
     this.gatheringGrid[i] = [];
     for (var j = 0; j < this.gatheringGridSize; j++)
     {
-      this.gatheringGrid[i][j] = (this.rng() > 0.998 ? 1 : 0);
+      this.gatheringGrid[i][j] = (this.rng() > 0.9995 ? 1 : 0);
     }
   }
 };
