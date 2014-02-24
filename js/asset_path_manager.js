@@ -53,6 +53,11 @@ var AssetPathManager = function()
   {
     this.textureAssetPaths.cave.push("img/cave_dungeon_" + i + ".png");
   }
+  this.textureAssetPaths.tavern = [];
+  for (var i = 0; i < 6; i++)
+  {
+    this.textureAssetPaths.tavern.push("img/tavern_" + i + ".png");
+  }
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

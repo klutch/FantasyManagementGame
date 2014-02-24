@@ -7,16 +7,17 @@ var FeatureGenerator = function(world, seed)
   this.dwellingGrid = [];
   this.dungeonGridSize = 512;
   this.dungeonGrid = [];
+  this.gatheringGridSize = 512;
+  this.gatheringGrid = [];
   this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
   
   // Create dwelling grid
   for (var i = 0; i < this.dwellingGridSize; i++)
   {
     this.dwellingGrid[i] = [];
-    
     for (var j = 0; j < this.dwellingGridSize; j++)
     {
-      this.dwellingGrid[i][j] = (this.rng() > 0.998 ? 1 : 0);
+      this.dwellingGrid[i][j] = (this.rng() > 0.999 ? 1 : 0);
     }
   }
   
@@ -24,10 +25,19 @@ var FeatureGenerator = function(world, seed)
   for (var i = 0; i < this.dungeonGridSize; i++)
   {
     this.dungeonGrid[i] = [];
-    
     for (var j = 0; j < this.dungeonGridSize; j++)
     {
-      this.dungeonGrid[i][j] = (this.rng() > 0.999 ? 1 : 0);
+      this.dungeonGrid[i][j] = (this.rng() > 0.998 ? 1 : 0);
+    }
+  }
+  
+  // Create gathering grid
+  for (var i = 0; i < this.gatheringGridSize; i++)
+  {
+    this.gatheringGrid[i] = [];
+    for (var j = 0; j < this.gatheringGridSize; j++)
+    {
+      this.gatheringGrid[i][j] = (this.rng() > 0.998 ? 1 : 0);
     }
   }
 };
@@ -105,6 +115,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       }
     }
   }
+  // Try dungeons
   else if (this.getDungeonValue(tileI, tileJ) == 1)
   {
     if (tile.type == TileType.Plains || tile.type == TileType.Forest)
@@ -115,6 +126,20 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
         var feature = this.world.createFeature(FeatureType.Dungeon, tileI, tileJ, 3, 3);
         
         feature.dungeonType = DungeonType.Cave;
+      }
+    }
+  }
+  // Try gatherings
+  else if (this.getGatheringValue(tileI, tileJ) == 1)
+  {
+    if (tile.type == TileType.Plains)
+    {
+      if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 2))
+      {
+        // Create tavern
+        var feature = this.world.createFeature(FeatureType.Gathering, tileI, tileJ, 3, 2);
+        
+        feature.gatheringType = GatheringType.Tavern;
       }
     }
   }
@@ -130,6 +155,12 @@ FeatureGenerator.prototype.getDwellingValue = function(x, y)
 FeatureGenerator.prototype.getDungeonValue = function(x, y)
 {
   return this.dungeonGrid[x & (this.dungeonGridSize - 1)][y & (this.dungeonGridSize - 1)];
+};
+
+// Get value from gathering grid
+FeatureGenerator.prototype.getGatheringValue = function(x, y)
+{
+  return this.gatheringGrid[x & (this.gatheringGridSize - 1)][y & (this.gatheringGridSize - 1)];
 };
 
 // Check terrain type given a location and a grid size

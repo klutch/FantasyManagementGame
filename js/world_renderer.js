@@ -101,6 +101,13 @@ WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ
       return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.cave[num]);
     }
   }
+  else if (feature.type == FeatureType.Gathering)
+  {
+    if (feature.gatheringType == GatheringType.Tavern)
+    {
+      return PIXI.Texture.fromImage(assetPathManager.textureAssetPaths.tavern[num]);
+    }
+  }
 };
 
 // Get number of chunks to show on the x axis
