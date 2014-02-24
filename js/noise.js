@@ -125,6 +125,70 @@ Noise.prototype.cell = function(x, y)
   return Math.max(Math.min(result, 1), 0);
 };
 
+// Solid cell noise algorithm
+Noise.prototype.solidCell = function(x, y)
+{
+  var result;
+  
+  // Scale down position
+  var noiseX = x / this.cellGridWidth;
+  var noiseY = y / this.cellGridHeight;
+  
+  // Get grid cell
+  var gridI = Math.floor(noiseX);
+  var gridJ = Math.floor(noiseY);
+  
+  // Get position inside cell
+  var relX = noiseX - gridI;
+  var relY = noiseY - gridJ;
+  
+  // Find closest point
+  var closest = 9999999;
+  var value;
+  for (var i = -2; i < 3; i++)
+  {
+    for (var j = -2; j < 3; j++)
+    {
+      var cellGridI = (gridI + i) & (this.cellGridWidth - 1);
+      var cellGridJ = (gridJ + j) & (this.cellGridHeight - 1);
+      var featurePointX = this.cellGradients[cellGridI][cellGridJ][0] + i;
+      var featurePointY = this.cellGradients[cellGridI][cellGridJ][1] + j;
+      var diff;
+      var distance;
+      
+      diff = [featurePointX - relX, featurePointY - relY];
+      distance = this.dot(diff, diff);
+      
+      if (distance < closest)
+      {
+        closest = distance;
+        value = this.dot(this.cellGradients[cellGridI][cellGridJ], this.cellGradients[cellGridI][cellGridJ]);
+      }
+    }
+  }
+  
+  // Take the square root, and return between [0, 1]
+  result = Math.sqrt(value);
+  return Math.max(Math.min(result, 1), 0);
+};
+
+// Cell edge noise
+Noise.prototype.cellEdge = function(x, y)
+{
+  var v1 = this.solidCell(x, y);
+  var v2 = this.solidCell(x + 1, y + 1);
+  var v3 = this.solidCell(x - 1, y - 1);
+  var v4 = this.solidCell(x + 1, y - 1);
+  var v5 = this.solidCell(x - 1, y + 1);
+  var r1 = (v1 - v2) > 0 ? 1 : 0;
+  var r2 = (v1 - v3) > 0 ? 1 : 0;
+  var r3 = (v1 - v4) > 0 ? 1 : 0;
+  var r4 = (v1 - v5) > 0 ? 1 : 0;
+  var result = Math.max(Math.min(r1 + r2 + r3 + r4, 1), 0);
+  
+  return result;
+};
+
 // Fractional brownian motion
 Noise.prototype.fbm = function(x, y, noiseMethod, options)
 {
@@ -137,16 +201,33 @@ Noise.prototype.fbm = function(x, y, noiseMethod, options)
   options["frequency"] = options["frequency"] || 1.4;
   options["gain"] = options["gain"] || 0.6;
   options["lacunarity"]  = options["lacunarity"] || 1.8;
+  options["modifyRange"] = ("modifyRange" in options) ? options["modifyRange"] : true;
+  options["ignoreAmplitude"] = ("ignoreAmplitude" in options) ? options["ignoreAmplitude"] : false;
   amplitude = options["gain"];
   
   for (var i = 0; i < options["iterations"]; i++)
   {
-    total += (noiseMethod.call(this, x * options["frequency"], y * options["frequency"]) * 2 - 1) * amplitude;
+    var v = noiseMethod.call(this, x * options["frequency"], y * options["frequency"]);
+    
+    if (options["modifyRange"])
+    {
+      v = v * 2 - 1;
+    }
+    
+    if (!options["ignoreAmplitude"])
+    {
+      v *= amplitude;
+    }
+    
+    total += v;
     options["frequency"] *= options["lacunarity"];
     amplitude *= options["gain"];
   }
   
-  total = (total + 1) * 0.5;
+  if (options["modifyRange"])
+  {
+    total = (total + 1) * 0.5;
+  }
   
   return total;
 };
