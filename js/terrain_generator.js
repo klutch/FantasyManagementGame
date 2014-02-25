@@ -49,39 +49,7 @@ TerrainGenerator.prototype.getElevation = function(x, y)
 
 TerrainGenerator.prototype.getRoad = function(x, y)
 {
-  var ugh = this;
-  var roadMethod = function(elevationMethod, rX, rY)
-  {
-    var v = elevationMethod.call(ugh, rX, rY);
-    return (v > 0.3 && v < 0.4) ? 1 : 0;
-  };
-  var r = roadMethod(this.getElevation, x, y);
-  
-  if (r == 1)
-  {
-    // Check to see if all surrounding tiles are filled
-    var f = roadMethod(this.getElevation, x - 1, y - 1);
-    
-    f += roadMethod(this.getElevation, x, y - 1);
-    f += roadMethod(this.getElevation, x + 1, y - 1);
-    f += roadMethod(this.getElevation, x - 1, y);
-    f += roadMethod(this.getElevation, x + 1, y);
-    f += roadMethod(this.getElevation, x - 1, y + 1);
-    f += roadMethod(this.getElevation, x, y + 1);
-    f += roadMethod(this.getElevation, x + 1, y + 1);
-    
-    if (f == 8)
-    {
-      return false;
-    }
-    else
-    {
-      return true;
-    }
-  }
-  
   return false;
-  //return r1 && !(r2 || r3);   // This is going to make no sense in the morning... I'm trying to limit roads to 1 tile width
 };
 
 TerrainGenerator.prototype.getTile = function(x, y)
