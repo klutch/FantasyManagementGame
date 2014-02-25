@@ -189,6 +189,23 @@ Noise.prototype.cellEdge = function(x, y)
   return result;
 };
 
+// Ridged perlin noise
+Noise.prototype.ridgedPerlin = function(x, y)
+{
+  var signal = this.perlin(x, y) * 2 - 1;
+  var offset = 1;
+  
+  if (signal < 0)
+  {
+    signal = -signal;
+  }
+  
+  signal = offset - signal;
+  signal *= signal * signal;
+  
+  return Math.max(Math.min(signal, 1), 0);
+};
+
 // Fractional brownian motion
 Noise.prototype.fbm = function(x, y, noiseMethod, options)
 {
