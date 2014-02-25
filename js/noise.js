@@ -192,7 +192,7 @@ Noise.prototype.cellEdge = function(x, y)
 // Ridged perlin noise
 Noise.prototype.ridgedPerlin = function(x, y)
 {
-  var signal = this.perlin(x, y) * 2 - 1;
+  var signal = Math.min(this.perlin(x, y), 0.7) * 2 - 1;
   var offset = 1;
   
   if (signal < 0)
@@ -201,7 +201,7 @@ Noise.prototype.ridgedPerlin = function(x, y)
   }
   
   signal = offset - signal;
-  signal *= signal * signal;
+  signal *= signal * signal * signal * signal;
   
   return Math.max(Math.min(signal, 1), 0);
 };

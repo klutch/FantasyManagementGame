@@ -49,6 +49,36 @@ TerrainGenerator.prototype.getElevation = function(x, y)
 
 TerrainGenerator.prototype.getRoad = function(x, y)
 {
+  var local = this.noise.ridgedPerlin(x, y) > 0.93 ? 1 : 0;
+  var neighbors = 0;
+  
+  if (local > 0)
+  {
+    for (var i = -1; i < 2; i++)
+    {
+      for (var j = -1; j < 2; j++)
+      {
+        if (i == 0 && j == 0)
+        {
+          continue;
+        }
+        else
+        {
+          neighbors += this.noise.ridgedPerlin(x + i, y + j) > 0.93 ? 1 : 0;
+        }
+      }
+    }
+
+    if (neighbors > 7)
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+  }
+  
   return false;
 };
 
@@ -59,7 +89,6 @@ TerrainGenerator.prototype.getTile = function(x, y)
   var tileType;
   var movementCost = 10;
   var walkable = true;
-  var isRoad = false;
   
   // Calculate moisture
   moisture = this.noise.fbm(x, y, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
@@ -68,15 +97,15 @@ TerrainGenerator.prototype.getTile = function(x, y)
   // Calculate elevation
   elevation = this.getElevation(x, y);
   
+  // Determine tile type
+  tileType = this.getTileType(moisture, elevation);
+  
   // Calculate roads
-  if (this.getRoad(x, y))
+  if (!(tileType == TileType.Water || tileType == TileType.Mountains) && this.getRoad(x, y))
   {
     movementCost = 5;
-    isRoad = true;
+    tileType = TileType.Road;
   }
-  
-  // Determine tile type
-  tileType = isRoad ? TileType.Road : this.getTileType(moisture, elevation);
   
   return new Tile(tileType, walkable, movementCost, elevation);
 };
