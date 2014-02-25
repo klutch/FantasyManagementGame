@@ -40,37 +40,55 @@ var TerrainGenerator = function(world, seed)
   ];
 };
 
+TerrainGenerator.prototype.getElevation = function(x, y)
+{
+  var result = this.noise.fbm(x, y, this.noise.cell, {iterations: 4, frequency: 1.4, gain: 1, lacunarity: 1.2});
+    
+  return Math.max(Math.min(result, 1), 0);
+};
+
+TerrainGenerator.prototype.getRoad = function(x, y)
+{
+  var ugh = this;
+  var roadMethod = function(elevationMethod, rX, rY)
+  {
+    var v = elevationMethod.call(ugh, rX, rY);
+    return v > 0.3 && v < 0.35;
+  };
+  
+  var r1 = roadMethod(this.getElevation, x, y);
+  var r2 = roadMethod(this.getElevation, x - 2, y - 2);
+  var r3 = roadMethod(this.getElevation, x + 2, y + 2);
+  
+  return r1;
+  //return r1 && !(r2 || r3);   // This is going to make no sense in the morning... I'm trying to limit roads to 1 tile width
+};
+
 TerrainGenerator.prototype.getTile = function(x, y)
 {
   var moisture;
   var elevation;
-  var road;
   var tileType;
   var movementCost = 10;
   var walkable = true;
-  
-  // Get road value
-  // This is garbage... garbage garbage garbage
-  //road = this.noise.fbm(x, y, this.noise.cellEdge, {iterations: 2, frequency: 1, gain: 0.8, lacunarity: 2, modifyRange: false, ignoreAmplitude: true});
+  var isRoad = false;
   
   // Calculate moisture
   moisture = this.noise.fbm(x, y, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
   moisture = Math.max(Math.min(moisture, 1), 0);
   
   // Calculate elevation
-  elevation = this.noise.fbm(x, y, this.noise.cell, {iterations: 4, frequency: 1.4, gain: 1, lacunarity: 1.2});
-  elevation = Math.max(Math.min(elevation, 1), 0);
+  elevation = this.getElevation(x, y);
   
-  // Determine tile type and other properties
-  /*if (road > 0)
+  // Calculate roads
+  if (this.getRoad(x, y))
   {
-    tileType = TileType.Road;
     movementCost = 5;
+    isRoad = true;
   }
-  else
-  {*/
-    tileType = this.getTileType(moisture, elevation);
-  //}
+  
+  // Determine tile type
+  tileType = isRoad ? TileType.Road : this.getTileType(moisture, elevation);
   
   return new Tile(tileType, walkable, movementCost, elevation);
 };
