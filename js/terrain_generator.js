@@ -49,7 +49,7 @@ TerrainGenerator.prototype.getElevation = function(x, y)
 
 TerrainGenerator.prototype.getRoad = function(x, y)
 {
-  var local = this.noise.ridgedPerlin(x, y) > 0.93 ? 1 : 0;
+  var local = this.noise.ridgedPerlin(x * 0.25, y * 0.25) > 0.98 ? 1 : 0;
   var neighbors = 0;
   
   if (local > 0)
@@ -64,19 +64,17 @@ TerrainGenerator.prototype.getRoad = function(x, y)
         }
         else
         {
-          neighbors += this.noise.ridgedPerlin(x + i, y + j) > 0.93 ? 1 : 0;
+          neighbors += this.noise.ridgedPerlin((x + i) * 0.25, (y + j) * 0.25) > 0.98 ? 1 : 0;
+          
+          if (neighbors > 7)
+          {
+            return false;
+          }
         }
       }
     }
-
-    if (neighbors > 7)
-    {
-      return false;
-    }
-    else
-    {
-      return true;
-    }
+    
+    return true;
   }
   
   return false;
