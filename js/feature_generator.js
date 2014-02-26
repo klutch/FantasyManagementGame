@@ -10,6 +10,14 @@ var FeatureGenerator = function(world, seed)
   this.gatheringGridSize = 512;
   this.gatheringGrid = [];
   this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
+  this.numCoinFlips = 64;
+  this.coinFlips = [];
+  
+  // Create coin flips
+  for (var i = 0; i < this.numCoinFlips; i++)
+  {
+    this.coinFlips[i] = this.rng() > 0.5;
+  }
   
   // Create dwelling grid
   for (var i = 0; i < this.dwellingGridSize; i++)
@@ -17,7 +25,7 @@ var FeatureGenerator = function(world, seed)
     this.dwellingGrid[i] = [];
     for (var j = 0; j < this.dwellingGridSize; j++)
     {
-      this.dwellingGrid[i][j] = (this.rng() > 0.9995 ? 1 : 0);
+      this.dwellingGrid[i][j] = (this.rng() > 0.995 ? 1 : 0);
     }
   }
   
@@ -37,7 +45,7 @@ var FeatureGenerator = function(world, seed)
     this.gatheringGrid[i] = [];
     for (var j = 0; j < this.gatheringGridSize; j++)
     {
-      this.gatheringGrid[i][j] = (this.rng() > 0.9995 ? 1 : 0);
+      this.gatheringGrid[i][j] = (this.rng() > 0.99 ? 1 : 0);
     }
   }
 };
@@ -98,10 +106,16 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
-        // Create town
-        var feature = this.world.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
-        
-        feature.dwellingType = DwellingType.Town;
+        if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
+        {
+          if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
+          {
+            // Create town
+            var feature = this.world.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
+
+            feature.dwellingType = DwellingType.Town;
+          }
+        }
       }
     }
     if (tile.type == TileType.Forest)
@@ -136,10 +150,16 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 2))
       {
-        // Create tavern
-        var feature = this.world.createFeature(FeatureType.Gathering, tileI, tileJ, 3, 2);
-        
-        feature.gatheringType = GatheringType.Tavern;
+        if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.9)
+        {
+          if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
+          {
+            // Create tavern
+            var feature = this.world.createFeature(FeatureType.Gathering, tileI, tileJ, 3, 2);
+
+            feature.gatheringType = GatheringType.Tavern;
+          }
+        }
       }
     }
   }
