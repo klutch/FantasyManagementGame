@@ -136,8 +136,8 @@ WorldRenderer.prototype.update = function()
   this.debugSelection.position.y = this.debugGridJ * tileSize;
 };
 
-// Render
-WorldRenderer.prototype.render = function()
+// Prerender chunks
+WorldRenderer.prototype.prerender = function()
 {
   var focusGridI = world.getGridI(this.camera.position.x);
   var focusGridJ = world.getGridJ(this.camera.position.y);
@@ -285,10 +285,10 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 };
 
 // Move the camera to a given position
-WorldRenderer.prototype.moveCamera = function(x, y)
+WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 {
-  this.camera.position.x = x;
-  this.camera.position.y = y;
+  this.camera.position.x += deltaX;
+  this.camera.position.y += deltaY;
 }
 
 // Zoom camera

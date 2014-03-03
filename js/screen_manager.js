@@ -3,12 +3,6 @@ var ScreenType = Object.freeze({
   WorldMap: 1
 });
 
-var Screen = function(screenType)
-{
-  this.type = screenType;
-  this.update = function(){};
-};
-
 var ScreenManager = function()
 {
   this.screens = {};
@@ -17,11 +11,23 @@ var ScreenManager = function()
 ScreenManager.prototype.addScreen = function(screen)
 {
   this.screens[screen.type] = screen;
+  
+  if (screen.onAddScreen != null)
+  {
+    screen.onAddScreen();
+  }
 };
 
 ScreenManager.prototype.removeScreen = function(screenType)
 {
+  var screen = this.screens[screenType];
+  
   delete this.screens[screenType];
+  
+  if (screen.onRemoveScreen != null)
+  {
+    screen.onRemoveScreen();
+  }
 };
 
 ScreenManager.prototype.update = function()
@@ -30,7 +36,7 @@ ScreenManager.prototype.update = function()
   {
     if (this.screens.hasOwnProperty(screenType))
     {
-      this.screens.update();
+      this.screens[screenType].update();
     }
   }
 };

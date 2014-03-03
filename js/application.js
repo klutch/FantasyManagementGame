@@ -7,7 +7,6 @@ var containerHeight;
 var stage;
 var renderer;
 var world;
-var worldRenderer;
 var inputManager;
 var screenManager;
 var fps;
@@ -40,9 +39,6 @@ function finishInitializing()
 {
   // Initialize world
   world = new World();
-  worldRenderer = new WorldRenderer(world);
-  stage.addChild(worldRenderer.container);
-  stage.addChild(worldRenderer.camera);
   
   // Initialize screen manager
   screenManager = new ScreenManager();
@@ -59,6 +55,7 @@ function finishInitializing()
     e = e || window.event;
     inputManager.onKeyUp(e.keyCode);
   };
+  /*
   $('canvas').mousewheel(function(e)
   {
     worldRenderer.zoomCamera(e.deltaY * 0.1);
@@ -67,7 +64,7 @@ function finishInitializing()
   {
     worldRenderer.debugGridI = world.getGridI(e.pageX + worldRenderer.camera.position.x - worldRenderer.halfScreen.x);
     worldRenderer.debugGridJ = world.getGridJ(e.pageY + worldRenderer.camera.position.y - worldRenderer.halfScreen.y);
-  });
+  });*/
   $('canvas').click(function(e)
   {
     inputManager.leftButton = true;
@@ -77,6 +74,9 @@ function finishInitializing()
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
   fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "black" });
   stage.addChild(fpsText);
+  
+  // Add world map screen
+  screenManager.addScreen(new WorldMapScreen());
   
   isLoaded = true;
 }
@@ -108,29 +108,6 @@ function updateFps()
   fpsText.setText("FPS: " + Math.floor(averageFps));
 }
 
-// Handle input
-function handleInput()
-{
-  if (inputManager.keysPressed[65])
-  {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x - 5, worldRenderer.camera.position.y);
-  }
-  if (inputManager.keysPressed[68])
-  {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x + 5, worldRenderer.camera.position.y);
-  }
-  if (inputManager.keysPressed[83])
-  {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y + 5);
-  }
-  if (inputManager.keysPressed[87])
-  {
-    worldRenderer.moveCamera(worldRenderer.camera.position.x, worldRenderer.camera.position.y - 5);
-  }
-  
-  inputManager.update();
-}
-
 // Game loop
 function loop()
 {
@@ -138,12 +115,10 @@ function loop()
   {
     // Update
     updateFps();
-    handleInput();
-    worldRenderer.update();
+    inputManager.update();
     screenManager.update();
 
     // Draw
-    worldRenderer.render();
     renderer.render(stage);
   }
   requestAnimFrame(loop);
