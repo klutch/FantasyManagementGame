@@ -3,6 +3,8 @@ var InputManager = function()
 {
   this.keysPressed = [];
   this.keysPressedLastFrame = [];
+  this.leftButton = false;
+  this.leftButtonLastFrame = false;
 }
 
 InputManager.prototype.onKeyDown = function(keyCode)
@@ -17,6 +19,7 @@ InputManager.prototype.onKeyUp = function(keyCode)
 
 InputManager.prototype.update = function()
 {
-  // Clone array
   this.keysPressedLastFrame = this.keysPressed.slice(0);
+  this.leftButtonLastFrame = this.leftButton;
+  this.leftButton = false;
 };

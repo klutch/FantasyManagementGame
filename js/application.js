@@ -9,6 +9,7 @@ var renderer;
 var world;
 var worldRenderer;
 var inputManager;
+var screenManager;
 var fps;
 var fpsText;
 var lastLoop = new Date();
@@ -43,6 +44,9 @@ function finishInitializing()
   stage.addChild(worldRenderer.container);
   stage.addChild(worldRenderer.camera);
   
+  // Initialize screen manager
+  screenManager = new ScreenManager();
+  
   // Initialize input manager
   inputManager = new InputManager();
   document.onkeydown = function(e)
@@ -66,15 +70,7 @@ function finishInitializing()
   });
   $('canvas').click(function(e)
   {
-    var tile = world.getTile(worldRenderer.debugGridI, worldRenderer.debugGridJ);
-    var debugString = 
-        "Tile at (" + worldRenderer.debugGridI + ", " + worldRenderer.debugGridJ + ")\n" +
-        "\ttype: " + tile.type + "\n" +
-        "\tfeatureId: " + tile.featureId + "\n" +
-        "\tfeatureTextureI: " + tile.featureTextureI + "\n" +
-        "\tfeatureTextureJ: " + tile.featureTextureJ;
-    
-    alert(debugString);
+    inputManager.leftButton = true;
   });
   
   // FPS
@@ -144,6 +140,7 @@ function loop()
     updateFps();
     handleInput();
     worldRenderer.update();
+    screenManager.update();
 
     // Draw
     worldRenderer.render();
