@@ -55,28 +55,22 @@ function finishInitializing()
     e = e || window.event;
     inputManager.onKeyUp(e.keyCode);
   };
-  /*
   $('canvas').mousewheel(function(e)
   {
-    worldRenderer.zoomCamera(e.deltaY * 0.1);
+    inputManager.mouseWheelDelta = e.deltaY;
   });
-  $('canvas').mousemove(function(e)
-  {
-    worldRenderer.debugGridI = world.getGridI(e.pageX + worldRenderer.camera.position.x - worldRenderer.halfScreen.x);
-    worldRenderer.debugGridJ = world.getGridJ(e.pageY + worldRenderer.camera.position.y - worldRenderer.halfScreen.y);
-  });*/
   $('canvas').click(function(e)
   {
     inputManager.leftButton = true;
   });
   
+  // Add world map screen
+  screenManager.addScreen(new WorldMapScreen());
+  
   // FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
   fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "black" });
   stage.addChild(fpsText);
-  
-  // Add world map screen
-  screenManager.addScreen(new WorldMapScreen());
   
   isLoaded = true;
 }
@@ -115,8 +109,8 @@ function loop()
   {
     // Update
     updateFps();
-    inputManager.update();
     screenManager.update();
+    inputManager.update();
 
     // Draw
     renderer.render(stage);

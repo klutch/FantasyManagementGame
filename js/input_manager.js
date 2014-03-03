@@ -5,6 +5,7 @@ var InputManager = function()
   this.keysPressedLastFrame = [];
   this.leftButton = false;
   this.leftButtonLastFrame = false;
+  this.mouseWheelDelta = 0;
 }
 
 InputManager.prototype.onKeyDown = function(keyCode)
@@ -22,4 +23,5 @@ InputManager.prototype.update = function()
   this.keysPressedLastFrame = this.keysPressed.slice(0);
   this.leftButtonLastFrame = this.leftButton;
   this.leftButton = false;
+  this.mouseWheelDelta = 0;
 };

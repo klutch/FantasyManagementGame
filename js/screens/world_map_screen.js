@@ -18,6 +18,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
 
 WorldMapScreen.prototype.update = function()
 {
+  // Handle input
   if (inputManager.keysPressed[65])
   {
     this.worldRenderer.moveCamera(-5, 0);
@@ -33,6 +34,10 @@ WorldMapScreen.prototype.update = function()
   if (inputManager.keysPressed[87])
   {
     this.worldRenderer.moveCamera(0, -5);
+  }
+  if (inputManager.mouseWheelDelta != 0)
+  {
+    this.worldRenderer.zoomCamera(inputManager.mouseWheelDelta * 0.1);
   }
   
   this.worldRenderer.update();
