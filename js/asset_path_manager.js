@@ -1,65 +1,86 @@
 var AssetPathManager = function()
 {
-  this.textureAssetPaths = {};
-  this.textureAssetPaths.blank = "img/blank.png";
-  this.textureAssetPaths.debugTileSelection = "img/selected_tile.png";
-  this.textureAssetPaths.fog = "img/fog_0.png";
-  this.textureAssetPaths.plains = [
-    "img/plains_0.png",
-    "img/plains_1.png",
-    "img/plains_2.png"
+  this.assetPaths = {};
+  
+  // Tile assets
+  this.assetPaths.tiles = {};
+  this.assetPaths.tiles.blank = "img/tiles/blank.png";
+  this.assetPaths.tiles.debugTileSelection = "img/tiles/selected_tile.png";
+  this.assetPaths.tiles.fog = "img/tiles/fog_0.png";
+  this.assetPaths.tiles.plains = [
+    "img/tiles/plains_0.png",
+    "img/tiles/plains_1.png",
+    "img/tiles/plains_2.png"
   ];
-  this.textureAssetPaths.forest = [
-    "img/forest_0.png",
-    "img/forest_1.png"
+  this.assetPaths.tiles.forest = [
+    "img/tiles/forest_0.png",
+    "img/tiles/forest_1.png"
   ];
-  this.textureAssetPaths.swamp = [
-    "img/swamp_0.png"
+  this.assetPaths.tiles.swamp = [
+    "img/tiles/swamp_0.png"
   ];
-  this.textureAssetPaths.mountains = [
-    "img/mountains_0.png"
+  this.assetPaths.tiles.mountains = [
+    "img/tiles/mountains_0.png"
   ];
-  this.textureAssetPaths.hills = [
-    "img/hills_0.png"
+  this.assetPaths.tiles.hills = [
+    "img/tiles/hills_0.png"
   ];
-  this.textureAssetPaths.snow = [
-    "img/snow_0.png"
+  this.assetPaths.tiles.snow = [
+    "img/tiles/snow_0.png"
   ];
-  this.textureAssetPaths.desert = [
-    "img/desert_0.png"
+  this.assetPaths.tiles.desert = [
+    "img/tiles/desert_0.png"
   ];
-  this.textureAssetPaths.water = [
-    "img/water_0.png"
+  this.assetPaths.tiles.water = [
+    "img/tiles/water_0.png"
   ];
-  this.textureAssetPaths.playerCastle = [];
+  this.assetPaths.tiles.playerCastle = [];
   for (var i = 0; i < 64; i++)
   {
-    this.textureAssetPaths.playerCastle.push("img/player_castle_" + i + ".png");
+    this.assetPaths.tiles.playerCastle.push("img/tiles/player_castle_" + i + ".png");
   }
-  this.textureAssetPaths.town = [
-    "img/town_0.png",
-    "img/town_1.png",
-    "img/town_2.png",
-    "img/town_3.png"
+  this.assetPaths.tiles.town = [
+    "img/tiles/town_0.png",
+    "img/tiles/town_1.png",
+    "img/tiles/town_2.png",
+    "img/tiles/town_3.png"
   ];
-  this.textureAssetPaths.grove = [
-    "img/grove_0.png",
-    "img/grove_1.png",
-    "img/grove_2.png",
-    "img/grove_3.png"
+  this.assetPaths.tiles.grove = [
+    "img/tiles/grove_0.png",
+    "img/tiles/grove_1.png",
+    "img/tiles/grove_2.png",
+    "img/tiles/grove_3.png"
   ];
-  this.textureAssetPaths.cave = [];
+  this.assetPaths.tiles.cave = [];
   for (var i = 0; i < 9; i++)
   {
-    this.textureAssetPaths.cave.push("img/cave_dungeon_" + i + ".png");
+    this.assetPaths.tiles.cave.push("img/tiles/cave_dungeon_" + i + ".png");
   }
-  this.textureAssetPaths.tavern = [];
+  this.assetPaths.tiles.tavern = [];
   for (var i = 0; i < 6; i++)
   {
-    this.textureAssetPaths.tavern.push("img/tavern_" + i + ".png");
+    this.assetPaths.tiles.tavern.push("img/tiles/tavern_" + i + ".png");
   }
-  this.textureAssetPaths.road = [
-    "img/road_0.png"
+  this.assetPaths.tiles.road = [
+    "img/tiles/road_0.png"
+  ];
+  
+  // UI assets
+  this.assetPaths.ui = {};
+  this.assetPaths.ui.panelCorners = [
+    "img/ui/panel_corner_0.png",
+    "img/ui/panel_corner_1.png",
+    "img/ui/panel_corner_2.png",
+    "img/ui/panel_corner_3.png"
+  ];
+  this.assetPaths.ui.panelSides = [
+    "img/ui/panel_side_0.png",
+    "img/ui/panel_side_1.png",
+    "img/ui/panel_side_2.png",
+    "img/ui/panel_side_3.png"
+  ];
+  this.assetPaths.ui.panelBg = [
+    "img/ui/panel_bg.png"
   ];
 };
 
@@ -68,22 +89,28 @@ AssetPathManager.prototype.preload = function(onComplete)
   var assetsToLoad = [];
   var assetLoader;
   
-  for (var key in this.textureAssetPaths)
+  for (var assetGroupKey in this.assetPaths)
   {
-    if (this.textureAssetPaths.hasOwnProperty(key))
+    if (this.assetPaths.hasOwnProperty(assetGroupKey))
     {
-      var value = this.textureAssetPaths[key];
-      
-      if (value instanceof Array)
+      for (var assetKey in this.assetPaths[assetGroupKey])
       {
-        for (var i = 0; i < value.length; i++)
+        if (this.assetPaths[assetGroupKey].hasOwnProperty(assetKey))
         {
-          assetsToLoad.push(value[i]);
+          var value = this.assetPaths[assetGroupKey][assetKey];
+          
+          if (value instanceof Array)
+          {
+            for (var i = 0; i < value.length; i++)
+            {
+              assetsToLoad.push(value[i]);
+            }
+          }
+          else
+          {
+            assetsToLoad.push(value);
+          }
         }
-      }
-      else
-      {
-        assetsToLoad.push(value);
       }
     }
   }
