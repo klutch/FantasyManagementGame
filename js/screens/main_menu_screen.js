@@ -23,7 +23,8 @@ var MainMenuScreen = function()
     centerX: true,
     centerY: true,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[0]),
-    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1])
+    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1]),
+    onClick: function (e) { alert('start new game'); }
   });
   
   this.container.addChild(this.logoSprite);

@@ -13,6 +13,9 @@ var ButtonComponent = function(options)
   this.hoverTexture = options.hoverTexture;
   this.interactive = true;
   this.buttonMode = true;
+  this.onMouseOver = options.onMouseOver;
+  this.onMouseOut = options.onMouseOut;
+  this.onClick = options.onClick;
   
   // Textures
   if (this.normalTexture != null)
@@ -55,6 +58,14 @@ var ButtonComponent = function(options)
 
 ButtonComponent.prototype = new PIXI.DisplayObjectContainer;
 
+ButtonComponent.prototype.click = function(interactionData)
+{
+  if (this.onClick != null)
+  {
+    this.onClick(interactionData);
+  }
+};
+
 ButtonComponent.prototype.mouseover = function(interactionData)
 {
   if (this.bitmapText != null)
@@ -69,6 +80,11 @@ ButtonComponent.prototype.mouseover = function(interactionData)
       this.textureSprite.setTexture(this.hoverTexture);
     }
   }
+  
+  if (this.onMouseOver != null)
+  {
+    this.onMouseOver(interactionData);
+  }
 };
 
 ButtonComponent.prototype.mouseout = function(interactionData)
@@ -81,5 +97,10 @@ ButtonComponent.prototype.mouseout = function(interactionData)
   if (this.textureSprite != null)
   {
     this.textureSprite.setTexture(this.normalTexture);
+  }
+  
+  if (this.onMouseOut != null)
+  {
+    this.onMouseOut(interactionData);
   }
 };
