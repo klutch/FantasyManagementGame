@@ -11,7 +11,7 @@ var ButtonComponent = function(options)
   
   if (options.text != null)
   {
-    this.bitmapText = new PIXI.BitmapText(options.text, {font: "18px SegoeMarker"});
+    this.bitmapText = new PIXI.BitmapText(options.text, {font: "12px pixelmix"});
     this.addChild(this.bitmapText);
   }
   if (options.centerText)

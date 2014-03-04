@@ -89,7 +89,7 @@ var AssetPathManager = function()
     "img/ui/logo.png"
   ];
   this.assetPaths.ui.font = [
-    "fonts/segoe_marker.fnt"
+    "fonts/pixelmix.fnt"
   ];
 };
 
