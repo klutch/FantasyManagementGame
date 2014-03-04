@@ -91,6 +91,10 @@ var AssetPathManager = function()
   this.assetPaths.ui.font = [
     "fonts/pixelmix.fnt"
   ];
+  this.assetPaths.ui.mainMenuButtons = [
+    "img/ui/button_0_normal.png",
+    "img/ui/button_0_hover.png"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

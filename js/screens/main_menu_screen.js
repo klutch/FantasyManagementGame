@@ -16,7 +16,15 @@ var MainMenuScreen = function()
   this.logoSprite.position.y = -100;
   
   // Buttons
-  this.newGameButton = new ButtonComponent({x: 0, y: 0, text: "Start new game", centerText: true});
+  this.newGameButton = new ButtonComponent({
+    x: 0,
+    y: 0,
+    text: "Start new game",
+    centerX: true,
+    centerY: true,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[0]),
+    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1])
+  });
   
   this.container.addChild(this.logoSprite);
   this.container.addChild(this.newGameButton);
