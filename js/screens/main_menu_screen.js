@@ -29,6 +29,7 @@ var MainMenuScreen = function()
     onClick: function (e)
       {
         game.closeMainMenu();
+        game.startNewGame();
       }
   });
   

@@ -1,10 +1,10 @@
 // WorldRenderer constructor
-var WorldRenderer = function(world)
+var WorldRenderer = function()
 {
   this.maxTileSpritePool = chunkSize * chunkSize;
   this.maxChunkSpritePool = 256;
-  this.world = world;
-  this.halfScreen = new PIXI.Point(renderer.view.width * 0.5, renderer.view.height * 0.5);
+  this.world = game.world;
+  this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
   this.tileSpritePool = [];
   this.chunkSpritePool = [];
   this.chunkTexturePool = [];
@@ -116,13 +116,13 @@ WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ
 // Get number of chunks to show on the x axis
 WorldRenderer.prototype.getChunkBufferX = function()
 {
-  return Math.ceil((containerWidth / (chunkSize * tileSize * this.camera.scale.x)) * 0.5);
+  return Math.ceil((game.containerWidth / (chunkSize * tileSize * this.camera.scale.x)) * 0.5);
 };
 
 // Get number of chunks to show on the y axis
 WorldRenderer.prototype.getChunkBufferY = function()
 {
-  return Math.ceil((containerHeight / (chunkSize * tileSize * this.camera.scale.y)) * 0.5);
+  return Math.ceil((game.containerHeight / (chunkSize * tileSize * this.camera.scale.y)) * 0.5);
 };
 
 // Update
@@ -139,10 +139,10 @@ WorldRenderer.prototype.update = function()
 // Prerender chunks
 WorldRenderer.prototype.prerender = function()
 {
-  var focusGridI = world.getGridI(this.camera.position.x);
-  var focusGridJ = world.getGridJ(this.camera.position.y);
-  var focusChunkI = world.getChunkI(focusGridI);
-  var focusChunkJ = world.getChunkJ(focusGridJ);
+  var focusGridI = this.world.getGridI(this.camera.position.x);
+  var focusGridJ = this.world.getGridJ(this.camera.position.y);
+  var focusChunkI = this.world.getChunkI(focusGridI);
+  var focusChunkJ = this.world.getChunkJ(focusGridJ);
   var chunkBufferX = this.getChunkBufferX();
   var chunkBufferY = this.getChunkBufferY();
   var startChunkI = focusChunkI - chunkBufferX;

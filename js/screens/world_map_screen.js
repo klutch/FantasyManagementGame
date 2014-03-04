@@ -1,19 +1,19 @@
 var WorldMapScreen = function()
 {
   this.type = ScreenType.WorldMap;
-  this.worldRenderer = new WorldRenderer(world);
+  this.worldRenderer = new WorldRenderer();
 };
 
 WorldMapScreen.prototype.onAddScreen = function()
 {
-  stage.addChild(this.worldRenderer.container);
-  stage.addChild(this.worldRenderer.camera);
+  game.stage.addChild(this.worldRenderer.container);
+  game.stage.addChild(this.worldRenderer.camera);
 };
 
 WorldMapScreen.prototype.onRemoveScreen = function()
 {
-  stage.removeChild(this.worldRenderer.container);
-  stage.removeChild(this.worldRenderer.camera);
+  game.stage.removeChild(this.worldRenderer.container);
+  game.stage.removeChild(this.worldRenderer.camera);
 };
 
 WorldMapScreen.prototype.update = function()

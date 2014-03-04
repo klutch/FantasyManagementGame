@@ -14,9 +14,6 @@ var Game = function()
   this.renderer = PIXI.autoDetectRenderer(this.containerWidth, this.containerHeight);
   $('#container').append(this.renderer.view);
   
-  // Initialize world
-  this.world = new World();
-  
   // Initialize input manager
   inputManager = new InputManager();
   document.onkeydown = function(e)
@@ -45,6 +42,13 @@ var Game = function()
 Game.prototype.closeMainMenu = function()
 {
   screenManager.removeScreen(ScreenType.MainMenu);
+};
+
+Game.prototype.startNewGame = function()
+{
+  this.world = new World();
+  this.state = GameState.WorldMap;
+  screenManager.addScreen(new WorldMapScreen(this.world));
 };
 
 Game.prototype.update = function()
