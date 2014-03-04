@@ -31,7 +31,14 @@ PanelComponent.prototype.buildPanel = function()
   var right = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.panelSides[1]));
   var bottom = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.panelSides[2]));
   var left = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.panelSides[3]));
-  var bg = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.panelBg));
+  var bg = new PIXI.TilingSprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.panelBg));
+  
+  // Background
+  bg.position.x = left.width;
+  bg.position.y = top.height;
+  bg.width = this.width - (left.width + right.width);
+  bg.height = this.height - (top.height + bottom.height);
+  this.addChild(bg);
   
   // Corners
   topLeft.position.x = 0;
@@ -70,11 +77,4 @@ PanelComponent.prototype.buildPanel = function()
   left.position.y = topLeft.height;
   left.height = this.height - (topLeft.height + bottomLeft.height);
   this.addChild(left);
-  
-  // Background
-  bg.position.x = topLeft.width;
-  bg.position.y = topLeft.height;
-  bg.width = this.width - (topLeft.width + topRight.width);
-  bg.height = this.height - (topLeft.height + bottomLeft.height);
-  this.addChild(bg);
 };
