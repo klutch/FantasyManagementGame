@@ -1,14 +1,16 @@
 var MainMenuScreen = function()
 {
+  this.type = ScreenType.MainMenu;
+  
   // Background
   this.backgroundSprite = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.black));
-  this.backgroundSprite.width = containerWidth;
-  this.backgroundSprite.height = containerHeight;
+  this.backgroundSprite.width = game.containerWidth;
+  this.backgroundSprite.height = game.containerHeight;
   
   // Container
   this.container = new PIXI.DisplayObjectContainer();
-  this.container.position.y = containerHeight * 0.5;
-  this.container.position.x = containerWidth * 0.5;
+  this.container.position.y = game.containerHeight * 0.5;
+  this.container.position.x = game.containerWidth * 0.5;
   
   // Logo
   this.logoSprite = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.logo));
@@ -24,7 +26,10 @@ var MainMenuScreen = function()
     centerY: true,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1]),
-    onClick: function (e) { alert('start new game'); }
+    onClick: function (e)
+      {
+        game.closeMainMenu();
+      }
   });
   
   this.container.addChild(this.logoSprite);
@@ -33,14 +38,14 @@ var MainMenuScreen = function()
 
 MainMenuScreen.prototype.onAddScreen = function()
 {
-  stage.addChild(this.backgroundSprite);
-  stage.addChild(this.container);
+  game.stage.addChild(this.backgroundSprite);
+  game.stage.addChild(this.container);
 };
 
 MainMenuScreen.prototype.onRemoveScreen = function()
 {
-  stage.removeChild(this.backgroundSprite);
-  stage.removeChild(this.container);
+  game.stage.removeChild(this.backgroundSprite);
+  game.stage.removeChild(this.container);
 };
 
 MainMenuScreen.prototype.update = function()

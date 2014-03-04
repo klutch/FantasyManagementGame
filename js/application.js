@@ -2,31 +2,20 @@
  * Copyright 2014 Graeme Collins
  */
 
-var containerWidth;
-var containerHeight;
-var stage;
-var renderer;
-var world;
-var inputManager;
-var screenManager;
 var fps;
 var fpsText;
 var lastLoop = new Date();
 var tileSize = 16;
 var chunkSize = 16;
 var isLoaded = false;
+var game;
+var screenManager;
+var inputManager;
 var assetPathManager = new AssetPathManager();
 
 // Initialize
 function initialize()
 {
-  // Initialize Pixi
-  containerWidth = $('#container').width();
-  containerHeight = $('#container').height();
-  stage = new PIXI.Stage(0x66FF99);
-  renderer = PIXI.autoDetectRenderer(containerWidth, containerHeight);
-  $('#container').append(renderer.view);
-  
   // Start preloading
   assetPathManager.preload(finishInitializing);
   
@@ -37,43 +26,16 @@ function initialize()
 // Finish initializing (after preloading has finished)
 function finishInitializing()
 {
-  // Initialize world
-  world = new World();
+  // Initialize game
+  game = new Game();
   
-  // Initialize screen manager
-  screenManager = new ScreenManager();
-  
-  // Initialize input manager
-  inputManager = new InputManager();
-  document.onkeydown = function(e)
-  {
-    e = e || window.event;
-    inputManager.onKeyDown(e.keyCode);
-  };
-  document.onkeyup = function(e)
-  {
-    e = e || window.event;
-    inputManager.onKeyUp(e.keyCode);
-  };
-  $('canvas').mousewheel(function(e)
-  {
-    inputManager.mouseWheelDelta = e.deltaY;
-  });
-  $('canvas').click(function(e)
-  {
-    inputManager.leftButton = true;
-  });
-  
-  // Add main menu screen
-  screenManager.addScreen(new MainMenuScreen());
-  
-  // Add world map screen
-  //screenManager.addScreen(new WorldMapScreen());
-  
-  // FPS
+  // Initialize FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
   fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "black" });
-  stage.addChild(fpsText);
+  game.stage.addChild(fpsText);
+  
+  // Open main menu
+  screenManager.addScreen(new MainMenuScreen());
   
   isLoaded = true;
 }
@@ -112,11 +74,10 @@ function loop()
   {
     // Update
     updateFps();
-    screenManager.update();
-    inputManager.update();
+    game.update();
 
     // Draw
-    renderer.render(stage);
+    game.draw();
   }
   requestAnimFrame(loop);
 }

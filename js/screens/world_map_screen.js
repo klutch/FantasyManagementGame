@@ -1,6 +1,6 @@
 var WorldMapScreen = function()
 {
-  this.screenType = ScreenType.WorldMap;
+  this.type = ScreenType.WorldMap;
   this.worldRenderer = new WorldRenderer(world);
 };
 
