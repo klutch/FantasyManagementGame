@@ -64,8 +64,11 @@ function finishInitializing()
     inputManager.leftButton = true;
   });
   
+  // Add main menu screen
+  screenManager.addScreen(new MainMenuScreen());
+  
   // Add world map screen
-  screenManager.addScreen(new WorldMapScreen());
+  //screenManager.addScreen(new WorldMapScreen());
   
   // FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];

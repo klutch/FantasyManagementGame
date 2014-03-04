@@ -82,6 +82,15 @@ var AssetPathManager = function()
   this.assetPaths.ui.panelBg = [
     "img/ui/panel_bg.png"
   ];
+  this.assetPaths.ui.black = [
+    "img/ui/black.png"
+  ];
+  this.assetPaths.ui.logo = [
+    "img/ui/logo.png"
+  ];
+  this.assetPaths.ui.font = [
+    "fonts/segoe_marker.fnt"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)
