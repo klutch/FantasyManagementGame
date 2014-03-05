@@ -117,9 +117,9 @@ WorldRenderer.prototype.prerender = function()
   var generationRequired = false;
   
   // Detect ungenerated chunks
-  for (var i = currentChunkI - this.detectionBuffer, limitI = currentChunkI + this.detectionBuffer; i < limitI; i++)
+  for (var i = currentChunkI - this.detectionBuffer, limitI = currentChunkI + this.detectionBuffer + 1; i < limitI; i++)
   {
-    for (var j = currentChunkJ - this.detectionBuffer, limitJ = currentChunkJ + this.detectionBuffer; j < limitJ; j++)
+    for (var j = currentChunkJ - this.detectionBuffer, limitJ = currentChunkJ + this.detectionBuffer + 1; j < limitJ; j++)
     {
       if (!this.doesChunkExist(i, j))
       {
@@ -136,9 +136,9 @@ WorldRenderer.prototype.prerender = function()
   // Generate chunks if necessary
   if (generationRequired)
   {
-    for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer; i < limitI; i++)
+    for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer + 1; i < limitI; i++)
     {
-      for (var j = currentChunkJ - this.generationBuffer, limitJ = currentChunkJ + this.generationBuffer; j < limitJ; j++)
+      for (var j = currentChunkJ - this.generationBuffer, limitJ = currentChunkJ + this.generationBuffer + 1; j < limitJ; j++)
       {
         if (this.chunkSprites[i] == null)
         {
