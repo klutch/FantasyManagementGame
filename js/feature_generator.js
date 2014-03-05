@@ -85,13 +85,13 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
     if (!giveUp)
     {
       found = true;
-      this.world.playerCastleX = randX;
-      this.world.playerCastleY = randY;
+      this.world.playerCastleI = randX;
+      this.world.playerCastleJ = randY;
     }
   }
   
   // Create feature
-  feature = this.world.createFeature(FeatureType.Castle, this.world.playerCastleX, this.world.playerCastleY, 8, 8);
+  feature = this.world.createFeature(FeatureType.Castle, this.world.playerCastleI, this.world.playerCastleJ, 8, 8);
   feature.castleType = CastleType.Player;
 };
 

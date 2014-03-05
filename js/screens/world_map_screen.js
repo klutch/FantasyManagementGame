@@ -1,5 +1,6 @@
 var WorldMapScreen = function()
 {
+  var root = this;
   this.type = ScreenType.WorldMap;
   this.worldRenderer = new WorldRenderer();
   this.bottomBar = new PanelComponent({
@@ -8,6 +9,14 @@ var WorldMapScreen = function()
     width: game.containerWidth + 16,
     height: 34
   });
+  this.homeButton = new ButtonComponent({
+    x: Math.floor(game.containerWidth * 0.5),
+    y: game.containerHeight - 28,
+    centerX: true,
+    centerY: true,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
+    onClick: function(e) { root.worldRenderer.moveCameraToHome(); }
+  });
 };
 
 WorldMapScreen.prototype.onAddScreen = function()
@@ -15,6 +24,7 @@ WorldMapScreen.prototype.onAddScreen = function()
   game.stage.addChild(this.worldRenderer.container);
   game.stage.addChild(this.worldRenderer.camera);
   game.stage.addChild(this.bottomBar);
+  game.stage.addChild(this.homeButton);
 };
 
 WorldMapScreen.prototype.onRemoveScreen = function()
@@ -22,6 +32,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.worldRenderer.container);
   game.stage.removeChild(this.worldRenderer.camera);
   game.stage.removeChild(this.bottomBar);
+  game.stage.removeChild(this.homeButton);
 };
 
 WorldMapScreen.prototype.update = function()

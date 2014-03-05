@@ -109,6 +109,9 @@ var AssetPathManager = function()
     "img/ui/button_0_normal.png",
     "img/ui/button_0_hover.png"
   ];
+  this.assetPaths.ui.homeCastleButtons = [
+    "img/ui/home_button.png"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

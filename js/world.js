@@ -76,8 +76,8 @@ var World = function(seed)
   this.features = [];
   this.terrainGenerator = new TerrainGenerator(this, seed);
   this.featureGenerator = new FeatureGenerator(this, seed);
-  this.playerCastleX = 0;
-  this.playerCastleY = 0;
+  this.playerCastleI = 0;
+  this.playerCastleJ = 0;
   
   this.featureGenerator.generatePlayerCastle();
 };

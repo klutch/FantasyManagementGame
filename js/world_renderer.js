@@ -6,8 +6,8 @@ var WorldRenderer = function()
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
   this.camera = new PIXI.DisplayObjectContainer();
-  this.camera.position.x = (this.world.playerCastleX + 4) * 16;
-  this.camera.position.y = (this.world.playerCastleY + 4) * 16;
+  this.camera.position.x = (this.world.playerCastleI + 4) * 16;
+  this.camera.position.y = (this.world.playerCastleJ + 4) * 16;
   this.camera.target = new PIXI.Point(this.camera.position.x, this.camera.position.y);
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
@@ -222,12 +222,19 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
   return chunkSprite;
 };
 
-// Move the camera to a given position
+// Move the camera to a new position
 WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 {
   this.camera.target.x += deltaX;
   this.camera.target.y += deltaY;
 }
+
+// Move the camera to the home castle
+WorldRenderer.prototype.moveCameraToHome = function()
+{
+  this.camera.target.x = (this.world.playerCastleI + 4) * tileSize;
+  this.camera.target.y = (this.world.playerCastleJ + 4) * tileSize;
+};
 
 // Zoom camera
 WorldRenderer.prototype.zoomCamera = function(deltaY)
