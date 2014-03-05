@@ -18,6 +18,8 @@ var WorldRenderer = function()
   this.debugSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.debugTileSelection));
   this.minScale = 0.05;
   this.maxScale = 2;
+  this.detectionBuffer = 1;   // Number of chunks surrounding the current chunk to check
+  this.generationBuffer = 2;  // Number of chunks surrounding the current chunk to generate
   
   this.container.addChild(this.debugSelection);
   
@@ -108,33 +110,63 @@ WorldRenderer.prototype.update = function()
 // Prerender chunks
 WorldRenderer.prototype.prerender = function()
 {
-  var focusGridI = this.world.getGridI(this.camera.position.x);
-  var focusGridJ = this.world.getGridJ(this.camera.position.y);
-  var focusChunkI = this.getChunkI(focusGridI);
-  var focusChunkJ = this.getChunkJ(focusGridJ);
-  var chunkBufferX = 1;
-  var chunkBufferY = 1;
-  var startChunkI = focusChunkI - chunkBufferX;
-  var endChunkI = focusChunkI + chunkBufferX;
-  var startChunkJ = focusChunkJ - chunkBufferY;
-  var endChunkJ = focusChunkJ + chunkBufferY;
+  var currentTileI = this.world.getGridI(this.camera.position.x);
+  var currentTileJ = this.world.getGridJ(this.camera.position.y);
+  var currentChunkI = this.getChunkI(currentTileI);
+  var currentChunkJ = this.getChunkJ(currentTileJ);
+  var generationRequired = false;
   
-  // Ensure necessary chunks exist
-  for(var chunkI = startChunkI; chunkI <= endChunkI; chunkI++)
+  // Detect ungenerated chunks
+  for (var i = currentChunkI - this.detectionBuffer, limitI = currentChunkI + this.detectionBuffer; i < limitI; i++)
   {
-    for(var chunkJ = startChunkJ; chunkJ <= endChunkJ; chunkJ++)
+    for (var j = currentChunkJ - this.detectionBuffer, limitJ = currentChunkJ + this.detectionBuffer; j < limitJ; j++)
     {
-      if (this.chunkSprites[chunkI] == null)
+      if (!this.doesChunkExist(i, j))
       {
-        this.chunkSprites[chunkI] = {};
+        generationRequired = true;
+        break;
       }
-      if (this.chunkSprites[chunkI][chunkJ] == null)
+    }
+    if (generationRequired)
+    {
+      break;
+    }
+  }
+  
+  // Generate chunks if necessary
+  if (generationRequired)
+  {
+    for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer; i < limitI; i++)
+    {
+      for (var j = currentChunkJ - this.generationBuffer, limitJ = currentChunkJ + this.generationBuffer; j < limitJ; j++)
       {
-        this.chunkSprites[chunkI][chunkJ] = this.generateChunkSprite(chunkI, chunkJ);
-        this.container.addChildAt(this.chunkSprites[chunkI][chunkJ], 0);
+        if (this.chunkSprites[i] == null)
+        {
+          this.chunkSprites[i] = {};
+        }
+        if (this.chunkSprites[i][j] == null)
+        {
+          this.chunkSprites[i][j] = this.generateChunkSprite(i, j);
+          this.container.addChildAt(this.chunkSprites[i][j], 0);
+        }
       }
     }
   }
+};
+
+// Does a chunk exist?
+WorldRenderer.prototype.doesChunkExist = function(chunkI, chunkJ)
+{
+  if (this.chunkSprites[chunkI] == null)
+  {
+    return false;
+  }
+  if (this.chunkSprites[chunkI][chunkJ] == null)
+  {
+    return false;
+  }
+  
+  return true;
 };
 
 // Generate a chunk sprite by rendering tiles to it
