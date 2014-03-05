@@ -1,7 +1,6 @@
 // WorldRenderer constructor
 var WorldRenderer = function()
 {
-  this.maxTileSpritePool = chunkSize * chunkSize;
   this.maxChunkSpritePool = 512;
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
@@ -25,24 +24,32 @@ var WorldRenderer = function()
   
   this.container.addChild(this.debugSelection);
   
-  for (var i = 0; i < this.maxTileSpritePool; i++)
-  {
-    this.tileSpritePool[i] = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.blank));
-  }
+  // Create reuseable sprites
   for (var i = 0; i < this.maxChunkSpritePool; i++)
   {
     this.chunkSpritePool[i] = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.blank));
     this.chunkTexturePool[i] = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
   }
+  
+  var ugh = this;
+  this.terrainSprites = {};
+  _.each(TileType, function(type)
+    {
+      ugh.terrainSprites[type] = [];
+      _.each(assetPathManager.assetPaths.terrainTiles[type], function(path)
+        {
+          ugh.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
+        });
+    });
 };
 
 // Get texture given a tile
-WorldRenderer.prototype.getTileTexture = function(tile)
+WorldRenderer.prototype.getTileSprite = function(tile)
 {
   var type = tile.type;
-  var tilesList = assetPathManager.assetPaths.terrainTiles[type];
+  var tilesList = this.terrainSprites[type];
   
-  return PIXI.Texture.fromImage(tilesList[Math.floor(Math.random() * tilesList.length)]);
+  return tilesList[Math.floor(Math.random() * tilesList.length)];
 };
 
 // Get texture given a feature
@@ -198,11 +205,10 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tileI = chunkI * chunkSize + i;
       var tileJ = chunkJ * chunkSize + j;
       var tile = this.world.getTile(tileI, tileJ);
-      var tileSprite = this.tileSpritePool[numActiveTileSprites];
+      var tileSprite = this.getTileSprite(tile);
       var c;
       
       // Render terrain tile
-      tileSprite.setTexture(this.getTileTexture(tile));
       tileSprite.position.x = i * tileSize;
       tileSprite.position.y = j * tileSize;
       
@@ -220,13 +226,13 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       renderTexture.render(tileSprite, tileSprite.position);
       
       // Render feature tile
-      if (tile.featureId != null)
+      /*if (tile.featureId != null)
       {
         var feature = this.world.features[tile.featureId];
         
         tileSprite.setTexture(this.getFeatureTexture(feature, tile.featureTextureI, tile.featureTextureJ));
         renderTexture.render(tileSprite, tileSprite.position);
-      }
+      }*/
       
       numActiveTileSprites++;
     }

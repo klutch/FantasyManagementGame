@@ -41,21 +41,22 @@ var AssetPathManager = function()
   
   // Player castle assets
   this.assetPaths.featureTiles = {};
-  this.assetPaths.featureTiles[FeatureType.PlayerCastle] = [];
+  this.assetPaths.featureTiles[FeatureType.PlayerCastle] = {};
+  this.assetPaths.featureTiles[FeatureType.PlayerCastle][FeatureType.PlayerCastle] = [];
   for (var i = 0; i < 64; i++)
   {
-    this.assetPaths.featureTiles[FeatureType.PlayerCastle].push("img/tiles/player_castle_" + i + ".png");
+    this.assetPaths.featureTiles[FeatureType.PlayerCastle][FeatureType.PlayerCastle].push("img/tiles/player_castle_" + i + ".png");
   }
   
   // Dwelling assets
-  this.assetPaths.dwellingTiles = {};
-  this.assetPaths.dwellingTiles[DwellingType.Town] = [
+  this.assetPaths.featureTiles[FeatureType.Dwelling] = {};
+  this.assetPaths.featureTiles[FeatureType.Dwelling][DwellingType.Town] = [
     "img/tiles/town_0.png",
     "img/tiles/town_1.png",
     "img/tiles/town_2.png",
     "img/tiles/town_3.png"
   ];
-  this.assetPaths.dwellingTiles[DwellingType.Grove] = [
+  this.assetPaths.featureTiles[FeatureType.Dwelling][DwellingType.Grove] = [
     "img/tiles/grove_0.png",
     "img/tiles/grove_1.png",
     "img/tiles/grove_2.png",
@@ -63,19 +64,19 @@ var AssetPathManager = function()
   ];
   
   // Dungeon assets
-  this.assetPaths.dungeonTiles = {};
-  this.assetPaths.dungeonTiles[DungeonType.Cave] = [];
+  this.assetPaths.featureTiles[FeatureType.Dungeon] = {};
+  this.assetPaths.featureTiles[FeatureType.Dungeon][DungeonType.Cave] = [];
   for (var i = 0; i < 9; i++)
   {
-    this.assetPaths.dungeonTiles[DungeonType.Cave].push("img/tiles/cave_dungeon_" + i + ".png");
+    this.assetPaths.featureTiles[FeatureType.Dungeon][DungeonType.Cave].push("img/tiles/cave_dungeon_" + i + ".png");
   }
   
   // Gathering assets
-  this.assetPaths.gatheringTiles = {};
-  this.assetPaths.gatheringTiles[GatheringType.Tavern] = [];
+  this.assetPaths.featureTiles[FeatureType.Gathering] = {};
+  this.assetPaths.featureTiles[FeatureType.Gathering][GatheringType.Tavern] = [];
   for (var i = 0; i < 6; i++)
   {
-    this.assetPaths.gatheringTiles[GatheringType.Tavern].push("img/tiles/tavern_" + i + ".png");
+    this.assetPaths.featureTiles[FeatureType.Gathering][GatheringType.Tavern].push("img/tiles/tavern_" + i + ".png");
   }
   
   // UI assets
@@ -112,35 +113,26 @@ var AssetPathManager = function()
 
 AssetPathManager.prototype.preload = function(onComplete)
 {
-  var assetsToLoad = [];
-  var assetLoader;
+  var assetsToLoad = this.recursiveCollectPaths(this.assetPaths);
+  var assetLoader = new PIXI.AssetLoader(assetsToLoad);
   
-  for (var assetGroupKey in this.assetPaths)
-  {
-    if (this.assetPaths.hasOwnProperty(assetGroupKey))
-    {
-      for (var assetKey in this.assetPaths[assetGroupKey])
-      {
-        if (this.assetPaths[assetGroupKey].hasOwnProperty(assetKey))
-        {
-          var value = this.assetPaths[assetGroupKey][assetKey];
-          
-          if (value instanceof Array)
-          {
-            for (var i = 0; i < value.length; i++)
-            {
-              assetsToLoad.push(value[i]);
-            }
-          }
-          else
-          {
-            assetsToLoad.push(value);
-          }
-        }
-      }
-    }
-  }
-  assetLoader = new PIXI.AssetLoader(assetsToLoad);
   assetLoader.onComplete = onComplete;
   assetLoader.load();
+};
+
+AssetPathManager.prototype.recursiveCollectPaths = function(obj)
+{
+  var paths = [];
+  var ugh = this;
+  
+  if (obj instanceof Array)
+  {
+    paths = paths.concat(obj);
+  }
+  else if (obj instanceof Object)
+  {
+    _.each(obj, function(item) { paths = paths.concat(ugh.recursiveCollectPaths(item)); });
+  }
+  
+  return paths;
 };
