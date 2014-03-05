@@ -184,6 +184,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tile = this.world.getTile(tileI, tileJ);
       var tileSprite = this.getTileSprite(tile);
       var c;
+      var tint;
       
       // Render terrain tile
       tileSprite.position.x = i * tileSize;
@@ -193,13 +194,14 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       {
         c = Math.floor((tile.elevation + 1) * 0.5 * 255).toString(16)
         c = c.length < 2 ? ('0' + c) : c;
-        tileSprite.tint = '0x' + c + c + c;
+        tint = '0x' + c + c + c;
       }
       else
       {
-        tileSprite.tint = 0xFFFFFF;
+        tint = 0xFFFFFF;
       }
       
+      tileSprite.tint = tint;
       renderTexture.render(tileSprite, tileSprite.position);
       
       // Render feature tile
@@ -208,6 +210,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
         var feature = this.world.features[tile.featureId];
         var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
         
+        featureSprite.tint = tint;
         renderTexture.render(featureSprite, tileSprite.position);
       }
     }
