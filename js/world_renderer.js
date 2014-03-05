@@ -146,6 +146,7 @@ WorldRenderer.prototype.update = function()
     else
     {
       screenManager.removeScreen(ScreenType.Loading);
+      this.totalChunksToGenerate = 0;
     }
   }
 };
@@ -157,6 +158,7 @@ WorldRenderer.prototype.determineChunkRenderStatus = function()
   var currentTileJ = this.world.getGridJ(this.camera.position.y);
   var currentChunkI = this.getChunkI(currentTileI);
   var currentChunkJ = this.getChunkJ(currentTileJ);
+  var generationRequired = false;
   
   // Detect ungenerated chunks
   for (var i = currentChunkI - this.detectionBuffer, limitI = currentChunkI + this.detectionBuffer + 1; i < limitI; i++)
@@ -165,16 +167,36 @@ WorldRenderer.prototype.determineChunkRenderStatus = function()
     {
       if (!this.doesChunkExist(i, j))
       {
-        this.chunksToGenerate.push([i, j]);
+        generationRequired = true;
+        break;
       }
     }
+    if (generationRequired)
+    {
+      break;
+    }
   }
-  this.totalChunksToGenerate = this.chunksToGenerate.length;
   
   // Open loading screen if necessary
-  if (this.totalChunksToGenerate > 0 && !screenManager.isScreenOpen(ScreenType.Loading))
+  if (generationRequired && !screenManager.isScreenOpen(ScreenType.Loading))
   {
       screenManager.addScreen(new LoadingScreen());
+  }
+  
+  // Mark chunks for generation
+  if (generationRequired)
+  {
+    for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer + 1; i < limitI; i++)
+    {
+      for (var j = currentChunkJ - this.generationBuffer, limitJ = currentChunkJ + this.generationBuffer + 1; j < limitJ; j++)
+      {
+        if (this.chunkSprites[i] == null || this.chunkSprites[i][j] == null)
+        {
+          this.chunksToGenerate.push([i, j]);
+        }
+      }
+    }
+    this.totalChunksToGenerate = this.chunksToGenerate.length;
   }
 };
 
