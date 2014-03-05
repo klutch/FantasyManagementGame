@@ -60,5 +60,4 @@ WorldMapScreen.prototype.update = function()
   }
   
   this.worldRenderer.update();
-  this.worldRenderer.prerender();
 };

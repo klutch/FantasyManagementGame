@@ -21,6 +21,8 @@ var WorldRenderer = function()
   this.maxScale = 2;
   this.detectionBuffer = 1;   // Number of chunks surrounding the current chunk to check
   this.generationBuffer = 2;  // Number of chunks surrounding the current chunk to generate
+  this.chunksToGenerate = []; // Array of coordinate pairs ([x, y]) that need to be generated
+  this.totalChunksToGenerate = 0;
   
   this.container.addChild(this.debugSelection);
   
@@ -98,33 +100,63 @@ WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
 // Update
 WorldRenderer.prototype.update = function()
 {
-  // Ease position towards target position
-  this.camera.position.x += (this.camera.targetPosition.x - this.camera.position.x) / 8;
-  this.camera.position.y += (this.camera.targetPosition.y - this.camera.position.y) / 8;
-  
-  // Ease scale towards target scale
-  this.camera.scale.x += (this.camera.targetScale - this.camera.scale.x) / 8;
-  this.camera.scale.y = this.camera.scale.x;
-  
-  // Update container position and scale
-  this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
-  this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
-  this.container.scale.x = this.camera.scale.x;
-  this.container.scale.y = this.camera.scale.y;
-  
-  // Debug...
-  this.debugSelection.position.x = this.debugGridI * tileSize;
-  this.debugSelection.position.y = this.debugGridJ * tileSize;
+  if (this.chunksToGenerate.length == 0)
+  {
+    // Ease position towards target position
+    this.camera.position.x += (this.camera.targetPosition.x - this.camera.position.x) / 8;
+    this.camera.position.y += (this.camera.targetPosition.y - this.camera.position.y) / 8;
+
+    // Ease scale towards target scale
+    this.camera.scale.x += (this.camera.targetScale - this.camera.scale.x) / 8;
+    this.camera.scale.y = this.camera.scale.x;
+
+    // Update container position and scale
+    this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
+    this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
+    this.container.scale.x = this.camera.scale.x;
+    this.container.scale.y = this.camera.scale.y;
+
+    // Debug...
+    this.debugSelection.position.x = this.debugGridI * tileSize;
+    this.debugSelection.position.y = this.debugGridJ * tileSize;
+    
+    // Determine if new chunks need to be rendered
+    this.determineChunkRenderStatus();
+  }
+  else
+  {
+    var chunkCoordPair = this.chunksToGenerate.pop();
+    var i = chunkCoordPair[0];
+    var j = chunkCoordPair[1];
+    var loadingScreen = screenManager.screens[ScreenType.Loading];
+    
+    // Create chunk sprite
+    if (this.chunkSprites[i] == null)
+    {
+      this.chunkSprites[i] = {};
+    }
+    this.chunkSprites[i][j] = this.generateChunkSprite(i, j);
+    this.container.addChildAt(this.chunkSprites[i][j], 0);
+    
+    // Update loading screen
+    if (this.chunksToGenerate.length > 0)
+    {
+      loadingScreen.setProgress((this.totalChunksToGenerate - this.chunksToGenerate.length) / this.totalChunksToGenerate);
+    }
+    else
+    {
+      screenManager.removeScreen(ScreenType.Loading);
+    }
+  }
 };
 
-// Prerender chunks
-WorldRenderer.prototype.prerender = function()
+// Determine whether or not new chunks need to be generated/rendered
+WorldRenderer.prototype.determineChunkRenderStatus = function()
 {
   var currentTileI = this.world.getGridI(this.camera.position.x);
   var currentTileJ = this.world.getGridJ(this.camera.position.y);
   var currentChunkI = this.getChunkI(currentTileI);
   var currentChunkJ = this.getChunkJ(currentTileJ);
-  var generationRequired = false;
   
   // Detect ungenerated chunks
   for (var i = currentChunkI - this.detectionBuffer, limitI = currentChunkI + this.detectionBuffer + 1; i < limitI; i++)
@@ -133,17 +165,20 @@ WorldRenderer.prototype.prerender = function()
     {
       if (!this.doesChunkExist(i, j))
       {
-        generationRequired = true;
-        break;
+        this.chunksToGenerate.push([i, j]);
       }
     }
-    if (generationRequired)
-    {
-      break;
-    }
+  }
+  this.totalChunksToGenerate = this.chunksToGenerate.length;
+  
+  // Open loading screen if necessary
+  if (this.totalChunksToGenerate > 0 && !screenManager.isScreenOpen(ScreenType.Loading))
+  {
+      screenManager.addScreen(new LoadingScreen());
   }
   
   // Generate chunks if necessary
+  /*
   if (generationRequired)
   {
     for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer + 1; i < limitI; i++)
@@ -161,7 +196,7 @@ WorldRenderer.prototype.prerender = function()
         }
       }
     }
-  }
+  }*/
 };
 
 // Does a chunk exist?

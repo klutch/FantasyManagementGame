@@ -1,6 +1,7 @@
 var ScreenType = Object.freeze({
   MainMenu: 0,
-  WorldMap: 1
+  WorldMap: 1,
+  Loading: 2
 });
 
 var ScreenManager = function()
@@ -31,6 +32,11 @@ ScreenManager.prototype.removeScreen = function(screenType)
   {
     screen.onRemoveScreen();
   }
+};
+
+ScreenManager.prototype.isScreenOpen = function(screenType)
+{
+  return this.screens[screenType] != null;
 };
 
 ScreenManager.prototype.update = function()

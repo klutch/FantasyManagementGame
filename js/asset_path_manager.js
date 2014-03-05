@@ -112,6 +112,10 @@ var AssetPathManager = function()
   this.assetPaths.ui.homeCastleButtons = [
     "img/ui/home_button.png"
   ];
+  this.assetPaths.ui.progressBar = [
+    "img/ui/progress_bar_fill.png",
+    "img/ui/progress_bar_border.png"
+  ];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)
