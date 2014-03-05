@@ -16,6 +16,9 @@ ScreenManager.prototype.addScreen = function(screen)
   {
     screen.onAddScreen();
   }
+  
+  // Resort depths
+  game.stage.children.sort(depthCompare);
 };
 
 ScreenManager.prototype.removeScreen = function(screenType)

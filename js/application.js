@@ -31,7 +31,8 @@ function finishInitializing()
   
   // Initialize FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
-  fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "black" });
+  fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "white" });
+  fpsText.z = 100;
   game.stage.addChild(fpsText);
   
   // Open main menu
@@ -65,6 +66,24 @@ function updateFps()
   }
   lastLoop = thisLoop;
   fpsText.setText("FPS: " + Math.floor(averageFps));
+}
+
+// Depth sorting
+function depthCompare(a, b)
+{
+  if (a.z == null || a.z == b.z)
+  {
+    return 0;
+  }
+  
+  if (a.z < b.z)
+  {
+    return -1;
+  }
+  else
+  {
+    return 1;
+  }
 }
 
 // Game loop
