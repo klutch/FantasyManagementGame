@@ -82,16 +82,6 @@ var World = function(seed)
   this.featureGenerator.generatePlayerCastle();
 };
 
-World.prototype.getChunkI = function(i)
-{
-  return Math.floor(i / chunkSize);
-};
-
-World.prototype.getChunkJ = function(j)
-{
-  return Math.floor(j / chunkSize);
-};
-
 World.prototype.getGridI = function(x)
 {
   return Math.floor(x / tileSize);

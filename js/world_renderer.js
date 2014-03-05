@@ -3,14 +3,8 @@ var WorldRenderer = function()
 {
   var root = this; // Need this for _.each loops... TODO: Learn javascript.
   
-  this.maxChunkSpritePool = 512;
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
-  this.tileSpritePool = [];
-  this.chunkSpritePool = [];
-  this.chunkTexturePool = [];
-  this.activeChunkPoolIndices = []; // array of indices used (for chunkSprite and chunkTexture pools)
-  this.spriteCounter = 0;
   this.camera = new PIXI.DisplayObjectContainer();
   this.camera.position.x = (this.world.playerCastleX + 4) * 16;
   this.camera.position.y = (this.world.playerCastleY + 4) * 16;
@@ -21,17 +15,10 @@ var WorldRenderer = function()
   this.debugGridI = 0;
   this.debugGridJ = 0;
   this.debugSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.debugTileSelection));
-  this.minScale = 0.25;
+  this.minScale = 0.05;
   this.maxScale = 2;
   
   this.container.addChild(this.debugSelection);
-  
-  // Create chunk sprite pool
-  for (var i = 0; i < this.maxChunkSpritePool; i++)
-  {
-    this.chunkSpritePool[i] = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.blank));
-    this.chunkTexturePool[i] = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
-  }
   
   // Create terrain sprites
   this.terrainSprites = {};
@@ -60,6 +47,16 @@ var WorldRenderer = function()
       });
     });
   });
+};
+
+WorldRenderer.prototype.getChunkI = function(i)
+{
+  return Math.floor(i / chunkSize);
+};
+
+WorldRenderer.prototype.getChunkJ = function(j)
+{
+  return Math.floor(j / chunkSize);
 };
 
 // Get terrain tile sprites
@@ -94,20 +91,6 @@ WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
   }
 };
 
-// Get number of chunks to show on the x axis
-WorldRenderer.prototype.getChunkBufferX = function()
-{
-  return Math.ceil((game.containerWidth / (chunkSize * tileSize * this.minScale)) * 0.5);
-  //return Math.ceil((game.containerWidth / (chunkSize * tileSize * this.camera.scale.x)) * 0.5);
-};
-
-// Get number of chunks to show on the y axis
-WorldRenderer.prototype.getChunkBufferY = function()
-{
-  return Math.ceil((game.containerHeight / (chunkSize * tileSize * this.minScale)) * 0.5);
-  //return Math.ceil((game.containerHeight / (chunkSize * tileSize * this.camera.scale.y)) * 0.5);
-};
-
 // Update
 WorldRenderer.prototype.update = function()
 {
@@ -124,17 +107,14 @@ WorldRenderer.prototype.prerender = function()
 {
   var focusGridI = this.world.getGridI(this.camera.position.x);
   var focusGridJ = this.world.getGridJ(this.camera.position.y);
-  var focusChunkI = this.world.getChunkI(focusGridI);
-  var focusChunkJ = this.world.getChunkJ(focusGridJ);
-  var chunkBufferX = this.getChunkBufferX();
-  var chunkBufferY = this.getChunkBufferY();
+  var focusChunkI = this.getChunkI(focusGridI);
+  var focusChunkJ = this.getChunkJ(focusGridJ);
+  var chunkBufferX = 1;
+  var chunkBufferY = 1;
   var startChunkI = focusChunkI - chunkBufferX;
   var endChunkI = focusChunkI + chunkBufferX;
   var startChunkJ = focusChunkJ - chunkBufferY;
   var endChunkJ = focusChunkJ + chunkBufferY;
-  
-  // Clear offscreen chunks
-  this.clearChunksOutside(startChunkI, endChunkI, startChunkJ, endChunkJ);
   
   // Ensure necessary chunks exist
   for(var chunkI = startChunkI; chunkI <= endChunkI; chunkI++)
@@ -154,68 +134,11 @@ WorldRenderer.prototype.prerender = function()
   }
 };
 
-// Clear chunks outside a given range
-WorldRenderer.prototype.clearChunksOutside = function(startChunkI, endChunkI, startChunkJ, endChunkJ)
-{
-  for (var chunkI in this.chunkSprites)
-  {
-    if (this.chunkSprites.hasOwnProperty(chunkI)) // JAVASCRIPT IS SO (&@!#%&*(@#! INTUITIVE!! D:
-    {
-      for (var chunkJ in this.chunkSprites[chunkI])
-      {
-        if (this.chunkSprites[chunkI].hasOwnProperty(chunkJ))
-        {
-          if (chunkI < startChunkI || chunkI > endChunkI || chunkJ < startChunkJ || chunkJ > endChunkJ)
-          {
-            var chunkSprite = this.chunkSprites[chunkI][chunkJ];
-            
-            this.container.removeChild(chunkSprite);
-            delete this.chunkSprites[chunkI][chunkJ];
-            delete this.activeChunkPoolIndices[this.getActiveChunkPoolIndex(chunkSprite)];
-            
-            if (_.size(this.chunkSprites[chunkI]) == 0)
-            {
-              delete this.chunkSprites[chunkI];
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-// Get an unused index from the chunk pool
-WorldRenderer.prototype.getUnusedChunkPoolIndex = function()
-{
-  var index = 0;
-  
-  while (this.activeChunkPoolIndices[index])
-  {
-    index++;
-  }
-  
-  return index;
-};
-
-// Get a chunk pool index, given a chunk sprite
-WorldRenderer.prototype.getActiveChunkPoolIndex = function(chunkSprite)
-{
-  for (var i = 0; i < this.activeChunkPoolIndices.length; i++)
-  {
-    if (this.activeChunkPoolIndices[i] == chunkSprite)
-    {
-      return i;
-    }
-  }
-};
-
 // Generate a chunk sprite by rendering tiles to it
 WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 {
-  var chunkPoolIndex = this.getUnusedChunkPoolIndex();
-  var renderTexture = this.chunkTexturePool[chunkPoolIndex];
-  var chunkSprite = this.chunkSpritePool[chunkPoolIndex];
-  var numActiveTileSprites = 0;
+  var renderTexture = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
+  var chunkSprite = new PIXI.Sprite(renderTexture);
   
   for (var i = 0; i < chunkSize; i++)
   {
@@ -252,16 +175,11 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
         
         renderTexture.render(featureSprite, tileSprite.position);
       }
-      
-      numActiveTileSprites++;
     }
   }
   
-  chunkSprite.setTexture(renderTexture);
   chunkSprite.position.x = chunkI * chunkSize * tileSize;
   chunkSprite.position.y = chunkJ * chunkSize * tileSize;
-  
-  this.activeChunkPoolIndices[chunkPoolIndex] = chunkSprite;
   
   return chunkSprite;
 };
