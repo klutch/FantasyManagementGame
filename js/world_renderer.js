@@ -2,7 +2,7 @@
 var WorldRenderer = function()
 {
   this.maxTileSpritePool = chunkSize * chunkSize;
-  this.maxChunkSpritePool = 256;
+  this.maxChunkSpritePool = 512;
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
   this.tileSpritePool = [];
@@ -20,6 +20,8 @@ var WorldRenderer = function()
   this.debugGridI = 0;
   this.debugGridJ = 0;
   this.debugSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.debugTileSelection));
+  this.minScale = 0.25;
+  this.maxScale = 2;
   
   this.container.addChild(this.debugSelection);
   
@@ -116,13 +118,15 @@ WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ
 // Get number of chunks to show on the x axis
 WorldRenderer.prototype.getChunkBufferX = function()
 {
-  return Math.ceil((game.containerWidth / (chunkSize * tileSize * this.camera.scale.x)) * 0.5);
+  return Math.ceil((game.containerWidth / (chunkSize * tileSize * this.minScale)) * 0.5);
+  //return Math.ceil((game.containerWidth / (chunkSize * tileSize * this.camera.scale.x)) * 0.5);
 };
 
 // Get number of chunks to show on the y axis
 WorldRenderer.prototype.getChunkBufferY = function()
 {
-  return Math.ceil((game.containerHeight / (chunkSize * tileSize * this.camera.scale.y)) * 0.5);
+  return Math.ceil((game.containerHeight / (chunkSize * tileSize * this.minScale)) * 0.5);
+  //return Math.ceil((game.containerHeight / (chunkSize * tileSize * this.camera.scale.y)) * 0.5);
 };
 
 // Update
@@ -294,7 +298,7 @@ WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 // Zoom camera
 WorldRenderer.prototype.zoomCamera = function(deltaY)
 {
-  var scale = Math.min(Math.max(this.camera.scale.x + deltaY, 0.5), 2);
+  var scale = Math.min(Math.max(this.camera.scale.x + deltaY, this.minScale), this.maxScale);
   
   this.camera.scale.x = scale;
   this.camera.scale.y = scale;
