@@ -8,6 +8,7 @@ var WorldRenderer = function()
   this.camera = new PIXI.DisplayObjectContainer();
   this.camera.position.x = (this.world.playerCastleX + 4) * 16;
   this.camera.position.y = (this.world.playerCastleY + 4) * 16;
+  this.camera.target = new PIXI.Point(this.camera.position.x, this.camera.position.y);
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
@@ -94,6 +95,8 @@ WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
 // Update
 WorldRenderer.prototype.update = function()
 {
+  this.camera.position.x += (this.camera.target.x - this.camera.position.x) / 8;
+  this.camera.position.y += (this.camera.target.y - this.camera.position.y) / 8;
   this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
   this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
   this.container.scale.x = this.camera.scale.x;
@@ -187,8 +190,8 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 // Move the camera to a given position
 WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 {
-  this.camera.position.x += deltaX;
-  this.camera.position.y += deltaY;
+  this.camera.target.x += deltaX;
+  this.camera.target.y += deltaY;
 }
 
 // Zoom camera
