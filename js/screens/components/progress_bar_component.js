@@ -11,7 +11,7 @@ var ProgressBarComponent = function(options)
   
   // Fill sprite
   this.maxFillWidth = 496;
-  this.fillSprite = new PIXI.TilingSprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.progressBar[0]));
+  this.fillSprite = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.progressBar[0]));
   this.fillSprite.position.x = 8;
   this.fillSprite.position.y = 6;
   this.fillSprite.width = 0;

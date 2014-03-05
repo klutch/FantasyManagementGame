@@ -176,27 +176,6 @@ WorldRenderer.prototype.determineChunkRenderStatus = function()
   {
       screenManager.addScreen(new LoadingScreen());
   }
-  
-  // Generate chunks if necessary
-  /*
-  if (generationRequired)
-  {
-    for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer + 1; i < limitI; i++)
-    {
-      for (var j = currentChunkJ - this.generationBuffer, limitJ = currentChunkJ + this.generationBuffer + 1; j < limitJ; j++)
-      {
-        if (this.chunkSprites[i] == null)
-        {
-          this.chunkSprites[i] = {};
-        }
-        if (this.chunkSprites[i][j] == null)
-        {
-          this.chunkSprites[i][j] = this.generateChunkSprite(i, j);
-          this.container.addChildAt(this.chunkSprites[i][j], 0);
-        }
-      }
-    }
-  }*/
 };
 
 // Does a chunk exist?
