@@ -41,11 +41,11 @@ var AssetPathManager = function()
   
   // Player castle assets
   this.assetPaths.featureTiles = {};
-  this.assetPaths.featureTiles[FeatureType.PlayerCastle] = {};
-  this.assetPaths.featureTiles[FeatureType.PlayerCastle][FeatureType.PlayerCastle] = [];
+  this.assetPaths.featureTiles[FeatureType.Castle] = {};
+  this.assetPaths.featureTiles[FeatureType.Castle][CastleType.Player] = [];
   for (var i = 0; i < 64; i++)
   {
-    this.assetPaths.featureTiles[FeatureType.PlayerCastle][FeatureType.PlayerCastle].push("img/tiles/player_castle_" + i + ".png");
+    this.assetPaths.featureTiles[FeatureType.Castle][CastleType.Player].push("img/tiles/player_castle_" + i + ".png");
   }
   
   // Dwelling assets

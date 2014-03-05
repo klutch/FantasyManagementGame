@@ -22,10 +22,15 @@ var Tile = function(type, walkable, movementCost, elevation)
 
 // Feature type enum
 var FeatureType = Object.freeze({
-  PlayerCastle: "PlayerCastle",
+  Castle: "Castle",
   Dwelling: "Dwelling",
   Dungeon: "Dungeon",
   Gathering: "Gathering"
+});
+
+// Castle type enum
+var CastleType = Object.freeze({
+  Player: "Player"
 });
 
 // Dwelling type enum
@@ -42,6 +47,14 @@ var DungeonType = Object.freeze({
 // Gathering type enum
 var GatheringType = Object.freeze({
   Tavern: "Tavern"
+});
+
+// Feature type lists (purely for convenience)
+var FeatureTypeList = Object.freeze({
+  Castle: CastleType,
+  Dwelling: DwellingType,
+  Dungeon: DungeonType,
+  Gathering: GatheringType
 });
 
 // Feature class

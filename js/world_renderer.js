@@ -1,6 +1,8 @@
 // WorldRenderer constructor
 var WorldRenderer = function()
 {
+  var root = this; // Need this for _.each loops... TODO: Learn javascript.
+  
   this.maxChunkSpritePool = 512;
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
@@ -24,26 +26,43 @@ var WorldRenderer = function()
   
   this.container.addChild(this.debugSelection);
   
-  // Create reuseable sprites
+  // Create chunk sprite pool
   for (var i = 0; i < this.maxChunkSpritePool; i++)
   {
     this.chunkSpritePool[i] = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.blank));
     this.chunkTexturePool[i] = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
   }
   
-  var ugh = this;
+  // Create terrain sprites
   this.terrainSprites = {};
   _.each(TileType, function(type)
     {
-      ugh.terrainSprites[type] = [];
+      root.terrainSprites[type] = [];
       _.each(assetPathManager.assetPaths.terrainTiles[type], function(path)
         {
-          ugh.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
+          root.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
         });
     });
+  
+  // Create feature sprites
+  this.featureSprites = {};
+  _.each(FeatureType, function(featureType)
+  {
+    var subTypes = FeatureTypeList[featureType];
+    
+    root.featureSprites[featureType] = {};
+    _.each(subTypes, function(subType)
+    {
+      root.featureSprites[featureType][subType] = [];
+      _.each(assetPathManager.assetPaths.featureTiles[featureType][subType], function(path)
+      {
+        root.featureSprites[featureType][subType].push(PIXI.Sprite.fromImage(path));
+      });
+    });
+  });
 };
 
-// Get texture given a tile
+// Get terrain tile sprites
 WorldRenderer.prototype.getTileSprite = function(tile)
 {
   var type = tile.type;
@@ -52,26 +71,26 @@ WorldRenderer.prototype.getTileSprite = function(tile)
   return tilesList[Math.floor(Math.random() * tilesList.length)];
 };
 
-// Get texture given a feature
-WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ)
+// Get feature tile sprites
+WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
 {
-  var num = textureJ * feature.width + textureI;
+  var index = textureJ * feature.width + textureI;
   
-  if (feature.type == FeatureType.PlayerCastle)
+  if (feature.type == FeatureType.Castle)
   {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.featureTiles[FeatureType.PlayerCastle][num]);
+    return this.featureSprites[feature.type][feature.castleType][index];
   }
   else if (feature.type == FeatureType.Dwelling)
   {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.dwellingTiles[feature.dwellingType][num]);
+    return this.featureSprites[feature.type][feature.dwellingType][index];
   }
   else if (feature.type == FeatureType.Dungeon)
   {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.dungeonTiles[feature.dungeonType][num]);
+    return this.featureSprites[feature.type][feature.dungeonType][index];
   }
   else if (feature.type == FeatureType.Gathering)
   {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.gatheringTiles[feature.gatheringType][num]);
+    return this.featureSprites[feature.type][feature.gatheringType][index];
   }
 };
 
@@ -226,13 +245,13 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       renderTexture.render(tileSprite, tileSprite.position);
       
       // Render feature tile
-      /*if (tile.featureId != null)
+      if (tile.featureId != null)
       {
         var feature = this.world.features[tile.featureId];
+        var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
         
-        tileSprite.setTexture(this.getFeatureTexture(feature, tile.featureTextureI, tile.featureTextureJ));
-        renderTexture.render(tileSprite, tileSprite.position);
-      }*/
+        renderTexture.render(featureSprite, tileSprite.position);
+      }
       
       numActiveTileSprites++;
     }

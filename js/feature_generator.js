@@ -91,7 +91,8 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   }
   
   // Create feature
-  feature = this.world.createFeature(FeatureType.PlayerCastle, this.world.playerCastleX, this.world.playerCastleY, 8, 8);
+  feature = this.world.createFeature(FeatureType.Castle, this.world.playerCastleX, this.world.playerCastleY, 8, 8);
+  feature.castleType = CastleType.Player;
 };
 
 // Try to generate a feature at a given tile
