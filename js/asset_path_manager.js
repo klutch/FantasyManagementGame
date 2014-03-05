@@ -2,68 +2,81 @@ var AssetPathManager = function()
 {
   this.assetPaths = {};
   
-  // Tile assets
+  // Terrain assets
   this.assetPaths.tiles = {};
   this.assetPaths.tiles.blank = "img/tiles/blank.png";
   this.assetPaths.tiles.debugTileSelection = "img/tiles/selected_tile.png";
   this.assetPaths.tiles.fog = "img/tiles/fog_0.png";
-  this.assetPaths.tiles.plains = [
+  this.assetPaths.terrainTiles = {};
+  this.assetPaths.terrainTiles[TileType.Plains] = [
     "img/tiles/plains_0.png",
     "img/tiles/plains_1.png",
     "img/tiles/plains_2.png"
   ];
-  this.assetPaths.tiles.forest = [
+  this.assetPaths.terrainTiles[TileType.Forest] = [
     "img/tiles/forest_0.png",
     "img/tiles/forest_1.png"
   ];
-  this.assetPaths.tiles.swamp = [
+  this.assetPaths.terrainTiles[TileType.Swamp] = [
     "img/tiles/swamp_0.png"
   ];
-  this.assetPaths.tiles.mountains = [
+  this.assetPaths.terrainTiles[TileType.Mountains] = [
     "img/tiles/mountains_0.png"
   ];
-  this.assetPaths.tiles.hills = [
+  this.assetPaths.terrainTiles[TileType.Hills] = [
     "img/tiles/hills_0.png"
   ];
-  this.assetPaths.tiles.snow = [
+  this.assetPaths.terrainTiles[TileType.Snow] = [
     "img/tiles/snow_0.png"
   ];
-  this.assetPaths.tiles.desert = [
+  this.assetPaths.terrainTiles[TileType.Desert] = [
     "img/tiles/desert_0.png"
   ];
-  this.assetPaths.tiles.water = [
+  this.assetPaths.terrainTiles[TileType.Water] = [
     "img/tiles/water_0.png"
   ];
-  this.assetPaths.tiles.playerCastle = [];
+  this.assetPaths.terrainTiles[TileType.Road] = [
+    "img/tiles/road_0.png"
+  ];
+  
+  // Player castle assets
+  this.assetPaths.featureTiles = {};
+  this.assetPaths.featureTiles[FeatureType.PlayerCastle] = [];
   for (var i = 0; i < 64; i++)
   {
-    this.assetPaths.tiles.playerCastle.push("img/tiles/player_castle_" + i + ".png");
+    this.assetPaths.featureTiles[FeatureType.PlayerCastle].push("img/tiles/player_castle_" + i + ".png");
   }
-  this.assetPaths.tiles.town = [
+  
+  // Dwelling assets
+  this.assetPaths.dwellingTiles = {};
+  this.assetPaths.dwellingTiles[DwellingType.Town] = [
     "img/tiles/town_0.png",
     "img/tiles/town_1.png",
     "img/tiles/town_2.png",
     "img/tiles/town_3.png"
   ];
-  this.assetPaths.tiles.grove = [
+  this.assetPaths.dwellingTiles[DwellingType.Grove] = [
     "img/tiles/grove_0.png",
     "img/tiles/grove_1.png",
     "img/tiles/grove_2.png",
     "img/tiles/grove_3.png"
   ];
-  this.assetPaths.tiles.cave = [];
+  
+  // Dungeon assets
+  this.assetPaths.dungeonTiles = {};
+  this.assetPaths.dungeonTiles[DungeonType.Cave] = [];
   for (var i = 0; i < 9; i++)
   {
-    this.assetPaths.tiles.cave.push("img/tiles/cave_dungeon_" + i + ".png");
+    this.assetPaths.dungeonTiles[DungeonType.Cave].push("img/tiles/cave_dungeon_" + i + ".png");
   }
-  this.assetPaths.tiles.tavern = [];
+  
+  // Gathering assets
+  this.assetPaths.gatheringTiles = {};
+  this.assetPaths.gatheringTiles[GatheringType.Tavern] = [];
   for (var i = 0; i < 6; i++)
   {
-    this.assetPaths.tiles.tavern.push("img/tiles/tavern_" + i + ".png");
+    this.assetPaths.gatheringTiles[GatheringType.Tavern].push("img/tiles/tavern_" + i + ".png");
   }
-  this.assetPaths.tiles.road = [
-    "img/tiles/road_0.png"
-  ];
   
   // UI assets
   this.assetPaths.ui = {};

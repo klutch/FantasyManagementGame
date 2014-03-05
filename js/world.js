@@ -1,14 +1,14 @@
 // Tile type enum
 var TileType = Object.freeze({
-  Desert: 0,
-  Plains: 1,
-  Hills: 2,
-  Mountains: 3,
-  Snow: 4,
-  Forest: 5,
-  Swamp: 6,
-  Water: 7,
-  Road: 8
+  Desert: "Desert",
+  Plains: "Plains",
+  Hills: "Hills",
+  Mountains: "Mountains",
+  Snow: "Snow",
+  Forest: "Forest",
+  Swamp: "Swamp",
+  Water: "Water",
+  Road: "Road"
 });
 
 // Tile class
@@ -22,26 +22,26 @@ var Tile = function(type, walkable, movementCost, elevation)
 
 // Feature type enum
 var FeatureType = Object.freeze({
-  PlayerCastle: 0,
-  Dwelling: 1,
-  Dungeon: 2,
-  Gather: 3
+  PlayerCastle: "PlayerCastle",
+  Dwelling: "Dwelling",
+  Dungeon: "Dungeon",
+  Gathering: "Gathering"
 });
 
 // Dwelling type enum
 var DwellingType = Object.freeze({
-  Town: 0,
-  Grove: 1
+  Town: "Town",
+  Grove: "Grove"
 });
 
 // Dungeon type enum
 var DungeonType = Object.freeze({
-  Cave: 0
+  Cave: "Cave"
 });
 
 // Gathering type enum
 var GatheringType = Object.freeze({
-  Tavern: 0
+  Tavern: "Tavern"
 });
 
 // Feature class

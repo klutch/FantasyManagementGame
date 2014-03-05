@@ -40,43 +40,9 @@ var WorldRenderer = function()
 WorldRenderer.prototype.getTileTexture = function(tile)
 {
   var type = tile.type;
+  var tilesList = assetPathManager.assetPaths.terrainTiles[type];
   
-  if (type == TileType.Plains)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.plains[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.plains.length)]);
-  }
-  else if (type == TileType.Forest)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.forest[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.forest.length)]);
-  }
-  else if (type == TileType.Swamp)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.swamp[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.swamp.length)]);
-  }
-  else if (type == TileType.Mountains)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.mountains[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.mountains.length)]);
-  }
-  else if (type == TileType.Hills)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.hills[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.hills.length)]);
-  }
-  else if (type == TileType.Snow)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.snow[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.snow.length)]);
-  }
-  else if (type == TileType.Desert)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.desert[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.desert.length)]);
-  }
-  else if (type == TileType.Water)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.water[Math.floor(Math.random()*assetPathManager.assetPaths.tiles.water.length)]);
-  }
-  else if (type == TileType.Road)
-  {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.road[0]);
-  }
+  return PIXI.Texture.fromImage(tilesList[Math.floor(Math.random() * tilesList.length)]);
 };
 
 // Get texture given a feature
@@ -86,32 +52,19 @@ WorldRenderer.prototype.getFeatureTexture = function(feature, textureI, textureJ
   
   if (feature.type == FeatureType.PlayerCastle)
   {
-    return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.playerCastle[num]);
+    return PIXI.Texture.fromImage(assetPathManager.assetPaths.featureTiles[FeatureType.PlayerCastle][num]);
   }
   else if (feature.type == FeatureType.Dwelling)
   {
-    if (feature.dwellingType == DwellingType.Town)
-    {
-      return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.town[num]);
-    }
-    else if (feature.dwellingType == DwellingType.Grove)
-    {
-      return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.grove[num]);
-    }
+    return PIXI.Texture.fromImage(assetPathManager.assetPaths.dwellingTiles[feature.dwellingType][num]);
   }
   else if (feature.type == FeatureType.Dungeon)
   {
-    if (feature.dungeonType == DungeonType.Cave)
-    {
-      return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.cave[num]);
-    }
+    return PIXI.Texture.fromImage(assetPathManager.assetPaths.dungeonTiles[feature.dungeonType][num]);
   }
   else if (feature.type == FeatureType.Gathering)
   {
-    if (feature.gatheringType == GatheringType.Tavern)
-    {
-      return PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.tavern[num]);
-    }
+    return PIXI.Texture.fromImage(assetPathManager.assetPaths.gatheringTiles[feature.gatheringType][num]);
   }
 };
 
