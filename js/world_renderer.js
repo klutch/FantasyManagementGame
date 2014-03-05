@@ -8,7 +8,8 @@ var WorldRenderer = function()
   this.camera = new PIXI.DisplayObjectContainer();
   this.camera.position.x = (this.world.playerCastleI + 4) * 16;
   this.camera.position.y = (this.world.playerCastleJ + 4) * 16;
-  this.camera.target = new PIXI.Point(this.camera.position.x, this.camera.position.y);
+  this.camera.targetPosition = new PIXI.Point(this.camera.position.x, this.camera.position.y);
+  this.camera.targetScale = 1;
   this.chunkSprites = {};
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
@@ -97,12 +98,21 @@ WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
 // Update
 WorldRenderer.prototype.update = function()
 {
-  this.camera.position.x += (this.camera.target.x - this.camera.position.x) / 8;
-  this.camera.position.y += (this.camera.target.y - this.camera.position.y) / 8;
+  // Ease position towards target position
+  this.camera.position.x += (this.camera.targetPosition.x - this.camera.position.x) / 8;
+  this.camera.position.y += (this.camera.targetPosition.y - this.camera.position.y) / 8;
+  
+  // Ease scale towards target scale
+  this.camera.scale.x += (this.camera.targetScale - this.camera.scale.x) / 8;
+  this.camera.scale.y = this.camera.scale.x;
+  
+  // Update container position and scale
   this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
   this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
   this.container.scale.x = this.camera.scale.x;
   this.container.scale.y = this.camera.scale.y;
+  
+  // Debug...
   this.debugSelection.position.x = this.debugGridI * tileSize;
   this.debugSelection.position.y = this.debugGridJ * tileSize;
 };
@@ -225,22 +235,21 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 // Move the camera to a new position
 WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 {
-  this.camera.target.x += deltaX;
-  this.camera.target.y += deltaY;
+  this.camera.targetPosition.x += deltaX;
+  this.camera.targetPosition.y += deltaY;
 }
 
 // Move the camera to the home castle
 WorldRenderer.prototype.moveCameraToHome = function()
 {
-  this.camera.target.x = (this.world.playerCastleI + 4) * tileSize;
-  this.camera.target.y = (this.world.playerCastleJ + 4) * tileSize;
+  this.camera.targetPosition.x = (this.world.playerCastleI + 4) * tileSize;
+  this.camera.targetPosition.y = (this.world.playerCastleJ + 4) * tileSize;
 };
 
 // Zoom camera
 WorldRenderer.prototype.zoomCamera = function(deltaY)
 {
-  var scale = Math.min(Math.max(this.camera.scale.x + deltaY, this.minScale), this.maxScale);
+  var scale = Math.min(Math.max(this.camera.targetScale + deltaY, this.minScale), this.maxScale);
   
-  this.camera.scale.x = scale;
-  this.camera.scale.y = scale;
+  this.camera.targetScale = scale;
 };
