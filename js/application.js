@@ -33,6 +33,7 @@ function finishInitializing()
   // Initialize FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
   fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "white" });
+  fpsText.y = 28;
   fpsText.z = 110;
   game.stage.addChild(fpsText);
   

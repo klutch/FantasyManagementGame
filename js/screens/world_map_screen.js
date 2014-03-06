@@ -5,15 +5,15 @@ var WorldMapScreen = function()
   this.worldRenderer = new WorldRenderer();
   this.bottomBar = new PanelComponent({
     x: -8,
-    y: game.containerHeight - 16,
+    y: -8,
     width: game.containerWidth + 16,
     height: 34
   });
   this.homeButton = new ButtonComponent({
     x: game.containerWidth - 28,
-    y: game.containerHeight - 28,
+    y: -4,
     centerX: true,
-    centerY: true,
+    centerY: false,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
     onClick: function(e) { root.worldRenderer.moveCameraToHome(); }
   });
@@ -47,7 +47,7 @@ WorldMapScreen.prototype.buildResourceIndicators = function()
   this.resourceIndicators = {};
   _.each(ResourceType, function(resourceType)
     {
-      this.resourceIndicators[resourceType] = new ResourceIndicatorComponent(resourceType, offset * counter, game.containerHeight - 22);
+      this.resourceIndicators[resourceType] = new ResourceIndicatorComponent(resourceType, offset * counter, 2);
       counter++;
     },
     this);
