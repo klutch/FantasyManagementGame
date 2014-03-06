@@ -10,7 +10,7 @@ var Game = function()
   // Initialize Pixi
   this.containerWidth = $('#container').width();
   this.containerHeight = $('#container').height();
-  this.stage = new PIXI.Stage(0x66FF99);
+  this.stage = new PIXI.Stage(0x000000);
   this.renderer = PIXI.autoDetectRenderer(this.containerWidth, this.containerHeight);
   $('#container').append(this.renderer.view);
   
