@@ -12,9 +12,3 @@ TooltipComponent.prototype.setText = function(text)
 {
   this.text.setText(text);
 };
-
-TooltipComponent.prototype.setPosition = function(point)
-{
-  this.position.x = point.x;
-  this.position.y = point.y;
-};
