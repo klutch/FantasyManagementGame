@@ -16,6 +16,7 @@ var ButtonComponent = function(options)
   this.onMouseOver = options.onMouseOver;
   this.onMouseOut = options.onMouseOut;
   this.onClick = options.onClick;
+  this.tooltipText = options.tooltipText;
   
   // Textures
   if (this.normalTexture != null)
@@ -68,6 +69,7 @@ ButtonComponent.prototype.click = function(interactionData)
 
 ButtonComponent.prototype.mouseover = function(interactionData)
 {
+  // Hover effects
   if (this.bitmapText != null)
   {
     this.bitmapText.tint = 0xFFF568;
@@ -81,6 +83,13 @@ ButtonComponent.prototype.mouseover = function(interactionData)
     }
   }
   
+  // Tooltips
+  if (this.tooltipText != null)
+  {
+    screenManager.screens[ScreenType.Tooltip].enableTooltip(this.tooltipText);
+  }
+  
+  // Callback
   if (this.onMouseOver != null)
   {
     this.onMouseOver(interactionData);
@@ -89,6 +98,7 @@ ButtonComponent.prototype.mouseover = function(interactionData)
 
 ButtonComponent.prototype.mouseout = function(interactionData)
 {
+  // Hover effects
   if (this.bitmapText != null)
   {
     this.bitmapText.tint = 0xCCCCCC;
@@ -99,6 +109,13 @@ ButtonComponent.prototype.mouseout = function(interactionData)
     this.textureSprite.setTexture(this.normalTexture);
   }
   
+  // Tooltips
+  if (this.tooltipText != null)
+  {
+    screenManager.screens[ScreenType.Tooltip].disableTooltip();
+  }
+  
+  // Callback
   if (this.onMouseOut != null)
   {
     this.onMouseOut(interactionData);

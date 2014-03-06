@@ -15,7 +15,8 @@ var WorldMapScreen = function()
     centerX: true,
     centerY: false,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
-    onClick: function(e) { root.worldRenderer.moveCameraToHome(); }
+    onClick: function(e) { root.worldRenderer.moveCameraToHome(); },
+    tooltipText: "Center on home castle"
   });
   
   this.buildResourceIndicators();
