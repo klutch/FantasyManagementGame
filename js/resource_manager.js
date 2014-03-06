@@ -1,34 +1,34 @@
 var ResourceType = Object.freeze({
   // Currency
-  Gold: 0,
+  Gold: "Gold",
   
   // Natural (raw)
-  Logs: 1,
-  Stone: 2,
+  Logs: "Logs",
+  Stone: "Stone",
   
   // Metals (raw)
-  IronOre: 3,
-  ChromiteOre: 4,
-  PlatinumOre: 5,
+  IronOre: "Iron Ore",
+  ChromiteOre: "Chromite Ore",
+  PlatinumOre: "Platinum Ore",
   
   // Crystals (raw)
-  RoughQuartz: 6,
-  RoughDiamond: 7,
-  RoughXenotime: 8,
+  RoughQuartz: "Rough Quartz",
+  RoughDiamond: "Rough Diamond",
+  RoughXenotime: "Rough Xenotime",
   
   // Natural (processed)
-  Planks: 9,
-  Bricks: 10,
+  Planks: "Planks",
+  Bricks: "Bricks",
   
   // Metals (processed)
-  IronIngot: 11,
-  ChromiumIngot: 12,
-  PlatinumIngot: 13,
+  IronIngot: "Iron Ingot",
+  ChromiumIngot: "Chromium Ingot",
+  PlatinumIngot: "Platinum Ingot",
   
   // Crystals (processed)
-  Quartz: 14,
-  Diamond: 15,
-  Xenotime: 16
+  Quartz: "Quartz",
+  Diamond: "Diamond",
+  Xenotime: "Xenotime"
 });
 
 var ResourceManager = function()

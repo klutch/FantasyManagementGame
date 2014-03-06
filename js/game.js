@@ -17,24 +17,6 @@ var Game = function()
   
   // Initialize input manager
   inputManager = new InputManager();
-  document.onkeydown = function(e)
-  {
-    e = e || window.event;
-    inputManager.onKeyDown(e.keyCode);
-  };
-  document.onkeyup = function(e)
-  {
-    e = e || window.event;
-    inputManager.onKeyUp(e.keyCode);
-  };
-  $('canvas').mousewheel(function(e)
-  {
-    inputManager.mouseWheelDelta = e.deltaY;
-  });
-  $('canvas').click(function(e)
-  {
-    inputManager.leftButton = true;
-  });
   
   // Initialize screen manager
   screenManager = new ScreenManager();
@@ -53,6 +35,7 @@ Game.prototype.startNewGame = function()
   this.world = new World();
   this.state = GameState.WorldMap;
   screenManager.addScreen(new WorldMapScreen(this.world));
+  screenManager.addScreen(new TooltipScreen());
 };
 
 Game.prototype.update = function()

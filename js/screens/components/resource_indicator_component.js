@@ -13,6 +13,9 @@ var ResourceIndicatorComponent = function(resourceType, x, y)
   this.iconSprite.position.y = 10;
   this.text = new PIXI.BitmapText("", {font: "8px small_pixelmix"});
   this.text.position.y = 5;
+  this.interactive = true;
+  this.mouseover = this.onMouseOver;
+  this.mouseout = this.onMouseOut;
   
   this.addChild(this.bgSprite);
   this.addChild(this.iconSprite);
@@ -25,4 +28,14 @@ ResourceIndicatorComponent.prototype.update = function()
 {
   this.text.setText(resourceManager.resourceQuantities[this.resourceType].toString());
   this.text.position.x = this.bgSprite.width - (this.text.textWidth + 6);
+};
+
+ResourceIndicatorComponent.prototype.onMouseOver = function(e)
+{
+  screenManager.screens[ScreenType.Tooltip].enableTooltip(this.resourceType);
+};
+
+ResourceIndicatorComponent.prototype.onMouseOut = function(e)
+{
+  screenManager.screens[ScreenType.Tooltip].disableTooltip();
 };
