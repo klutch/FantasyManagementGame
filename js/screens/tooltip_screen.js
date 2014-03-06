@@ -6,6 +6,7 @@ var TooltipScreen = function()
   this.tooltip = new TooltipComponent();
   this.tooltipUses = 0; // Number of elements trying to use the tooltip
   this.boundaryMargin = 16;
+  this.tooltipOffsetX = 16;
   this.upperLeftBounds = new PIXI.Point(this.boundaryMargin, this.boundaryMargin);
   this.lowerRightBounds = new PIXI.Point(game.containerWidth - this.boundaryMargin, game.containerHeight - this.boundaryMargin);
 };
@@ -42,13 +43,16 @@ TooltipScreen.prototype.disableTooltip = function()
 
 TooltipScreen.prototype.setTooltipPosition = function(mouse)
 {
+  this.tooltip.position.x = mouse.x + this.tooltipOffsetX;
+  this.tooltip.position.y = mouse.y;
+  
   // Enforce upper left boundary
-  this.tooltip.position.x = Math.max(this.upperLeftBounds.x, mouse.x);
-  this.tooltip.position.y = Math.max(this.upperLeftBounds.y, mouse.y);
+  this.tooltip.position.x = Math.max(this.upperLeftBounds.x, this.tooltip.position.x);
+  this.tooltip.position.y = Math.max(this.upperLeftBounds.y, this.tooltip.position.y);
   
   // Enforce lower right boundary
-  this.tooltip.position.x = Math.min(this.lowerRightBounds.x - this.tooltip.text.textWidth, mouse.x);
-  this.tooltip.position.y = Math.min(this.lowerRightBounds.y - this.tooltip.text.textHeight, mouse.y);
+  this.tooltip.position.x = Math.min(this.lowerRightBounds.x - this.tooltip.text.textWidth, this.tooltip.position.x);
+  this.tooltip.position.y = Math.min(this.lowerRightBounds.y - this.tooltip.text.textHeight, this.tooltip.position.y);
 };
 
 TooltipScreen.prototype.update = function()
