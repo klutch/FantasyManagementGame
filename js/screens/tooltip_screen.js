@@ -24,11 +24,14 @@ TooltipScreen.prototype.onRemoveScreen = function()
 TooltipScreen.prototype.enableTooltip = function(text)
 {
   this.tooltip.setText(text);
-  this.setTooltipPosition(inputManager.mousePosition);
+  this.tooltip.position.x = -1000;
+  this.tooltip.position.y = -1000;
+  this.tooltip.text.updateText();
   if (this.tooltipUses == 0)
   {
     this.container.addChild(this.tooltip);
   }
+  this.tooltip.updateTransform();
   this.tooltipUses++;
 };
 
