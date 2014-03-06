@@ -40,8 +40,9 @@ Game.prototype.startNewGame = function()
 
 Game.prototype.update = function()
 {
-  screenManager.update();
   inputManager.update();
+  screenManager.update();
+  inputManager.postUpdate();
 };
 
 Game.prototype.draw = function()

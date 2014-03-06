@@ -30,6 +30,10 @@ InputManager.prototype.onKeyUp = function(keyCode)
 InputManager.prototype.update = function()
 {
   this.mousePosition = game.stage.getMousePosition();
+};
+
+InputManager.prototype.postUpdate = function()
+{
   this.keysPressedLastFrame = this.keysPressed.slice(0);
   this.leftButtonLastFrame = this.leftButton;
   this.leftButton = false;
