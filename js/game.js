@@ -11,7 +11,8 @@ var Game = function()
   this.containerWidth = $('#container').width();
   this.containerHeight = $('#container').height();
   this.stage = new PIXI.Stage(0x000000);
-  this.renderer = PIXI.autoDetectRenderer(this.containerWidth, this.containerHeight);
+  //this.renderer = PIXI.autoDetectRenderer(this.containerWidth, this.containerHeight);
+  this.renderer = new PIXI.CanvasRenderer(this.containerWidth, this.containerHeight);
   $('#container').append(this.renderer.view);
   
   // Initialize input manager
