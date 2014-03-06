@@ -12,6 +12,7 @@ var game;
 var screenManager;
 var inputManager;
 var assetPathManager = new AssetPathManager();
+var resourceManager;
 
 // Initialize
 function initialize()

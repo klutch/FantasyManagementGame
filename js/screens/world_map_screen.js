@@ -5,18 +5,20 @@ var WorldMapScreen = function()
   this.worldRenderer = new WorldRenderer();
   this.bottomBar = new PanelComponent({
     x: -8,
-    y: game.containerHeight - 28,
+    y: game.containerHeight - 16,
     width: game.containerWidth + 16,
     height: 34
   });
   this.homeButton = new ButtonComponent({
-    x: Math.floor(game.containerWidth * 0.5),
+    x: game.containerWidth - 28,
     y: game.containerHeight - 28,
     centerX: true,
     centerY: true,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
     onClick: function(e) { root.worldRenderer.moveCameraToHome(); }
   });
+  
+  this.buildResourceIndicators();
 };
 
 WorldMapScreen.prototype.onAddScreen = function()
@@ -25,6 +27,7 @@ WorldMapScreen.prototype.onAddScreen = function()
   game.stage.addChild(this.worldRenderer.camera);
   game.stage.addChild(this.bottomBar);
   game.stage.addChild(this.homeButton);
+  _.each(this.resourceIndicators, function(indicator) { game.stage.addChild(indicator); });
 };
 
 WorldMapScreen.prototype.onRemoveScreen = function()
@@ -33,6 +36,21 @@ WorldMapScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.worldRenderer.camera);
   game.stage.removeChild(this.bottomBar);
   game.stage.removeChild(this.homeButton);
+  _.each(this.resourceIndicators, function(indicator) { game.stage.removeChild(indicator); });
+};
+
+WorldMapScreen.prototype.buildResourceIndicators = function()
+{
+  var offset = 74;
+  var counter = 0;
+  
+  this.resourceIndicators = {};
+  _.each(ResourceType, function(resourceType)
+    {
+      this.resourceIndicators[resourceType] = new ResourceIndicatorComponent(resourceType, offset * counter, game.containerHeight - 22);
+      counter++;
+    },
+    this);
 };
 
 WorldMapScreen.prototype.update = function()
@@ -60,4 +78,5 @@ WorldMapScreen.prototype.update = function()
   }
   
   this.worldRenderer.update();
+  _.each(this.resourceIndicators, function(indicator) { indicator.update(); });
 };

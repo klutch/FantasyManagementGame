@@ -37,6 +37,9 @@ var Game = function()
   
   // Initialize screen manager
   screenManager = new ScreenManager();
+  
+  // Initialize resource manager
+  resourceManager = new ResourceManager();
 };
 
 Game.prototype.closeMainMenu = function()
