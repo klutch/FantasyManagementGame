@@ -112,6 +112,24 @@ var AssetPathManager = function()
     "img/ui/progress_bar_border.png"
   ];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
+  this.assetPaths.ui.resources = {};
+  this.assetPaths.ui.resources[ResourceType.Gold] = ["img/ui/resource_gold.png"];
+  this.assetPaths.ui.resources[ResourceType.Logs] = ["img/ui/resource_logs.png"];
+  this.assetPaths.ui.resources[ResourceType.Stone] = ["img/ui/resource_stone.png"];
+  this.assetPaths.ui.resources[ResourceType.IronOre] = ["img/ui/resource_iron_ore.png"];
+  this.assetPaths.ui.resources[ResourceType.ChromiteOre] = ["img/ui/resource_chromite_ore.png"];
+  this.assetPaths.ui.resources[ResourceType.PlatinumOre] = ["img/ui/resource_platinum_ore.png"];
+  this.assetPaths.ui.resources[ResourceType.RoughQuartz] = ["img/ui/resource_rough_quartz.png"];
+  this.assetPaths.ui.resources[ResourceType.RoughDiamond] = ["img/ui/resource_rough_diamond.png"];
+  this.assetPaths.ui.resources[ResourceType.RoughXenotime] = ["img/ui/resource_rough_xenotime.png"];
+  this.assetPaths.ui.resources[ResourceType.Planks] = ["img/ui/resource_planks.png"];
+  this.assetPaths.ui.resources[ResourceType.Bricks] = ["img/ui/resource_bricks.png"];
+  this.assetPaths.ui.resources[ResourceType.IronIngot] = ["img/ui/resource_iron_ingot.png"];
+  this.assetPaths.ui.resources[ResourceType.ChromiumIngot] = ["img/ui/resource_chromium_ingot.png"];
+  this.assetPaths.ui.resources[ResourceType.PlatinumIngot] = ["img/ui/resource_platinum_ingot.png"];
+  this.assetPaths.ui.resources[ResourceType.Quartz] = ["img/ui/resource_quartz.png"];
+  this.assetPaths.ui.resources[ResourceType.Diamond] = ["img/ui/resource_diamond.png"];
+  this.assetPaths.ui.resources[ResourceType.Xenotime] = ["img/ui/resource_xenotime.png"];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)
