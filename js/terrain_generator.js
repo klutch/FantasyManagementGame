@@ -108,10 +108,12 @@ TerrainGenerator.prototype.getTemperatureModifier = function(elevation)
 
 TerrainGenerator.prototype.isRiver = function(x, y)
 {
-  var road1 = this.noise.ridgedPerlin(x * 0.5, y * 0.5);
-  var result = road1;
-  
-  return result > 0.9;
+  return this.noise.ridgedPerlin(x * 0.5, y * 0.5) > 0.9;
+};
+
+TerrainGenerator.prototype.isRoad = function(x, y)
+{
+  return this.noise.ridgedPerlin((x + 113) * 0.4, (y - 107) * 0.4) > 0.97;
 };
 
 TerrainGenerator.prototype.getTile = function(x, y)
@@ -151,25 +153,32 @@ TerrainGenerator.prototype.getTile = function(x, y)
   finalElevation = MathHelper.lerp(elevationRange[0], elevationRange[1], baseElevation);
   
   // Determine tile type
-  if (finalElevation > 0.9)
+  if (this.isRoad(x, y))
   {
-    // Mountains
-    tileType = TileType.Mountain;
-  }
-  else if (finalElevation < 0.05)
-  {
-    // Water
-    tileType = TileType.Water;
+    tileType = TileType.Road;
   }
   else
   {
-    if (biomeType != BiomeType.Desert && this.isRiver(x, y))
+    if (finalElevation > 0.9)
     {
+      // Mountains
+      tileType = TileType.Mountain;
+    }
+    else if (finalElevation < 0.05)
+    {
+      // Water
       tileType = TileType.Water;
     }
     else
     {
-      tileType = this.getTileType(biomeType, finalTemperature, finalPrecipitation);
+      if (biomeType != BiomeType.Desert && this.isRiver(x, y))
+      {
+        tileType = TileType.Water;
+      }
+      else
+      {
+        tileType = this.getTileType(biomeType, finalTemperature, finalPrecipitation);
+      }
     }
   }
   
