@@ -58,7 +58,7 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   
   while (!found)
   {
-    var randRadius = getRandomInt(1800, 2200);
+    var randRadius = getRandomInt(0, 2200);
     var randAngle = Math.random() * Math.PI * 2;
     var randX = Math.floor(Math.cos(randAngle) * randRadius);
     var randY = Math.floor(Math.sin(randAngle) * randRadius);
