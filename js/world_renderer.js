@@ -20,7 +20,7 @@ var WorldRenderer = function()
   this.minScale = 0.05;
   this.maxScale = 2;
   this.detectionBuffer = 1;   // Number of chunks surrounding the current chunk to check
-  this.generationBuffer = 2;  // Number of chunks surrounding the current chunk to generate
+  this.generationBuffer = 4;  // Number of chunks surrounding the current chunk to generate
   this.chunksToGenerate = []; // Array of coordinate pairs ([x, y]) that need to be generated
   this.totalChunksToGenerate = 0;
   
@@ -34,7 +34,6 @@ var WorldRenderer = function()
       _.each(assetPathManager.assetPaths.terrainTiles[type], function(path)
         {
           root.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
-          //root.terrainSprites[type].push(PIXI.Sprite.fromImage(assetPathManager.assetPaths.tiles.white));
         });
     });
   
