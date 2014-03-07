@@ -83,7 +83,7 @@ var TerrainGenerator = function(world, seed)
 
 TerrainGenerator.prototype.getElevation = function(x, y)
 {
-  var result = this.noise.fbm(x * 0.1, y * 0.1, this.noise.ridgedPerlin, {iterations: 3, frequency: 1.5, gain: 0.8, lacunarity: 1.2});
+  var result = this.noise.fbm(x * 0.1, y * 0.1, this.noise.ridgedPerlin, {iterations: 4, frequency: 2, gain: 0.8, lacunarity: 2});
   
   return Math.max(Math.min(result * result, 1), 0);
 };
