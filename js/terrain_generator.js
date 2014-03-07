@@ -83,7 +83,7 @@ var TerrainGenerator = function(world, seed)
 
 TerrainGenerator.prototype.getElevation = function(x, y)
 {
-  var result = this.noise.fbm(x * 0.25, y * 0.25, this.noise.ridgedPerlin, {iterations: 3, frequency: 1.5, gain: 0.8, lacunarity: 1.2});
+  var result = this.noise.fbm(x * 0.1, y * 0.1, this.noise.ridgedPerlin, {iterations: 3, frequency: 1.5, gain: 0.8, lacunarity: 1.2});
   
   return Math.max(Math.min(result * result, 1), 0);
 };
@@ -156,7 +156,7 @@ TerrainGenerator.prototype.getTile = function(x, y)
   finalElevation = MathHelper.lerp(elevationRange[0], elevationRange[1], baseElevation);
   
   // Handle special elevation cases (mountains and water)
-  if (finalElevation > 0.8)
+  if (finalElevation > 0.9)
   {
     tileType = TileType.Mountain;
   }
