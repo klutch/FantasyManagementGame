@@ -260,7 +260,6 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       var tile = this.world.getTile(tileI, tileJ);
       var tileSprite = this.getTileSprite(tile);
       var c;
-      var tint;
       
       // Render terrain tile
       tileSprite.position.x = i * tileSize;
@@ -268,17 +267,12 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       
       // Calculate tint
       //tileSprite.tint = this.getBiomeTint(tile.biomeType);
-      /*if (tile.type != TileType.Water)
+      if (tile.type == TileType.Mountain)
       {
-        c = Math.floor((tile.elevation + 1) * 0.5 * 255).toString(16)
+        c = Math.floor(tile.elevation * tile.elevation * tile.elevation * 255).toString(16)
         c = c.length < 2 ? ('0' + c) : c;
-        tint = '0x' + c + c + c;
+        tileSprite.tint = '0x' + c + c + c;
       }
-      else
-      {
-        tint = 0xFFFFFF;
-      }*/
-      //tileSprite.tint = tint;
       
       renderTexture.render(tileSprite, tileSprite.position);
       
