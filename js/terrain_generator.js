@@ -6,70 +6,57 @@ var TerrainGenerator = function(world, seed)
   // Biome bounds
   this.biomeBounds = {};
   this.biomeBounds[BiomeType.Tundra] = [
-    new PIXI.Rectangle(0, 0, 0.3, 0.3)
+    new PIXI.Rectangle(0, 0, 0.4, 0.4)
   ];
   this.biomeBounds[BiomeType.Taiga] = [
-    new PIXI.Rectangle(0, 0.3, 0.3, 0.7)
+    new PIXI.Rectangle(0, 0.4, 0.3, 0.6)
   ];
   this.biomeBounds[BiomeType.Temperate] = [
-    new PIXI.Rectangle(0.3, 0, 0.2, 0.2),
-    new PIXI.Rectangle(0.3, 0.2, 0.7, 0.2),
-    new PIXI.Rectangle(0.3, 0.4, 0.4, 0.3)
+    new PIXI.Rectangle(0.4, 0, 0.2, 0.4),
+    new PIXI.Rectangle(0.3, 0.4, 0.7, 0.2)
   ];
   this.biomeBounds[BiomeType.Tropical] = [
-    new PIXI.Rectangle(0.7, 0.4, 0.3, 0.3),
-    new PIXI.Rectangle(0.3, 0.7, 0.7, 0.3)
+    new PIXI.Rectangle(0.3, 0.6, 0.7, 0.4)
   ];
   this.biomeBounds[BiomeType.Desert] = [
-    new PIXI.Rectangle(0.5, 0, 0.5, 0.2)
+    new PIXI.Rectangle(0.6, 0, 0.4, 0.4)
   ];
   
   // Tile bounds by biome
   this.tileBoundsByBiome = {};
   this.tileBoundsByBiome[BiomeType.Tundra] = {};
   this.tileBoundsByBiome[BiomeType.Tundra][TileType.Plains] = [
-    new PIXI.Rectangle(0, 0, 0.1, 0.2),
-    new PIXI.Rectangle(0.1, 0, 0.1, 0.1),
-    new PIXI.Rectangle(0.2, 0, 0.1, 0.2)
+    new PIXI.Rectangle(0.2, 0, 0.2, 0.4)
   ];
   this.tileBoundsByBiome[BiomeType.Tundra][TileType.Snow] = [
-    new PIXI.Rectangle(0, 0.2, 0.1, 0.1),
-    new PIXI.Rectangle(0.1, 0.1, 0.1, 0.2),
-    new PIXI.Rectangle(0.2, 0.2, 0.1, 0.1)
+    new PIXI.Rectangle(0, 0, 0.2, 0.4)
   ];
   this.tileBoundsByBiome[BiomeType.Taiga] = {};
   this.tileBoundsByBiome[BiomeType.Taiga][TileType.Snow] = [
-    new PIXI.Rectangle(0, 0.3, 0.2, 0.3),
-    new PIXI.Rectangle(0, 0.6, 0.1, 0.4)
+    new PIXI.Rectangle(0, 0.4, 0.2, 0.6)
   ];
   this.tileBoundsByBiome[BiomeType.Taiga][TileType.Forest] = [
-    new PIXI.Rectangle(0.2, 0.3, 0.1, 0.3),
-    new PIXI.Rectangle(0.1, 0.6, 0.2, 0.4)
+    new PIXI.Rectangle(0.2, 0.4, 0.1, 0.6)
   ];
   this.tileBoundsByBiome[BiomeType.Temperate] = {};
   this.tileBoundsByBiome[BiomeType.Temperate][TileType.Grassland] = [
-    new PIXI.Rectangle(0.3, 0, 0.2, 0.2),
-    new PIXI.Rectangle(0.3, 0.2, 0.7, 0.2)
-  ];
-  this.tileBoundsByBiome[BiomeType.Temperate][TileType.Forest] = [
-    new PIXI.Rectangle(0.3, 0.4, 0.4, 0.3)
+    new PIXI.Rectangle(0.4, 0, 0.2, 0.4),
+    new PIXI.Rectangle(0.3, 0.4, 0.7, 0.2)
   ];
   this.tileBoundsByBiome[BiomeType.Tropical] = {};
   this.tileBoundsByBiome[BiomeType.Tropical][TileType.Forest] = [
-    new PIXI.Rectangle(0.7, 0.4, 0.3, 0.4),
-    new PIXI.Rectangle(0.3, 0.7, 0.4, 0.1)
+    new PIXI.Rectangle(0.3, 0.6, 0.7, 0.2)
   ];
   this.tileBoundsByBiome[BiomeType.Tropical][TileType.Swamp] = [
     new PIXI.Rectangle(0.3, 0.8, 0.7, 0.2)
   ];
   this.tileBoundsByBiome[BiomeType.Desert] = {};
   this.tileBoundsByBiome[BiomeType.Desert][TileType.Sand] = [
-    new PIXI.Rectangle(0.6, 0, 0.4, 0.1),
-    new PIXI.Rectangle(0.9, 0.1, 0.1, 0.1)
+    new PIXI.Rectangle(0.7, 0, 0.3, 0.2)
   ];
   this.tileBoundsByBiome[BiomeType.Desert][TileType.Arid] = [
-    new PIXI.Rectangle(0.5, 0, 0.1, 0.1),
-    new PIXI.Rectangle(0.5, 0.1, 0.4, 0.1)
+    new PIXI.Rectangle(0.6, 0, 0.1, 0.2),
+    new PIXI.Rectangle(0.6, 0.2, 0.4, 0.2)
   ];
   
   // Elevation ranges by biome
