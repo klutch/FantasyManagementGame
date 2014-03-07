@@ -83,61 +83,41 @@ var TerrainGenerator = function(world, seed)
 
 TerrainGenerator.prototype.getElevation = function(x, y)
 {
-  var result = this.noise.fbm(x, y, this.noise.cell, {iterations: 4, frequency: 1.4, gain: 1, lacunarity: 1.2});
+  var result = this.noise.fbm(x, y, this.noise.cell, {iterations: 4, frequency: 1.2, gain: 1, lacunarity: 1.2});
     
   return Math.max(Math.min(result, 1), 0);
 };
 
 TerrainGenerator.prototype.getPrecipitation = function(x, y)
 {
-  var result = this.noise.fbm(x * 0.5, y * 0.5, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
+  var result = this.noise.fbm(x, y, this.noise.ridgedPerlin, {iterations: 4, frequency: 0.7, gain: 0.8, lacunarity: 1.8});
+    
+  return Math.max(Math.min(result, 1), 0)
+  //var result = this.noise.fbm(x, y, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
   
-  return Math.max(Math.min(result, 1), 0);
+  //return Math.max(Math.min(result, 1), 0);
+  //return this.noise.ridgedPerlin(x * 0.5, y * 0.5);
 };
 
 TerrainGenerator.prototype.getTemperature = function(x, y)
 {
-  return this.noise.perlin(x * 0.25, y * 0.25);
+  return this.noise.ridgedPerlin(x * 0.5, y * 0.5);
+  /*var result = this.noise.fbm(x * 0.25, y * 0.25, this.noise.cell, {iterations: 4, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
+  
+  return Math.max(Math.min(result, 1), 0);*/
+  //return this.noise.cell(x, y);
 };
 
-/*
-TerrainGenerator.prototype.getRoadNoise = function(x, y)
+TerrainGenerator.prototype.getPrecipitationModifier = function(elevation)
 {
-  return this.noise.ridgedPerlin(x * 0.25, y * 0.25);
+  //return Math.max(Math.min(1 - baseElevation * 0.5, 1), 0)
+  return 1;
 };
 
-TerrainGenerator.prototype.isRoad = function(x, y)
+TerrainGenerator.prototype.getTemperatureModifier = function(elevation)
 {
-  var local = this.getRoadNoise(x, y) > 0.98 ? 1 : 0;
-  var neighbors = 0;
-  
-  if (local > 0)
-  {
-    for (var i = -1; i < 2; i++)
-    {
-      for (var j = -1; j < 2; j++)
-      {
-        if (i == 0 && j == 0)
-        {
-          continue;
-        }
-        else
-        {
-          neighbors += this.getRoadNoise(x + i, y + j) > 0.98 ? 1 : 0;
-          
-          if (neighbors > 7)
-          {
-            return false;
-          }
-        }
-      }
-    }
-    
-    return true;
-  }
-  
-  return false;
-};*/
+  return 1;
+};
 
 TerrainGenerator.prototype.getTile = function(x, y)
 {
@@ -147,8 +127,6 @@ TerrainGenerator.prototype.getTile = function(x, y)
   var finalElevation;
   var finalPrecipitation;
   var finalTemperature;
-  var elevationPrecipitationModifier;
-  var elevationTemperatureModifier;
   var elevationRange;
   var biomeType;
   var tileType;
@@ -162,15 +140,13 @@ TerrainGenerator.prototype.getTile = function(x, y)
   basePrecipitation = this.getPrecipitation(x, y);
   
   // Calculate final precipitation
-  elevationPrecipitationModifier = Math.max(Math.min(1 - baseElevation * 0.5, 1), 0);
-  finalPrecipitation = basePrecipitation * elevationPrecipitationModifier;
+  finalPrecipitation = basePrecipitation;
   
   // Get base temperature
   baseTemperature = this.getTemperature(x, y);
   
   // Calculate final temperature
-  elevationTemperatureModifier = elevationPrecipitationModifier;
-  finalTemperature = baseTemperature * elevationTemperatureModifier;
+  finalTemperature = baseTemperature;
   
   // Get biome type
   biomeType = this.getBiomeType(finalTemperature, finalPrecipitation);
@@ -184,7 +160,7 @@ TerrainGenerator.prototype.getTile = function(x, y)
   {
     tileType = TileType.Mountain;
   }
-  else if (finalElevation < 0.2)
+  else if (finalElevation < 0.1)
   {
     tileType = TileType.Water;
   }

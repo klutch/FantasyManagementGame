@@ -34,6 +34,7 @@ var WorldRenderer = function()
       _.each(assetPathManager.assetPaths.terrainTiles[type], function(path)
         {
           root.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
+          //root.terrainSprites[type].push(PIXI.Sprite.fromImage(assetPathManager.assetPaths.tiles.white));
         });
     });
   
@@ -94,6 +95,36 @@ WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
   else if (feature.type == FeatureType.Gathering)
   {
     return this.featureSprites[feature.type][feature.gatheringType][index];
+  }
+};
+
+// Get biome tint
+WorldRenderer.prototype.getBiomeTint = function(biomeType)
+{
+  if (biomeType == BiomeType.Tundra)
+  {
+    return 0x00ffff;
+    // return '#00ffff';
+  }
+  else if (biomeType == BiomeType.Taiga)
+  {
+    return 0xff00ff;
+    // return '#ff00ff';
+  }
+  else if (biomeType == BiomeType.Temperate)
+  {
+    return 0x00ff00;
+    // return '#00ff00';
+  }
+  else if (biomeType == BiomeType.Tropical)
+  {
+    return 0x555555;
+    // return '#555555';
+  }
+  else if (biomeType == BiomeType.Desert)
+  {
+    return 0xffff00;
+    // return '#ffff00';
   }
 };
 
@@ -236,6 +267,8 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       tileSprite.position.x = i * tileSize;
       tileSprite.position.y = j * tileSize;
       
+      // Calculate tint
+      //tileSprite.tint = this.getBiomeTint(tile.biomeType);
       if (tile.type != TileType.Water)
       {
         c = Math.floor((tile.elevation + 1) * 0.5 * 255).toString(16)
@@ -246,8 +279,8 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       {
         tint = 0xFFFFFF;
       }
-      
       tileSprite.tint = tint;
+      
       renderTexture.render(tileSprite, tileSprite.position);
       
       // Render feature tile

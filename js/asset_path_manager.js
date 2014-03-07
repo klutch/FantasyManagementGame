@@ -4,9 +4,10 @@ var AssetPathManager = function()
   
   // Terrain assets
   this.assetPaths.tiles = {};
-  this.assetPaths.tiles.blank = "img/tiles/blank.png";
-  this.assetPaths.tiles.debugTileSelection = "img/tiles/selected_tile.png";
-  this.assetPaths.tiles.fog = "img/tiles/fog_0.png";
+  this.assetPaths.tiles.blank = ["img/tiles/blank.png"];
+  this.assetPaths.tiles.debugTileSelection = ["img/tiles/selected_tile.png"];
+  this.assetPaths.tiles.fog = ["img/tiles/fog_0.png"];
+  this.assetPaths.tiles.white = ["img/tiles/white.png"];
   this.assetPaths.terrainTiles = {};
   this.assetPaths.terrainTiles[TileType.Plains] = [
     "img/tiles/plains_0.png"

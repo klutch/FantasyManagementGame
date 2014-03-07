@@ -89,7 +89,7 @@ var World = function(seed)
   this.playerCastleI = 0;
   this.playerCastleJ = 0;
   
-  this.featureGenerator.generatePlayerCastle();
+  //this.featureGenerator.generatePlayerCastle();
 };
 
 World.prototype.getGridI = function(x)
