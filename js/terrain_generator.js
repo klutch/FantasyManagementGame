@@ -100,6 +100,25 @@ TerrainGenerator.prototype.getTemperature = function(x, y)
   return this.noise.ridgedPerlin(x * 0.5, y * 0.5);
 };
 
+TerrainGenerator.prototype.getPrecipitationModifier = function(elevation)
+{
+  var a = elevation * elevation;
+  var b = a * a;
+  var c = b * b;
+  var d = c * c;
+  
+  return 1 - d;
+};
+
+TerrainGenerator.prototype.getTemperatureModifier = function(elevation)
+{
+  var a = elevation * elevation;
+  var b = a * a;
+  var c = b * b;
+  
+  return 1 - c;
+};
+
 TerrainGenerator.prototype.getTile = function(x, y)
 {
   var baseElevation;
@@ -121,13 +140,13 @@ TerrainGenerator.prototype.getTile = function(x, y)
   basePrecipitation = this.getPrecipitation(x, y);
   
   // Calculate final precipitation
-  finalPrecipitation = basePrecipitation;
+  finalPrecipitation = basePrecipitation * this.getPrecipitationModifier(baseElevation);
   
   // Get base temperature
   baseTemperature = this.getTemperature(x, y);
   
   // Calculate final temperature
-  finalTemperature = baseTemperature;
+  finalTemperature = baseTemperature * this.getTemperatureModifier(baseElevation);
   
   // Get biome type
   biomeType = this.getBiomeType(finalTemperature, finalPrecipitation);
