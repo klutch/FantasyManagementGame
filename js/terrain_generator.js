@@ -83,40 +83,21 @@ var TerrainGenerator = function(world, seed)
 
 TerrainGenerator.prototype.getElevation = function(x, y)
 {
-  var result = this.noise.fbm(x, y, this.noise.cell, {iterations: 4, frequency: 1.2, gain: 1, lacunarity: 1.2});
-    
-  return Math.max(Math.min(result, 1), 0);
+  var result = this.noise.fbm(x * 0.25, y * 0.25, this.noise.ridgedPerlin, {iterations: 3, frequency: 1.5, gain: 0.8, lacunarity: 1.2});
+  
+  return Math.max(Math.min(result * result, 1), 0);
 };
 
 TerrainGenerator.prototype.getPrecipitation = function(x, y)
 {
-  var result = this.noise.fbm(x, y, this.noise.ridgedPerlin, {iterations: 4, frequency: 0.7, gain: 0.8, lacunarity: 1.8});
+  var result = this.noise.fbm(x * 0.5, y * 0.5, this.noise.ridgedPerlin, {iterations: 4, frequency: 0.7, gain: 0.8, lacunarity: 1.8});
     
   return Math.max(Math.min(result, 1), 0)
-  //var result = this.noise.fbm(x, y, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
-  
-  //return Math.max(Math.min(result, 1), 0);
-  //return this.noise.ridgedPerlin(x * 0.5, y * 0.5);
 };
 
 TerrainGenerator.prototype.getTemperature = function(x, y)
 {
   return this.noise.ridgedPerlin(x * 0.5, y * 0.5);
-  /*var result = this.noise.fbm(x * 0.25, y * 0.25, this.noise.cell, {iterations: 4, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
-  
-  return Math.max(Math.min(result, 1), 0);*/
-  //return this.noise.cell(x, y);
-};
-
-TerrainGenerator.prototype.getPrecipitationModifier = function(elevation)
-{
-  //return Math.max(Math.min(1 - baseElevation * 0.5, 1), 0)
-  return 1;
-};
-
-TerrainGenerator.prototype.getTemperatureModifier = function(elevation)
-{
-  return 1;
 };
 
 TerrainGenerator.prototype.getTile = function(x, y)

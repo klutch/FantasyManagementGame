@@ -70,7 +70,7 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
       {
         var tile = this.world.getTile(i, j);
         
-        if (tile.type != TileType.Plains)
+        if (tile.type != TileType.Grassland)
         {
           giveUp = true;
           break;

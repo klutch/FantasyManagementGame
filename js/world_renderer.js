@@ -269,7 +269,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       
       // Calculate tint
       //tileSprite.tint = this.getBiomeTint(tile.biomeType);
-      if (tile.type != TileType.Water)
+      /*if (tile.type != TileType.Water)
       {
         c = Math.floor((tile.elevation + 1) * 0.5 * 255).toString(16)
         c = c.length < 2 ? ('0' + c) : c;
@@ -278,8 +278,8 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
       else
       {
         tint = 0xFFFFFF;
-      }
-      tileSprite.tint = tint;
+      }*/
+      //tileSprite.tint = tint;
       
       renderTexture.render(tileSprite, tileSprite.position);
       
@@ -289,7 +289,7 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
         var feature = this.world.features[tile.featureId];
         var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
         
-        featureSprite.tint = tint;
+        //featureSprite.tint = tint;
         renderTexture.render(featureSprite, tileSprite.position);
       }
     }
