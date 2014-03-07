@@ -24,50 +24,50 @@ var TerrainGenerator = function(world, seed)
     new PIXI.Rectangle(0.5, 0, 0.5, 0.2)
   ];
   
-  // Tile bounds
-  this.tileBounds = {};
-  this.tileBounds[BiomeType.Tundra] = {};
-  this.tileBounds[BiomeType.Tundra][TileType.Plains] = [
+  // Tile bounds by biome
+  this.tileBoundsByBiome = {};
+  this.tileBoundsByBiome[BiomeType.Tundra] = {};
+  this.tileBoundsByBiome[BiomeType.Tundra][TileType.Plains] = [
     new PIXI.Rectangle(0, 0, 0.1, 0.2),
     new PIXI.Rectangle(0.1, 0, 0.1, 0.1),
     new PIXI.Rectangle(0.2, 0, 0.1, 0.2)
   ];
-  this.tileBounds[BiomeType.Tundra][TileType.Snow] = [
+  this.tileBoundsByBiome[BiomeType.Tundra][TileType.Snow] = [
     new PIXI.Rectangle(0, 0.2, 0.1, 0.1),
     new PIXI.Rectangle(0.1, 0.1, 0.1, 0.2),
     new PIXI.Rectangle(0.2, 0.2, 0.1, 0.1)
   ];
-  this.tileBounds[BiomeType.Taiga] = {};
-  this.tileBounds[BiomeType.Taiga][TileType.Snow] = [
+  this.tileBoundsByBiome[BiomeType.Taiga] = {};
+  this.tileBoundsByBiome[BiomeType.Taiga][TileType.Snow] = [
     new PIXI.Rectangle(0, 0.3, 0.2, 0.3),
     new PIXI.Rectangle(0, 0.6, 0.1, 0.4)
   ];
-  this.tileBounds[BiomeType.Taiga][TileType.Forest] = [
+  this.tileBoundsByBiome[BiomeType.Taiga][TileType.Forest] = [
     new PIXI.Rectangle(0.2, 0.3, 0.1, 0.3),
     new PIXI.Rectangle(0.1, 0.6, 0.2, 0.4)
   ];
-  this.tileBounds[BiomeType.Temperate] = {};
-  this.tileBounds[BiomeType.Temperate][TileType.Grassland] = [
+  this.tileBoundsByBiome[BiomeType.Temperate] = {};
+  this.tileBoundsByBiome[BiomeType.Temperate][TileType.Grassland] = [
     new PIXI.Rectangle(0.3, 0, 0.2, 0.2),
     new PIXI.Rectangle(0.3, 0.2, 0.7, 0.2)
   ];
-  this.tileBounds[BiomeType.Temperate][TileType.Forest] = [
+  this.tileBoundsByBiome[BiomeType.Temperate][TileType.Forest] = [
     new PIXI.Rectangle(0.3, 0.4, 0.4, 0.3)
   ];
-  this.tileBounds[BiomeType.Tropical] = {};
-  this.tileBounds[BiomeType.Tropical][TileType.Forest] = [
+  this.tileBoundsByBiome[BiomeType.Tropical] = {};
+  this.tileBoundsByBiome[BiomeType.Tropical][TileType.Forest] = [
     new PIXI.Rectangle(0.7, 0.4, 0.3, 0.4),
     new PIXI.Rectangle(0.3, 0.7, 0.4, 0.1)
   ];
-  this.tileBounds[BiomeType.Tropical][TileType.Swamp] = [
+  this.tileBoundsByBiome[BiomeType.Tropical][TileType.Swamp] = [
     new PIXI.Rectangle(0.3, 0.8, 0.7, 0.2)
   ];
-  this.tileBounds[BiomeType.Desert] = {};
-  this.tileBounds[BiomeType.Desert][TileType.Sand] = [
+  this.tileBoundsByBiome[BiomeType.Desert] = {};
+  this.tileBoundsByBiome[BiomeType.Desert][TileType.Sand] = [
     new PIXI.Rectangle(0.6, 0, 0.4, 0.1),
     new PIXI.Rectangle(0.9, 0.1, 0.1, 0.1)
   ];
-  this.tileBounds[BiomeType.Desert][TileType.Arid] = [
+  this.tileBoundsByBiome[BiomeType.Desert][TileType.Arid] = [
     new PIXI.Rectangle(0.5, 0, 0.1, 0.1),
     new PIXI.Rectangle(0.5, 0.1, 0.4, 0.1)
   ];
@@ -88,6 +88,19 @@ TerrainGenerator.prototype.getElevation = function(x, y)
   return Math.max(Math.min(result, 1), 0);
 };
 
+TerrainGenerator.prototype.getPrecipitation = function(x, y)
+{
+  var result = this.noise.fbm(x * 0.5, y * 0.5, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
+  
+  return Math.max(Math.min(result, 1), 0);
+};
+
+TerrainGenerator.prototype.getTemperature = function(x, y)
+{
+  return this.noise.perlin(x * 0.25, y * 0.25);
+};
+
+/*
 TerrainGenerator.prototype.getRoadNoise = function(x, y)
 {
   return this.noise.ridgedPerlin(x * 0.25, y * 0.25);
@@ -124,89 +137,107 @@ TerrainGenerator.prototype.isRoad = function(x, y)
   }
   
   return false;
-};
+};*/
 
 TerrainGenerator.prototype.getTile = function(x, y)
 {
-  var moisture;
-  var elevation;
+  var baseElevation;
+  var basePrecipitation;
+  var baseTemperature;
+  var finalElevation;
+  var finalPrecipitation;
+  var finalTemperature;
+  var elevationPrecipitationModifier;
+  var elevationTemperatureModifier;
+  var elevationRange;
+  var biomeType;
   var tileType;
   var movementCost = 10;
   var walkable = true;
-  var isRoad = this.isRoad(x, y);
   
-  // Calculate moisture
-  if (!isRoad)
+  // Get base elevation
+  baseElevation = this.getElevation(x, y);
+  
+  // Get base precipitation
+  basePrecipitation = this.getPrecipitation(x, y);
+  
+  // Calculate final precipitation
+  elevationPrecipitationModifier = Math.max(Math.min(1 - baseElevation * 0.5, 1), 0);
+  finalPrecipitation = basePrecipitation * elevationPrecipitationModifier;
+  
+  // Get base temperature
+  baseTemperature = this.getTemperature(x, y);
+  
+  // Calculate final temperature
+  elevationTemperatureModifier = elevationPrecipitationModifier;
+  finalTemperature = baseTemperature * elevationTemperatureModifier;
+  
+  // Get biome type
+  biomeType = this.getBiomeType(finalTemperature, finalPrecipitation);
+  
+  // Calculate final elevation
+  elevationRange = this.elevationRanges[biomeType];
+  finalElevation = MathHelper.lerp(elevationRange[0], elevationRange[1], baseElevation);
+  
+  // Handle special elevation cases (mountains and water)
+  if (finalElevation > 0.8)
   {
-    moisture = this.noise.fbm(x, y, this.noise.perlin, {iterations: 8, frequency: 1.2, gain: 0.8, lacunarity: 1.2});
-    moisture = Math.max(Math.min(moisture, 1), 0);
+    tileType = TileType.Mountain;
+  }
+  else if (finalElevation < 0.2)
+  {
+    tileType = TileType.Water;
+  }
+  else
+  {
+    tileType = this.getTileType(biomeType, finalTemperature, finalPrecipitation);
   }
   
-  // Calculate elevation
-  elevation = this.getElevation(x, y);
-  
-  // Determine tile type
-  tileType = isRoad ? TileType.Road : this.getTileType(moisture, elevation);
-  
-  return new Tile(tileType, walkable, movementCost, elevation);
+  return new Tile(tileType, biomeType, walkable, movementCost, finalElevation);
 };
 
-TerrainGenerator.prototype.getTileType = function(moisture, elevation)
+TerrainGenerator.prototype.getBiomeType = function(temperature, precipitation)
 {
-  for (var i = 0; i < this.plainsRects.length; i++)
+  for (var key in this.biomeBounds)
   {
-    if (this.plainsRects[i].contains(moisture, elevation))
+    if (this.biomeBounds.hasOwnProperty(key))
     {
-      return TileType.Plains;
+      var bounds = this.biomeBounds[key];
+      
+      for (var i = 0; i < bounds.length; i++)
+      {
+        if (bounds[i].contains(temperature, precipitation))
+        {
+          return key;
+        }
+      }
     }
   }
-  for (var i = 0; i < this.forestRects.length; i++)
+  
+  alert("Couldn't find a biome type... this should never happen!");
+  console.error("Couldn't find a biome type");
+};
+
+TerrainGenerator.prototype.getTileType = function(biomeType, temperature, precipitation)
+{
+  var tileBounds = this.tileBoundsByBiome[biomeType];
+  
+  for (var key in tileBounds)
   {
-    if (this.forestRects[i].contains(moisture, elevation))
+    if (tileBounds.hasOwnProperty(key))
     {
-      return TileType.Forest;
+      var bounds = tileBounds[key];
+      
+      for (var i = 0; i < bounds.length; i++)
+      {
+        if (bounds[i].contains(temperature, precipitation))
+        {
+          return key;
+        }
+      }
     }
   }
-  for (var i = 0; i < this.swampRects.length; i++)
-  {
-    if (this.swampRects[i].contains(moisture, elevation))
-    {
-      return TileType.Swamp;
-    }
-  }
-  for (var i = 0; i < this.mountainsRects.length; i++)
-  {
-    if (this.mountainsRects[i].contains(moisture, elevation))
-    {
-      return TileType.Mountains;
-    }
-  }
-  for (var i = 0; i < this.hillsRects.length; i++)
-  {
-    if (this.hillsRects[i].contains(moisture, elevation))
-    {
-      return TileType.Hills;
-    }
-  }
-  for (var i = 0; i < this.snowRects.length; i++)
-  {
-    if (this.snowRects[i].contains(moisture, elevation))
-    {
-      return TileType.Snow;
-    }
-  }
-  for (var i = 0; i < this.desertRects.length; i++)
-  {
-    if (this.desertRects[i].contains(moisture, elevation))
-    {
-      return TileType.Desert;
-    }
-  }
-  for (var i = 0; i < this.waterRects.length; i++)
-  {
-    if (this.waterRects[i].contains(moisture, elevation))
-    {
-      return TileType.Water;
-    }
-  }
+  
+  alert("Couldn't find a tile type... this should never happen!");
+  console.error("Couldn't find a tile type");
 };

@@ -9,28 +9,31 @@ var AssetPathManager = function()
   this.assetPaths.tiles.fog = "img/tiles/fog_0.png";
   this.assetPaths.terrainTiles = {};
   this.assetPaths.terrainTiles[TileType.Plains] = [
-    "img/tiles/plains_0.png",
-    "img/tiles/plains_1.png",
-    "img/tiles/plains_2.png"
+    "img/tiles/plains_0.png"
+  ];
+  this.assetPaths.terrainTiles[TileType.Snow] = [
+    "img/tiles/snow_0.png"
   ];
   this.assetPaths.terrainTiles[TileType.Forest] = [
     "img/tiles/forest_0.png",
     "img/tiles/forest_1.png"
   ];
+  this.assetPaths.terrainTiles[TileType.Grassland] = [
+    "img/tiles/grassland_0.png",
+    "img/tiles/grassland_1.png",
+    "img/tiles/grassland_2.png"
+  ];
   this.assetPaths.terrainTiles[TileType.Swamp] = [
     "img/tiles/swamp_0.png"
   ];
-  this.assetPaths.terrainTiles[TileType.Mountains] = [
+  this.assetPaths.terrainTiles[TileType.Arid] = [
+    "img/tiles/arid_0.png"
+  ];
+  this.assetPaths.terrainTiles[TileType.Sand] = [
+    "img/tiles/sand_0.png"
+  ];
+  this.assetPaths.terrainTiles[TileType.Mountain] = [
     "img/tiles/mountains_0.png"
-  ];
-  this.assetPaths.terrainTiles[TileType.Hills] = [
-    "img/tiles/hills_0.png"
-  ];
-  this.assetPaths.terrainTiles[TileType.Snow] = [
-    "img/tiles/snow_0.png"
-  ];
-  this.assetPaths.terrainTiles[TileType.Desert] = [
-    "img/tiles/desert_0.png"
   ];
   this.assetPaths.terrainTiles[TileType.Water] = [
     "img/tiles/water_0.png"

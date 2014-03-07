@@ -15,7 +15,9 @@ var TileType = Object.freeze({
   Grassland: "Grassland",
   Swamp: "Swamp",
   Arid: "Arid",
-  Sand: "Sand"
+  Sand: "Sand",
+  Mountain: "Mountain",
+  Water: "Water"
 });
 
 // Tile class
@@ -109,7 +111,7 @@ World.prototype.getTile = function(i, j)
   if (this.tiles[i][j] == null)
   {
     this.tiles[i][j] = this.terrainGenerator.getTile(i, j);
-    this.featureGenerator.tryGenerateAt(i, j);
+    //this.featureGenerator.tryGenerateAt(i, j);
   }
   
   return this.tiles[i][j];
