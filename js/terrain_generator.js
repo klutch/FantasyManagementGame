@@ -111,9 +111,42 @@ TerrainGenerator.prototype.isRiver = function(x, y)
   return this.noise.ridgedPerlin(x * 0.5, y * 0.5) > 0.9;
 };
 
+TerrainGenerator.prototype.roadMethod = function(x, y)
+{
+  return this.noise.ridgedPerlin((x + 113) * 0.4, (y - 107) * 0.4) > 0.96;
+};
+
 TerrainGenerator.prototype.isRoad = function(x, y)
 {
-  return this.noise.ridgedPerlin((x + 113) * 0.4, (y - 107) * 0.4) > 0.97;
+  var accumulator = 0;
+  
+  if (this.roadMethod(x, y))
+  {
+    accumulator = 1;
+    
+    for (var i = x - 1, limitX = x + 2; i < limitX; i++)
+    {
+      for (var j = y - 1, limitY = y + 2; j < limitY; j++)
+      {
+        if (i == x && j == y)
+        {
+          continue;
+        }
+        
+        if (this.roadMethod(i, j))
+        {
+          accumulator += 1;
+        }
+        
+        if (accumulator > 8)
+        {
+          return false;
+        }
+      }
+    }
+  }
+  
+  return accumulator > 1;
 };
 
 TerrainGenerator.prototype.getTile = function(x, y)
