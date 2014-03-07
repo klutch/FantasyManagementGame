@@ -147,7 +147,7 @@ TerrainGenerator.prototype.getTile = function(x, y)
   {
     tileType = TileType.Mountain;
   }
-  else if (finalElevation < 0.1)
+  else if (finalElevation < 0.05)
   {
     tileType = TileType.Water;
   }
