@@ -2,42 +2,83 @@ var TerrainGenerator = function(world, seed)
 {
   this.world = world;
   this.noise = new Noise(seed, {perlinGridWidth: 32, perlinGridHeight: 32, cellGridWidth: 64, cellGridHeight: 64});
-  this.plainsRects = [
-    new PIXI.Rectangle(0, 0.3, 0.5, 0.3),
-    new PIXI.Rectangle(0.3, 0, 0.2, 0.3)
-  ];
-  this.forestRects = [
-    new PIXI.Rectangle(0.5, 0, 0.1, 0.6),
-    new PIXI.Rectangle(0.6, 0.3, 0.4, 0.3),
-    new PIXI.Rectangle(0.8, 0.6, 0.2, 0.1)
-  ];
-  this.swampRects = [
-    new PIXI.Rectangle(0.6, 0.1, 0.1, 0.2),
-    new PIXI.Rectangle(0.7, 0.2, 0.1, 0.1)
-  ];
-  this.mountainsRects = [
-    new PIXI.Rectangle(0.2, 0.8, 0.1, 0.1),
-    new PIXI.Rectangle(0, 0.9, 1, 0.1),
-    new PIXI.Rectangle(0.8, 0.8, 0.2, 0.1)
-  ];
-  this.hillsRects = [
-    new PIXI.Rectangle(0, 0.6, 0.4, 0.2),
-    new PIXI.Rectangle(0.4, 0.6, 0.4, 0.1),
-    new PIXI.Rectangle(0.7, 0.7, 0.3, 0.1),
-    new PIXI.Rectangle(0, 0.8, 0.2, 0.1)
-  ];
-  this.snowRects = [
-    new PIXI.Rectangle(0.3, 0.8, 0.5, 0.1),
-    new PIXI.Rectangle(0.4, 0.7, 0.3, 0.1)
-  ];
-  this.desertRects = [
+  
+  // Biome bounds
+  this.biomeBounds = {};
+  this.biomeBounds[BiomeType.Tundra] = [
     new PIXI.Rectangle(0, 0, 0.3, 0.3)
   ];
-  this.waterRects = [
-    new PIXI.Rectangle(0.7, 0, 0.3, 0.2),
-    new PIXI.Rectangle(0.8, 0.2, 0.2, 0.1),
-    new PIXI.Rectangle(0.6, 0, 0.1, 0.1)
+  this.biomeBounds[BiomeType.Taiga] = [
+    new PIXI.Rectangle(0, 0.3, 0.3, 0.7)
   ];
+  this.biomeBounds[BiomeType.Temperate] = [
+    new PIXI.Rectangle(0.3, 0, 0.2, 0.2),
+    new PIXI.Rectangle(0.3, 0.2, 0.7, 0.2),
+    new PIXI.Rectangle(0.3, 0.4, 0.4, 0.3)
+  ];
+  this.biomeBounds[BiomeType.Tropical] = [
+    new PIXI.Rectangle(0.7, 0.4, 0.3, 0.3),
+    new PIXI.Rectangle(0.3, 0.7, 0.7, 0.3)
+  ];
+  this.biomeBounds[BiomeType.Desert] = [
+    new PIXI.Rectangle(0.5, 0, 0.5, 0.2)
+  ];
+  
+  // Tile bounds
+  this.tileBounds = {};
+  this.tileBounds[BiomeType.Tundra] = {};
+  this.tileBounds[BiomeType.Tundra][TileType.Plains] = [
+    new PIXI.Rectangle(0, 0, 0.1, 0.2),
+    new PIXI.Rectangle(0.1, 0, 0.1, 0.1),
+    new PIXI.Rectangle(0.2, 0, 0.1, 0.2)
+  ];
+  this.tileBounds[BiomeType.Tundra][TileType.Snow] = [
+    new PIXI.Rectangle(0, 0.2, 0.1, 0.1),
+    new PIXI.Rectangle(0.1, 0.1, 0.1, 0.2),
+    new PIXI.Rectangle(0.2, 0.2, 0.1, 0.1)
+  ];
+  this.tileBounds[BiomeType.Taiga] = {};
+  this.tileBounds[BiomeType.Taiga][TileType.Snow] = [
+    new PIXI.Rectangle(0, 0.3, 0.2, 0.3),
+    new PIXI.Rectangle(0, 0.6, 0.1, 0.4)
+  ];
+  this.tileBounds[BiomeType.Taiga][TileType.Forest] = [
+    new PIXI.Rectangle(0.2, 0.3, 0.1, 0.3),
+    new PIXI.Rectangle(0.1, 0.6, 0.2, 0.4)
+  ];
+  this.tileBounds[BiomeType.Temperate] = {};
+  this.tileBounds[BiomeType.Temperate][TileType.Grassland] = [
+    new PIXI.Rectangle(0.3, 0, 0.2, 0.2),
+    new PIXI.Rectangle(0.3, 0.2, 0.7, 0.2)
+  ];
+  this.tileBounds[BiomeType.Temperate][TileType.Forest] = [
+    new PIXI.Rectangle(0.3, 0.4, 0.4, 0.3)
+  ];
+  this.tileBounds[BiomeType.Tropical] = {};
+  this.tileBounds[BiomeType.Tropical][TileType.Forest] = [
+    new PIXI.Rectangle(0.7, 0.4, 0.3, 0.4),
+    new PIXI.Rectangle(0.3, 0.7, 0.4, 0.1)
+  ];
+  this.tileBounds[BiomeType.Tropical][TileType.Swamp] = [
+    new PIXI.Rectangle(0.3, 0.8, 0.7, 0.2)
+  ];
+  this.tileBounds[BiomeType.Desert] = {};
+  this.tileBounds[BiomeType.Desert][TileType.Sand] = [
+    new PIXI.Rectangle(0.6, 0, 0.4, 0.1),
+    new PIXI.Rectangle(0.9, 0.1, 0.1, 0.1)
+  ];
+  this.tileBounds[BiomeType.Desert][TileType.Arid] = [
+    new PIXI.Rectangle(0.5, 0, 0.1, 0.1),
+    new PIXI.Rectangle(0.5, 0.1, 0.4, 0.1)
+  ];
+  
+  // Elevation ranges by biome
+  this.elevationRanges = {};
+  this.elevationRanges[BiomeType.Tundra] = [0.2, 1];
+  this.elevationRanges[BiomeType.Taiga] = [0, 1];
+  this.elevationRanges[BiomeType.Temperate] = [0.1, 0.9];
+  this.elevationRanges[BiomeType.Tropical] = [0, 1];
+  this.elevationRanges[BiomeType.Desert] = [0.2, 0.9];
 };
 
 TerrainGenerator.prototype.getElevation = function(x, y)

@@ -1,26 +1,34 @@
-// Tile type enum
+// Biome types
+var BiomeType = Object.freeze({
+  Tundra: "Tundra",
+  Taiga: "Taiga",
+  Temperate: "Temperate",
+  Tropical: "Tropical",
+  Desert: "Desert"
+});
+
+// Tile types
 var TileType = Object.freeze({
-  Desert: "Desert",
   Plains: "Plains",
-  Hills: "Hills",
-  Mountains: "Mountains",
   Snow: "Snow",
   Forest: "Forest",
+  Grassland: "Grassland",
   Swamp: "Swamp",
-  Water: "Water",
-  Road: "Road"
+  Arid: "Arid",
+  Sand: "Sand"
 });
 
 // Tile class
-var Tile = function(type, walkable, movementCost, elevation)
+var Tile = function(type, biomeType, walkable, movementCost, elevation)
 {
   this.type = type;
+  this.biomeType = biomeType;
   this.walkable = walkable;
   this.movementCost = movementCost;
   this.elevation = elevation;
 };
 
-// Feature type enum
+// Feature types
 var FeatureType = Object.freeze({
   Castle: "Castle",
   Dwelling: "Dwelling",
@@ -28,23 +36,23 @@ var FeatureType = Object.freeze({
   Gathering: "Gathering"
 });
 
-// Castle type enum
+// Castle types
 var CastleType = Object.freeze({
   Player: "Player"
 });
 
-// Dwelling type enum
+// Dwelling types
 var DwellingType = Object.freeze({
   Town: "Town",
   Grove: "Grove"
 });
 
-// Dungeon type enum
+// Dungeon types
 var DungeonType = Object.freeze({
   Cave: "Cave"
 });
 
-// Gathering type enum
+// Gathering types
 var GatheringType = Object.freeze({
   Tavern: "Tavern"
 });
