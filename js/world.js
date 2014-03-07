@@ -17,7 +17,8 @@ var TileType = Object.freeze({
   Arid: "Arid",
   Sand: "Sand",
   Mountain: "Mountain",
-  Water: "Water"
+  Water: "Water",
+  Road: "Road"
 });
 
 // Tile class

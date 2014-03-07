@@ -106,6 +106,14 @@ TerrainGenerator.prototype.getTemperatureModifier = function(elevation)
   return 1 - c;
 };
 
+TerrainGenerator.prototype.isRiver = function(x, y)
+{
+  var road1 = this.noise.ridgedPerlin(x * 0.5, y * 0.5);
+  var result = road1;
+  
+  return result > 0.9;
+};
+
 TerrainGenerator.prototype.getTile = function(x, y)
 {
   var baseElevation;
@@ -142,18 +150,27 @@ TerrainGenerator.prototype.getTile = function(x, y)
   elevationRange = this.elevationRanges[biomeType];
   finalElevation = MathHelper.lerp(elevationRange[0], elevationRange[1], baseElevation);
   
-  // Handle special elevation cases (mountains and water)
+  // Determine tile type
   if (finalElevation > 0.9)
   {
+    // Mountains
     tileType = TileType.Mountain;
   }
   else if (finalElevation < 0.05)
   {
+    // Water
     tileType = TileType.Water;
   }
   else
   {
-    tileType = this.getTileType(biomeType, finalTemperature, finalPrecipitation);
+    if (biomeType != BiomeType.Desert && this.isRiver(x, y))
+    {
+      tileType = TileType.Water;
+    }
+    else
+    {
+      tileType = this.getTileType(biomeType, finalTemperature, finalPrecipitation);
+    }
   }
   
   return new Tile(tileType, biomeType, walkable, movementCost, finalElevation);
