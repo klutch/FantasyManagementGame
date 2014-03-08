@@ -24,6 +24,7 @@ var WorldRenderer = function()
   this.chunksToGenerate = []; // Array of coordinate pairs ([x, y]) that need to be generated
   this.totalChunksToGenerate = 0;
   this.tilesToDraw = [];
+  this.tilePosition = new PIXI.Point(0, 0); // Reusable position. Used in drawTile()
   
   this.container.addChild(this.debugSelection);
   
@@ -176,18 +177,12 @@ WorldRenderer.prototype.drawTile = function(i, j)
   var chunkJ = this.getChunkJ(j);
   var tile = this.world.getTile(i, j);
   var tileSprite = this.getTileSprite(tile);
-  var chunkSprite;
+  var chunkSprite = this.doesChunkExist(chunkI, chunkJ) ? this.chunkSprites[chunkI][chunkJ] : this.generateChunkSprite(chunkI, chunkJ);
   var color;
   
-  // Generate chunk sprite if necessary
-  if (!this.doesChunkExist(chunkI, chunkJ))
-  {
-    chunkSprite = this.generateChunkSprite(chunkI, chunkJ);
-  }
-
-  // Render terrain tile
-  tileSprite.position.x = i * tileSize;
-  tileSprite.position.y = j * tileSize;
+  // Calculate position
+  this.tilePosition.x = (i - chunkI * chunkSize) * tileSize;
+  this.tilePosition.y = (j - chunkJ * chunkSize) * tileSize;
 
   // Calculate tint
   //tileSprite.tint = this.getBiomeTint(tile.biomeType);
@@ -198,7 +193,7 @@ WorldRenderer.prototype.drawTile = function(i, j)
     tileSprite.tint = '0x' + color + color + color;
   }
 
-  chunkSprite.texture.render(tileSprite, tileSprite.position);
+  chunkSprite.texture.render(tileSprite, this.tilePosition);
 
   // Render feature tile
   if (tile.featureId != null)
@@ -232,6 +227,22 @@ WorldRenderer.prototype.zoomCamera = function(deltaY)
   this.camera.targetScale = scale;
 };
 
+// Draw tiles
+WorldRenderer.prototype.drawTiles = function()
+{
+  if (this.tilesToDraw.length > 0)
+  {
+    for (var n = 0; n < this.tilesToDraw.length; n++)
+    {
+      var coords = this.tilesToDraw[n];
+
+      this.drawTile(coords[0], coords[1]);
+    }
+
+    this.tilesToDraw.length = 0;
+  }
+};
+
 // Update
 WorldRenderer.prototype.update = function()
 {
@@ -252,4 +263,7 @@ WorldRenderer.prototype.update = function()
   // Debug...
   this.debugSelection.position.x = this.debugGridI * tileSize;
   this.debugSelection.position.y = this.debugGridJ * tileSize;
+  
+  // Draw tiles
+  this.drawTiles();
 };

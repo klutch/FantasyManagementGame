@@ -94,15 +94,8 @@ var World = function(seed)
   //this.featureGenerator.generatePlayerCastle();
 };
 
-World.prototype.getGridI = function(x)
-{
-  return Math.floor(x / tileSize);
-};
-
-World.prototype.getGridJ = function(y)
-{
-  return Math.floor(y / tileSize);
-};
+World.prototype.getGridI = function(x) { return Math.floor(x / tileSize); };
+World.prototype.getGridJ = function(y) { return Math.floor(y / tileSize); };
 
 // Does tile exist
 World.prototype.doesTileExist = function(i, j)
@@ -136,6 +129,7 @@ World.prototype.generateTile = function(i, j)
   return this.tiles[i][j];
 };
 
+// Create feature
 World.prototype.createFeature = function(featureType, x, y, width, height)
 {
   var id = this.features.length;
@@ -156,4 +150,31 @@ World.prototype.createFeature = function(featureType, x, y, width, height)
   }
   
   return feature;
+};
+
+// Discover tiles in a radius around a given tile
+World.prototype.discoverRadius = function(tileI, tileJ, radius)
+{
+  var radiusSq = radius * radius;
+  var worldRenderer = screenManager.screens[ScreenType.WorldMap].worldRenderer;
+  
+  for (var i = tileI - radius, limitI = tileI + radius + 1; i < limitI; i++)
+  {
+    for (var j = tileJ - radius, limitJ = tileJ + radius + 1; j < limitJ; j++)
+    {
+      var relI = i - tileI;
+      var relJ = j - tileJ;
+      var distanceSq = relI * relI + relJ * relJ;
+      var tile;
+      
+      if (distanceSq > radiusSq)
+      {
+        continue;
+      }
+      
+      tile = this.doesTileExist(i, j) ? this.getTile(i, j) : this.generateTile(i, j);
+      tile.discovered = true;
+      worldRenderer.addTileToDraw(i, j);
+    }
+  }
 };

@@ -36,6 +36,8 @@ Game.prototype.startNewGame = function()
   this.state = GameState.WorldMap;
   screenManager.addScreen(new WorldMapScreen(this.world));
   screenManager.addScreen(new TooltipScreen());
+  
+  this.world.discoverRadius(this.world.playerCastleI, this.world.playerCastleJ, 32);
 };
 
 Game.prototype.update = function()
