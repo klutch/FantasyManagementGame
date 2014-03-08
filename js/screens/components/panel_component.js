@@ -15,6 +15,7 @@ var PanelComponent = function(options)
   this.height = options.height;
   this.position.x = options.x;
   this.position.y = options.y;
+  this.z = options.z;
   
   this.buildPanel();
 };

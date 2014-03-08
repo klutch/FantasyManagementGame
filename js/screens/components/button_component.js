@@ -9,6 +9,7 @@ var ButtonComponent = function(options)
   this.base();
   this.position.x = options.x;
   this.position.y = options.y;
+  this.z = options.z;
   this.normalTexture = options.normalTexture;
   this.hoverTexture = options.hoverTexture;
   this.interactive = true;

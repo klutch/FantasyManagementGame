@@ -14,6 +14,7 @@ var WorldRenderer = function()
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = this.halfScreen.x;
   this.container.position.y = this.halfScreen.y;
+  this.container.z = 0;
   this.debugGridI = 0;
   this.debugGridJ = 0;
   this.debugSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.debugTileSelection));

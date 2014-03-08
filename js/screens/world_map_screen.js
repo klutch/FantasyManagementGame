@@ -1,17 +1,21 @@
 var WorldMapScreen = function()
 {
   var root = this;
+  
   this.type = ScreenType.WorldMap;
+  this.z = 90;
   this.worldRenderer = new WorldRenderer();
-  this.bottomBar = new PanelComponent({
+  this.resourceBar = new PanelComponent({
     x: -8,
     y: -8,
+    z: this.z,
     width: game.containerWidth + 16,
-    height: 34
+    height: 36
   });
   this.homeButton = new ButtonComponent({
     x: game.containerWidth - 28,
     y: -4,
+    z: this.z + 1,
     centerX: true,
     centerY: false,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
@@ -26,7 +30,7 @@ WorldMapScreen.prototype.onAddScreen = function()
 {
   game.stage.addChild(this.worldRenderer.container);
   game.stage.addChild(this.worldRenderer.camera);
-  game.stage.addChild(this.bottomBar);
+  game.stage.addChild(this.resourceBar);
   game.stage.addChild(this.homeButton);
   _.each(this.resourceIndicators, function(indicator) { game.stage.addChild(indicator); });
 };
@@ -35,7 +39,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.worldRenderer.container);
   game.stage.removeChild(this.worldRenderer.camera);
-  game.stage.removeChild(this.bottomBar);
+  game.stage.removeChild(this.resourceBar);
   game.stage.removeChild(this.homeButton);
   _.each(this.resourceIndicators, function(indicator) { game.stage.removeChild(indicator); });
 };
@@ -49,6 +53,7 @@ WorldMapScreen.prototype.buildResourceIndicators = function()
   _.each(ResourceType, function(resourceType)
     {
       this.resourceIndicators[resourceType] = new ResourceIndicatorComponent(resourceType, offset * counter, 2);
+      this.resourceIndicators[resourceType].z = this.z + (counter + 1) * 0.01;
       counter++;
     },
     this);
