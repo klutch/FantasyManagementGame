@@ -90,8 +90,6 @@ var World = function(seed)
   this.featureGenerator = new FeatureGenerator(this, seed);
   this.playerCastleI = 0;
   this.playerCastleJ = 0;
-  
-  //this.featureGenerator.generatePlayerCastle();
 };
 
 World.prototype.getGridI = function(x) { return Math.floor(x / tileSize); };
@@ -125,6 +123,7 @@ World.prototype.generateTile = function(i, j)
     this.tiles[i] = [];
   }
   this.tiles[i][j] = this.terrainGenerator.generateTile(i, j);
+  this.featureGenerator.tryGenerateAt(i, j);
   
   return this.tiles[i][j];
 };

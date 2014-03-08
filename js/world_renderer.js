@@ -201,7 +201,7 @@ WorldRenderer.prototype.drawTile = function(i, j)
     var feature = this.world.features[tile.featureId];
     var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
     
-    chunkSprite.texture.render(featureSprite, tileSprite.position);
+    chunkSprite.texture.render(featureSprite, this.tilePosition);
   }
 };
 
@@ -217,6 +217,15 @@ WorldRenderer.prototype.moveCameraToHome = function()
 {
   this.camera.targetPosition.x = (this.world.playerCastleI + 4) * tileSize;
   this.camera.targetPosition.y = (this.world.playerCastleJ + 4) * tileSize;
+};
+
+// Set camera position
+WorldRenderer.prototype.setCamera = function(x, y)
+{
+  this.camera.position.x = x;
+  this.camera.position.y = y;
+  this.camera.targetPosition.x = x;
+  this.camera.targetPosition.y = y;
 };
 
 // Zoom camera

@@ -68,7 +68,7 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
     {
       for (var j = randY; j < randY + 8; j++)
       {
-        var tile = this.world.getTile(i, j);
+        var tile = this.world.doesTileExist(i, j) ? this.world.getTile(i, j) : this.world.generateTile(i, j);
         
         if (tile.type != TileType.Grassland)
         {
@@ -187,11 +187,11 @@ FeatureGenerator.prototype.getGatheringValue = function(x, y)
 // Check terrain type given a location and a grid size
 FeatureGenerator.prototype.checkTerrainType = function(tileType, tileI, tileJ, width, height)
 {
-  for (var i = 0; i < width; i++)
+  for (var i = tileI, limitI = tileI + width; i < limitI; i++)
   {
-    for (var j = 0; j < height; j++)
+    for (var j = tileJ, limitJ = tileJ + height; j < limitJ; j++)
     {
-      var tile = this.world.getTile(tileI + i, tileJ + j);
+      var tile = this.world.doesTileExist(i, j) ? this.world.getTile(i, j) : this.world.generateTile(i, j);
       
       if (tile.type != tileType)
       {
