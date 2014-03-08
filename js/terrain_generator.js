@@ -111,16 +111,17 @@ TerrainGenerator.prototype.isRiver = function(x, y)
   return this.noise.ridgedPerlin(x * 0.5, y * 0.5) > 0.9;
 };
 
-TerrainGenerator.prototype.roadMethod = function(x, y)
+TerrainGenerator.prototype.getRoadNoise = function(x, y)
 {
-  return this.noise.ridgedPerlin((x + 113) * 0.4, (y - 107) * 0.4) > 0.96;
+  return this.noise.ridgedPerlin((x + 113) * 0.4, (y - 107) * 0.4);
 };
 
 TerrainGenerator.prototype.isRoad = function(x, y)
 {
   var accumulator = 0;
+  var threshold = 0.96;
   
-  if (this.roadMethod(x, y))
+  if (this.getRoadNoise(x, y) > threshold)
   {
     accumulator = 1;
     
@@ -133,7 +134,7 @@ TerrainGenerator.prototype.isRoad = function(x, y)
           continue;
         }
         
-        if (this.roadMethod(i, j))
+        if (this.getRoadNoise(i, j) > threshold)
         {
           accumulator += 1;
         }

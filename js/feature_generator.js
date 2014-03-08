@@ -103,7 +103,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
   // Try dwellings
   if (this.getDwellingValue(tileI, tileJ) == 1)
   {
-    if (tile.type == TileType.Plains)
+    if (tile.type == TileType.Grassland)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
@@ -133,7 +133,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
   // Try dungeons
   else if (this.getDungeonValue(tileI, tileJ) == 1)
   {
-    if (tile.type == TileType.Plains || tile.type == TileType.Forest)
+    if (tile.type == TileType.Grassland || tile.type == TileType.Forest)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 3))
       {
@@ -147,11 +147,11 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
   // Try gatherings
   else if (this.getGatheringValue(tileI, tileJ) == 1)
   {
-    if (tile.type == TileType.Plains)
+    if (tile.type == TileType.Grassland)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 2))
       {
-        if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.9)
+        if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
         {
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
