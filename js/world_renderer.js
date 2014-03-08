@@ -23,6 +23,7 @@ var WorldRenderer = function()
   this.generationBuffer = 4;  // Number of chunks surrounding the current chunk to generate
   this.chunksToGenerate = []; // Array of coordinate pairs ([x, y]) that need to be generated
   this.totalChunksToGenerate = 0;
+  this.tilesToDraw = [];
   
   this.container.addChild(this.debugSelection);
   
@@ -127,109 +128,6 @@ WorldRenderer.prototype.getBiomeTint = function(biomeType)
   }
 };
 
-// Update
-WorldRenderer.prototype.update = function()
-{
-  if (this.chunksToGenerate.length == 0)
-  {
-    // Ease position towards target position
-    this.camera.position.x += (this.camera.targetPosition.x - this.camera.position.x) / 8;
-    this.camera.position.y += (this.camera.targetPosition.y - this.camera.position.y) / 8;
-
-    // Ease scale towards target scale
-    this.camera.scale.x += (this.camera.targetScale - this.camera.scale.x) / 8;
-    this.camera.scale.y = this.camera.scale.x;
-
-    // Update container position and scale
-    this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
-    this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
-    this.container.scale.x = this.camera.scale.x;
-    this.container.scale.y = this.camera.scale.y;
-
-    // Debug...
-    this.debugSelection.position.x = this.debugGridI * tileSize;
-    this.debugSelection.position.y = this.debugGridJ * tileSize;
-    
-    // Determine if new chunks need to be rendered
-    this.determineChunkRenderStatus();
-  }
-  else
-  {
-    var chunkCoordPair = this.chunksToGenerate.pop();
-    var i = chunkCoordPair[0];
-    var j = chunkCoordPair[1];
-    var loadingScreen = screenManager.screens[ScreenType.Loading];
-    
-    // Create chunk sprite
-    if (this.chunkSprites[i] == null)
-    {
-      this.chunkSprites[i] = {};
-    }
-    this.chunkSprites[i][j] = this.generateChunkSprite(i, j);
-    this.container.addChildAt(this.chunkSprites[i][j], 0);
-    
-    // Update loading screen
-    if (this.chunksToGenerate.length > 0)
-    {
-      loadingScreen.setProgress((this.totalChunksToGenerate - this.chunksToGenerate.length) / this.totalChunksToGenerate);
-    }
-    else
-    {
-      screenManager.removeScreen(ScreenType.Loading);
-      this.totalChunksToGenerate = 0;
-    }
-  }
-};
-
-// Determine whether or not new chunks need to be generated/rendered
-WorldRenderer.prototype.determineChunkRenderStatus = function()
-{
-  var currentTileI = this.world.getGridI(this.camera.position.x);
-  var currentTileJ = this.world.getGridJ(this.camera.position.y);
-  var currentChunkI = this.getChunkI(currentTileI);
-  var currentChunkJ = this.getChunkJ(currentTileJ);
-  var generationRequired = false;
-  
-  // Detect ungenerated chunks
-  for (var i = currentChunkI - this.detectionBuffer, limitI = currentChunkI + this.detectionBuffer + 1; i < limitI; i++)
-  {
-    for (var j = currentChunkJ - this.detectionBuffer, limitJ = currentChunkJ + this.detectionBuffer + 1; j < limitJ; j++)
-    {
-      if (!this.doesChunkExist(i, j))
-      {
-        generationRequired = true;
-        break;
-      }
-    }
-    if (generationRequired)
-    {
-      break;
-    }
-  }
-  
-  // Open loading screen if necessary
-  if (generationRequired && !screenManager.isScreenOpen(ScreenType.Loading))
-  {
-      screenManager.addScreen(new LoadingScreen());
-  }
-  
-  // Mark chunks for generation
-  if (generationRequired)
-  {
-    for (var i = currentChunkI - this.generationBuffer, limitI = currentChunkI + this.generationBuffer + 1; i < limitI; i++)
-    {
-      for (var j = currentChunkJ - this.generationBuffer, limitJ = currentChunkJ + this.generationBuffer + 1; j < limitJ; j++)
-      {
-        if (this.chunkSprites[i] == null || this.chunkSprites[i][j] == null)
-        {
-          this.chunksToGenerate.push([i, j]);
-        }
-      }
-    }
-    this.totalChunksToGenerate = this.chunksToGenerate.length;
-  }
-};
-
 // Does a chunk exist?
 WorldRenderer.prototype.doesChunkExist = function(chunkI, chunkJ)
 {
@@ -245,53 +143,71 @@ WorldRenderer.prototype.doesChunkExist = function(chunkI, chunkJ)
   return true;
 };
 
-// Generate a chunk sprite by rendering tiles to it
+// Generate a chunk sprite
 WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 {
   var renderTexture = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
   var chunkSprite = new PIXI.Sprite(renderTexture);
   
-  for (var i = 0; i < chunkSize; i++)
-  {
-    for (var j = 0; j < chunkSize; j++)
-    {
-      var tileI = chunkI * chunkSize + i;
-      var tileJ = chunkJ * chunkSize + j;
-      var tile = this.world.getTile(tileI, tileJ);
-      var tileSprite = this.getTileSprite(tile);
-      var c;
-      
-      // Render terrain tile
-      tileSprite.position.x = i * tileSize;
-      tileSprite.position.y = j * tileSize;
-      
-      // Calculate tint
-      //tileSprite.tint = this.getBiomeTint(tile.biomeType);
-      if (tile.type == TileType.Mountain)
-      {
-        c = Math.floor(tile.elevation * tile.elevation * tile.elevation * 255).toString(16)
-        c = c.length < 2 ? ('0' + c) : c;
-        tileSprite.tint = '0x' + c + c + c;
-      }
-      
-      renderTexture.render(tileSprite, tileSprite.position);
-      
-      // Render feature tile
-      if (tile.featureId != null)
-      {
-        var feature = this.world.features[tile.featureId];
-        var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
-        
-        //featureSprite.tint = tint;
-        renderTexture.render(featureSprite, tileSprite.position);
-      }
-    }
-  }
-  
   chunkSprite.position.x = chunkI * chunkSize * tileSize;
   chunkSprite.position.y = chunkJ * chunkSize * tileSize;
   
+  if (this.chunkSprites[chunkI] == null)
+  {
+    this.chunkSprites[chunkI] = {};
+  }
+  
+  this.chunkSprites[chunkI][chunkJ] = chunkSprite;
+  this.container.addChildAt(chunkSprite, 0);
+  
   return chunkSprite;
+};
+
+// Add tiles to draw
+WorldRenderer.prototype.addTileToDraw = function(i, j)
+{
+  this.tilesToDraw.push([i, j]);
+};
+
+// Draw tiles
+WorldRenderer.prototype.drawTile = function(i, j)
+{
+  var chunkI = this.getChunkI(i);
+  var chunkJ = this.getChunkJ(j);
+  var tile = this.world.getTile(i, j);
+  var tileSprite = this.getTileSprite(tile);
+  var chunkSprite;
+  var color;
+  
+  // Generate chunk sprite if necessary
+  if (!this.doesChunkExist(chunkI, chunkJ))
+  {
+    chunkSprite = this.generateChunkSprite(chunkI, chunkJ);
+  }
+
+  // Render terrain tile
+  tileSprite.position.x = i * tileSize;
+  tileSprite.position.y = j * tileSize;
+
+  // Calculate tint
+  //tileSprite.tint = this.getBiomeTint(tile.biomeType);
+  if (tile.type == TileType.Mountain)
+  {
+    color = Math.floor(tile.elevation * tile.elevation * tile.elevation * 255).toString(16)
+    color = color.length < 2 ? ('0' + color) : color;
+    tileSprite.tint = '0x' + color + color + color;
+  }
+
+  chunkSprite.texture.render(tileSprite, tileSprite.position);
+
+  // Render feature tile
+  if (tile.featureId != null)
+  {
+    var feature = this.world.features[tile.featureId];
+    var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
+    
+    chunkSprite.texture.render(featureSprite, tileSprite.position);
+  }
 };
 
 // Move the camera to a new position
@@ -314,4 +230,26 @@ WorldRenderer.prototype.zoomCamera = function(deltaY)
   var scale = Math.min(Math.max(this.camera.targetScale + deltaY, this.minScale), this.maxScale);
   
   this.camera.targetScale = scale;
+};
+
+// Update
+WorldRenderer.prototype.update = function()
+{
+  // Ease position towards target position
+  this.camera.position.x += (this.camera.targetPosition.x - this.camera.position.x) / 8;
+  this.camera.position.y += (this.camera.targetPosition.y - this.camera.position.y) / 8;
+
+  // Ease scale towards target scale
+  this.camera.scale.x += (this.camera.targetScale - this.camera.scale.x) / 8;
+  this.camera.scale.y = this.camera.scale.x;
+
+  // Update container position and scale
+  this.container.position.x = (-this.camera.position.x * this.camera.scale.x) + this.halfScreen.x;
+  this.container.position.y = (-this.camera.position.y * this.camera.scale.y) + this.halfScreen.y;
+  this.container.scale.x = this.camera.scale.x;
+  this.container.scale.y = this.camera.scale.y;
+
+  // Debug...
+  this.debugSelection.position.x = this.debugGridI * tileSize;
+  this.debugSelection.position.y = this.debugGridJ * tileSize;
 };

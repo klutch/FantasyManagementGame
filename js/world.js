@@ -22,13 +22,14 @@ var TileType = Object.freeze({
 });
 
 // Tile class
-var Tile = function(type, biomeType, walkable, movementCost, elevation)
+var Tile = function(type, biomeType, walkable, movementCost, elevation, discovered)
 {
   this.type = type;
   this.biomeType = biomeType;
   this.walkable = walkable;
   this.movementCost = movementCost;
   this.elevation = elevation;
+  this.discovered = discovered;
 };
 
 // Feature types
@@ -90,7 +91,7 @@ var World = function(seed)
   this.playerCastleI = 0;
   this.playerCastleJ = 0;
   
-  this.featureGenerator.generatePlayerCastle();
+  //this.featureGenerator.generatePlayerCastle();
 };
 
 World.prototype.getGridI = function(x)
@@ -103,17 +104,34 @@ World.prototype.getGridJ = function(y)
   return Math.floor(y / tileSize);
 };
 
+// Does tile exist
+World.prototype.doesTileExist = function(i, j)
+{
+  if (this.tiles[i] == null)
+  {
+    return false;
+  }
+  if (this.tiles[i][j] == null)
+  {
+    return false;
+  }
+  return true;
+};
+
+// Get a tile
 World.prototype.getTile = function(i, j)
+{
+  return this.tiles[i][j];
+};
+
+// Generate a tile
+World.prototype.generateTile = function(i, j)
 {
   if (this.tiles[i] == null)
   {
     this.tiles[i] = [];
   }
-  if (this.tiles[i][j] == null)
-  {
-    this.tiles[i][j] = this.terrainGenerator.getTile(i, j);
-    this.featureGenerator.tryGenerateAt(i, j);
-  }
+  this.tiles[i][j] = this.terrainGenerator.generateTile(i, j);
   
   return this.tiles[i][j];
 };

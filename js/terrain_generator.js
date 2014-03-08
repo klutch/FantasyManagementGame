@@ -150,7 +150,7 @@ TerrainGenerator.prototype.isRoad = function(x, y)
   return accumulator > 1;
 };
 
-TerrainGenerator.prototype.getTile = function(x, y)
+TerrainGenerator.prototype.generateTile = function(x, y)
 {
   var baseElevation;
   var basePrecipitation;
@@ -216,7 +216,7 @@ TerrainGenerator.prototype.getTile = function(x, y)
     }
   }
   
-  return new Tile(tileType, biomeType, walkable, movementCost, finalElevation);
+  return new Tile(tileType, biomeType, walkable, movementCost, finalElevation, false);
 };
 
 TerrainGenerator.prototype.getBiomeType = function(temperature, precipitation)
