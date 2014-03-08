@@ -22,7 +22,12 @@ var AssetPathManager = function()
   this.assetPaths.terrainTiles[TileType.Grassland] = [
     "img/tiles/grassland_0.png",
     "img/tiles/grassland_1.png",
-    "img/tiles/grassland_2.png"
+    "img/tiles/grassland_2.png",
+    "img/tiles/grassland_3.png",
+    "img/tiles/grassland_4.png",
+    "img/tiles/grassland_5.png",
+    "img/tiles/grassland_6.png",
+    "img/tiles/grassland_7.png"
   ];
   this.assetPaths.terrainTiles[TileType.Swamp] = [
     "img/tiles/swamp_0.png"

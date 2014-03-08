@@ -5,8 +5,8 @@
 var fps;
 var fpsText;
 var lastLoop = new Date();
-var tileSize = 16;
-var chunkSize = 64;
+var tileSize = 32;
+var chunkSize = 32;
 var isLoaded = false;
 var game;
 var screenManager;
