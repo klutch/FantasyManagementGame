@@ -20,7 +20,14 @@ var AssetPathManager = function()
     "img/tiles/plains_7.png"
   ];
   this.assetPaths.terrainTiles[TileType.Snow] = [
-    "img/tiles/snow_0.png"
+    "img/tiles/snow_0.png",
+    "img/tiles/snow_1.png",
+    "img/tiles/snow_2.png",
+    "img/tiles/snow_3.png",
+    "img/tiles/snow_4.png",
+    "img/tiles/snow_5.png",
+    "img/tiles/snow_6.png",
+    "img/tiles/snow_7.png"
   ];
   this.assetPaths.terrainTiles[TileType.Forest] = [
     "img/tiles/forest_0.png",
