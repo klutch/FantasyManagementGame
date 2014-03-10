@@ -31,7 +31,12 @@ var AssetPathManager = function()
   ];
   this.assetPaths.terrainTiles[TileType.Forest] = [
     "img/tiles/forest_0.png",
-    "img/tiles/forest_1.png"
+    "img/tiles/forest_0.png",
+    "img/tiles/forest_0.png",
+    "img/tiles/forest_1.png",
+    "img/tiles/forest_2.png",
+    "img/tiles/forest_3.png",
+    "img/tiles/forest_4.png"
   ];
   this.assetPaths.terrainTiles[TileType.Grassland] = [
     "img/tiles/grassland_0.png",
