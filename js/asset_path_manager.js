@@ -61,7 +61,14 @@ var AssetPathManager = function()
     "img/tiles/swamp_6.png",
   ];
   this.assetPaths.terrainTiles[TileType.Arid] = [
-    "img/tiles/arid_0.png"
+    "img/tiles/arid_0.png",
+    "img/tiles/arid_1.png",
+    "img/tiles/arid_2.png",
+    "img/tiles/arid_3.png",
+    "img/tiles/arid_4.png",
+    "img/tiles/arid_5.png",
+    "img/tiles/arid_6.png",
+    "img/tiles/arid_7.png",
   ];
   this.assetPaths.terrainTiles[TileType.Sand] = [
     "img/tiles/sand_0.png"
