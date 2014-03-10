@@ -49,7 +49,16 @@ var AssetPathManager = function()
     "img/tiles/grassland_7.png"
   ];
   this.assetPaths.terrainTiles[TileType.Swamp] = [
-    "img/tiles/swamp_0.png"
+    "img/tiles/swamp_0.png",
+    "img/tiles/swamp_0.png",
+    "img/tiles/swamp_0.png",
+    "img/tiles/swamp_0.png",
+    "img/tiles/swamp_1.png",
+    "img/tiles/swamp_2.png",
+    "img/tiles/swamp_3.png",
+    "img/tiles/swamp_4.png",
+    "img/tiles/swamp_5.png",
+    "img/tiles/swamp_6.png",
   ];
   this.assetPaths.terrainTiles[TileType.Arid] = [
     "img/tiles/arid_0.png"
