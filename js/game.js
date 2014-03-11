@@ -42,7 +42,7 @@ Game.prototype.startNewGame = function()
   
   this.world.featureGenerator.generatePlayerCastle();
   this.world.discoverRadius(this.world.playerCastleI + 4, this.world.playerCastleJ + 4, 128);
-  worldMapScreen.worldRenderer.setCamera((this.world.playerCastleI + 4) * tileSize, (this.world.playerCastleJ + 4) * tileSize);
+  worldMapScreen.worldRenderer.setCamera((this.world.playerCastleI + 2) * tileSize, (this.world.playerCastleJ + 2) * tileSize);
 };
 
 Game.prototype.update = function()

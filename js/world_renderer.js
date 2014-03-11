@@ -6,8 +6,6 @@ var WorldRenderer = function()
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
   this.camera = new PIXI.DisplayObjectContainer();
-  this.camera.position.x = (this.world.playerCastleI + 4) * 16;
-  this.camera.position.y = (this.world.playerCastleJ + 4) * 16;
   this.camera.targetPosition = new PIXI.Point(this.camera.position.x, this.camera.position.y);
   this.camera.targetScale = 1;
   this.chunkSprites = {};
@@ -216,8 +214,8 @@ WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 // Move the camera to the home castle
 WorldRenderer.prototype.moveCameraToHome = function()
 {
-  this.camera.targetPosition.x = (this.world.playerCastleI + 4) * tileSize;
-  this.camera.targetPosition.y = (this.world.playerCastleJ + 4) * tileSize;
+  this.camera.targetPosition.x = (this.world.playerCastleI + 2) * tileSize;
+  this.camera.targetPosition.y = (this.world.playerCastleJ + 2) * tileSize;
 };
 
 // Set camera position

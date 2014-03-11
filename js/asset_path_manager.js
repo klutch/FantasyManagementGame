@@ -87,9 +87,9 @@ var AssetPathManager = function()
   this.assetPaths.featureTiles = {};
   this.assetPaths.featureTiles[FeatureType.Castle] = {};
   this.assetPaths.featureTiles[FeatureType.Castle][CastleType.Player] = [];
-  for (var i = 0; i < 64; i++)
+  for (var i = 0; i < 16; i++)
   {
-    this.assetPaths.featureTiles[FeatureType.Castle][CastleType.Player].push("img/tiles/player_castle_" + i + ".png");
+    this.assetPaths.featureTiles[FeatureType.Castle][CastleType.Player].push("img/tiles/castle_" + i + ".png");
   }
   
   // Dwelling assets

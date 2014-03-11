@@ -64,9 +64,9 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
     var randY = Math.floor(Math.sin(randAngle) * randRadius);
     var giveUp = false;
     
-    for (var i = randX; i < randX + 8; i++)
+    for (var i = randX; i < randX + 4; i++)
     {
-      for (var j = randY; j < randY + 8; j++)
+      for (var j = randY; j < randY + 4; j++)
       {
         var tile = this.world.doesTileExist(i, j) ? this.world.getTile(i, j) : this.world.generateTile(i, j);
         
@@ -91,7 +91,7 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   }
   
   // Create feature
-  feature = this.world.createFeature(FeatureType.Castle, this.world.playerCastleI, this.world.playerCastleJ, 8, 8);
+  feature = this.world.createFeature(FeatureType.Castle, this.world.playerCastleI, this.world.playerCastleJ, 4, 4);
   feature.castleType = CastleType.Player;
 };
 
