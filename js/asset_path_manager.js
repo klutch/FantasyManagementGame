@@ -109,19 +109,19 @@ var AssetPathManager = function()
   
   // Dungeon assets
   this.assetPaths.featureTiles[FeatureType.Dungeon] = {};
-  this.assetPaths.featureTiles[FeatureType.Dungeon][DungeonType.Cave] = [];
-  for (var i = 0; i < 9; i++)
-  {
-    this.assetPaths.featureTiles[FeatureType.Dungeon][DungeonType.Cave].push("img/tiles/cave_dungeon_" + i + ".png");
-  }
+  this.assetPaths.featureTiles[FeatureType.Dungeon][DungeonType.Cave] = [
+    "img/tiles/cave_dungeon_0.png",
+    "img/tiles/cave_dungeon_1.png",
+    "img/tiles/cave_dungeon_2.png",
+    "img/tiles/cave_dungeon_3.png"
+  ];
   
   // Gathering assets
   this.assetPaths.featureTiles[FeatureType.Gathering] = {};
-  this.assetPaths.featureTiles[FeatureType.Gathering][GatheringType.Tavern] = [];
-  for (var i = 0; i < 6; i++)
-  {
-    this.assetPaths.featureTiles[FeatureType.Gathering][GatheringType.Tavern].push("img/tiles/tavern_" + i + ".png");
-  }
+  this.assetPaths.featureTiles[FeatureType.Gathering][GatheringType.Tavern] = [
+    "img/tiles/tavern_0.png",
+    "img/tiles/tavern_1.png",
+  ];
   
   // UI assets
   this.assetPaths.ui = {};

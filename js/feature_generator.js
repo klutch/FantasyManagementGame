@@ -135,10 +135,10 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
   {
     if (tile.type == TileType.Grassland || tile.type == TileType.Forest)
     {
-      if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 3))
+      if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create cave dungeon
-        var feature = this.world.createFeature(FeatureType.Dungeon, tileI, tileJ, 3, 3);
+        var feature = this.world.createFeature(FeatureType.Dungeon, tileI, tileJ, 2, 2);
         
         feature.dungeonType = DungeonType.Cave;
       }
@@ -149,14 +149,14 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
   {
     if (tile.type == TileType.Grassland)
     {
-      if (this.checkTerrainType(tile.type, tileI, tileJ, 3, 2))
+      if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 1))
       {
         if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
         {
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
             // Create tavern
-            var feature = this.world.createFeature(FeatureType.Gathering, tileI, tileJ, 3, 2);
+            var feature = this.world.createFeature(FeatureType.Gathering, tileI, tileJ, 2, 1);
 
             feature.gatheringType = GatheringType.Tavern;
           }
