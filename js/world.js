@@ -9,16 +9,16 @@ var BiomeType = Object.freeze({
 
 // Tile types
 var TileType = Object.freeze({
-  Plains: "Plains",
-  Snow: "Snow",
-  Forest: "Forest",
-  Grassland: "Grassland",
-  Swamp: "Swamp",
-  Arid: "Arid",
-  Sand: "Sand",
-  Mountain: "Mountain",
-  Water: "Water",
-  Road: "Road"
+  Plains: 0,
+  Snow: 1,
+  Forest: 2,
+  Grassland: 3,
+  Swamp: 4,
+  Arid: 5,
+  Sand: 6,
+  Mountain: 7,
+  Water: 8,
+  Road: 9
 });
 
 // Tile class

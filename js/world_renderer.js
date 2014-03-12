@@ -47,6 +47,7 @@ var WorldRenderer = function()
       {
         if (i == 16) { continue; }
         this.transitionSprites[type][i] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.transitionTiles[type][i]);
+        this.transitionSprites[type][i].tint = this.getTileTint(type);
       }
     },
     this);
@@ -141,6 +142,24 @@ WorldRenderer.prototype.getBiomeTint = function(biomeType)
   {
     return 0xffff00;
     // return '#ffff00';
+  }
+};
+
+// Get tile tint
+WorldRenderer.prototype.getTileTint = function(tileType)
+{
+  switch(tileType)
+  {
+    case TileType.Plains: return 0x74565a; //#74565a
+    case TileType.Snow: return 0xffffff; //#ffffff;
+    case TileType.Forest: return 0x427500; //#427500
+    case TileType.Grassland: return 0x4e7918; //#4e7918
+    case TileType.Swamp: return 0x273909; //#273909
+    case TileType.Arid: return 0x736357; //#736357
+    case TileType.Sand: return 0xcaac63; //#caac63
+    case TileType.Mountain: return 0x545454; //#545454
+    case TileType.Water: return 0x183f6d; //#183f6d
+    case TileType.Road: return 0x8c6239; //#8c6239
   }
 };
 
