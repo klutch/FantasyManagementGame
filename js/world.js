@@ -115,6 +115,12 @@ World.prototype.getTile = function(i, j)
   return this.tiles[i][j];
 };
 
+// Get or create a tile
+World.prototype.getOrCreateTile = function(i, j)
+{
+  return this.doesTileExist(i, j) ? this.getTile(i, j) : this.generateTile(i, j);
+};
+
 // Generate a tile
 World.prototype.generateTile = function(i, j)
 {

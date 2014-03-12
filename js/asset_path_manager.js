@@ -9,6 +9,7 @@ var AssetPathManager = function()
   this.assetPaths.tiles.fog = ["img/tiles/fog_0.png"];
   this.assetPaths.tiles.white = ["img/tiles/white.png"];
   this.assetPaths.terrainTiles = {};
+  this.assetPaths.transitionTiles = {};
   this.assetPaths.terrainTiles[TileType.Plains] = [
     "img/tiles/plains_0.png",
     "img/tiles/plains_1.png",
@@ -58,7 +59,7 @@ var AssetPathManager = function()
     "img/tiles/swamp_3.png",
     "img/tiles/swamp_4.png",
     "img/tiles/swamp_5.png",
-    "img/tiles/swamp_6.png",
+    "img/tiles/swamp_6.png"
   ];
   this.assetPaths.terrainTiles[TileType.Arid] = [
     "img/tiles/arid_0.png",
@@ -68,7 +69,7 @@ var AssetPathManager = function()
     "img/tiles/arid_4.png",
     "img/tiles/arid_5.png",
     "img/tiles/arid_6.png",
-    "img/tiles/arid_7.png",
+    "img/tiles/arid_7.png"
   ];
   this.assetPaths.terrainTiles[TileType.Sand] = [
     "img/tiles/sand_0.png"
@@ -82,6 +83,68 @@ var AssetPathManager = function()
   this.assetPaths.terrainTiles[TileType.Road] = [
     "img/tiles/road_0.png"
   ];
+  
+  // Terrain transitions
+  this.assetPaths.transitionTiles[TileType.Plains] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Plains][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Snow] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Snow][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Forest] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Forest][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Grassland] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Grassland][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Swamp] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Swamp][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Arid] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Arid][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Sand] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Sand][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Mountain] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Mountain][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Water] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Water][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
+  this.assetPaths.transitionTiles[TileType.Road] = [];
+  for (var i = 1; i < 32; i++)
+  {
+    if (i == 16) { continue; }
+    this.assetPaths.transitionTiles[TileType.Road][i] = "img/tiles/grassland_x_" + i + ".png";
+  }
   
   // Player castle assets
   this.assetPaths.featureTiles = {};
@@ -192,7 +255,13 @@ AssetPathManager.prototype.recursiveCollectPaths = function(obj)
   
   if (obj instanceof Array)
   {
-    paths = paths.concat(obj);
+    for (var i = 0; i < obj.length; i++)
+    {
+      if (obj[i] != undefined)
+      {
+        paths.push(obj[i]);
+      }
+    }
   }
   else if (obj instanceof Object)
   {

@@ -1,8 +1,6 @@
 // WorldRenderer constructor
 var WorldRenderer = function()
 {
-  var root = this; // Need this for _.each loops... TODO: Learn javascript.
-  
   this.world = game.world;
   this.halfScreen = new PIXI.Point(game.containerWidth * 0.5, game.containerHeight * 0.5);
   this.camera = new PIXI.DisplayObjectContainer();
@@ -31,12 +29,27 @@ var WorldRenderer = function()
   this.terrainSprites = {};
   _.each(TileType, function(type)
     {
-      root.terrainSprites[type] = [];
+      this.terrainSprites[type] = [];
       _.each(assetPathManager.assetPaths.terrainTiles[type], function(path)
         {
-          root.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
-        });
-    });
+          this.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
+        },
+        this);
+    },
+    this);
+  
+  // Create transition sprites
+  this.transitionSprites = {};
+  _.each(TileType, function(type)
+    {
+      this.transitionSprites[type] = [];
+      for (var i = 0; i < 32; i++)
+      {
+        if (i == 16) { continue; }
+        this.transitionSprites[type][i] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.transitionTiles[type][i]);
+      }
+    },
+    this);
   
   // Create feature sprites
   this.featureSprites = {};
@@ -44,16 +57,19 @@ var WorldRenderer = function()
   {
     var subTypes = FeatureTypeList[featureType];
     
-    root.featureSprites[featureType] = {};
+    this.featureSprites[featureType] = {};
     _.each(subTypes, function(subType)
     {
-      root.featureSprites[featureType][subType] = [];
+      this.featureSprites[featureType][subType] = [];
       _.each(assetPathManager.assetPaths.featureTiles[featureType][subType], function(path)
       {
-        root.featureSprites[featureType][subType].push(PIXI.Sprite.fromImage(path));
-      });
-    });
-  });
+        this.featureSprites[featureType][subType].push(PIXI.Sprite.fromImage(path));
+      },
+      this);
+    },
+    this);
+  },
+  this);
 };
 
 WorldRenderer.prototype.getChunkI = function(i)
@@ -163,6 +179,78 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
   return chunkSprite;
 };
 
+// Get edge transition sprite
+WorldRenderer.prototype.getEdgeTransition = function(tile, tileI, tileJ)
+{
+  var tileType = tile.type;
+  var index = 0;
+  var sprite;
+  
+  if (this.world.getOrCreateTile(tileI - 1, tileJ).type != tileType)
+  {
+    index += 1;
+  }
+  if (this.world.getOrCreateTile(tileI, tileJ - 1).type != tileType)
+  {
+    index += 2;
+  }
+  if (this.world.getOrCreateTile(tileI + 1, tileJ).type != tileType)
+  {
+    index += 4;
+  }
+  if (this.world.getOrCreateTile(tileI, tileJ + 1).type != tileType)
+  {
+    index += 8;
+  }
+  
+  if (index > 0)
+  {
+    sprite = this.transitionSprites[tileType][index]
+    if (sprite == null)
+    {
+      console.error("out of bounds");
+    }
+    return sprite;
+  }
+  return null;
+};
+
+// Get corner transition sprite
+WorldRenderer.prototype.getCornerTransition = function(tile, tileI, tileJ)
+{
+  var tileType = tile.type;
+  var index = 0;
+  var sprite;
+  
+  if (this.world.getOrCreateTile(tileI - 1, tileJ - 1).type != tileType)
+  {
+    index += 1;
+  }
+  if (this.world.getOrCreateTile(tileI + 1, tileJ - 1).type != tileType)
+  {
+    index += 2;
+  }
+  if (this.world.getOrCreateTile(tileI + 1, tileJ + 1).type != tileType)
+  {
+    index += 4;
+  }
+  if (this.world.getOrCreateTile(tileI - 1, tileJ + 1).type != tileType)
+  {
+    index += 8;
+  }
+  
+  if (index > 0)
+  {
+    sprite = this.transitionSprites[tileType][index + 16]
+    if (sprite == null)
+    {
+      console.error("out of bounds");
+    }
+    return sprite;
+  }
+  return null;
+};
+
 // Add tiles to draw
 WorldRenderer.prototype.addTileToDraw = function(i, j)
 {
@@ -177,6 +265,8 @@ WorldRenderer.prototype.drawTile = function(i, j)
   var tile = this.world.getTile(i, j);
   var tileSprite = this.getTileSprite(tile);
   var chunkSprite = this.doesChunkExist(chunkI, chunkJ) ? this.chunkSprites[chunkI][chunkJ] : this.generateChunkSprite(chunkI, chunkJ);
+  var edgeTransition = this.getEdgeTransition(tile, i, j);
+  var cornerTransition = this.getCornerTransition(tile, i, j);
   var color;
   
   // Calculate position
@@ -193,6 +283,16 @@ WorldRenderer.prototype.drawTile = function(i, j)
   }
 
   chunkSprite.texture.render(tileSprite, this.tilePosition);
+  
+  // Draw transitions
+  if (edgeTransition != null)
+  {
+    chunkSprite.texture.render(edgeTransition, this.tilePosition);
+  }
+  if (cornerTransition != null)
+  {
+    chunkSprite.texture.render(cornerTransition, this.tilePosition);
+  }
 
   // Render feature tile
   if (tile.featureId != null)

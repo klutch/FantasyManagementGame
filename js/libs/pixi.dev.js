@@ -12210,6 +12210,8 @@ PIXI.AssetLoader.prototype.constructor = PIXI.AssetLoader;
  */
 PIXI.AssetLoader.prototype._getDataType = function(str)
 {
+  if (str == null) { console.error('str is null'); }
+  
     var test = 'data:';
     //starts with 'data:'
     var start = str.slice(0, test.length).toLowerCase();
