@@ -47,7 +47,6 @@ var WorldRenderer = function()
       {
         if (i == 16) { continue; }
         this.transitionSprites[type][i] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.transitionTiles[type][i]);
-        this.transitionSprites[type][i].tint = this.getTileTint(type);
       }
     },
     this);
@@ -75,12 +74,12 @@ var WorldRenderer = function()
 
 WorldRenderer.prototype.getChunkI = function(i)
 {
-  return Math.floor(i / chunkSize);
+  return Math.floor(i / CHUNK_SIZE);
 };
 
 WorldRenderer.prototype.getChunkJ = function(j)
 {
-  return Math.floor(j / chunkSize);
+  return Math.floor(j / CHUNK_SIZE);
 };
 
 // Get terrain tile sprites
@@ -118,49 +117,27 @@ WorldRenderer.prototype.getFeatureSprite = function(feature, textureI, textureJ)
 // Get biome tint
 WorldRenderer.prototype.getBiomeTint = function(biomeType)
 {
-  if (biomeType == BiomeType.Tundra)
-  {
-    return 0x00ffff;
-    // return '#00ffff';
-  }
-  else if (biomeType == BiomeType.Taiga)
-  {
-    return 0xff00ff;
-    // return '#ff00ff';
-  }
-  else if (biomeType == BiomeType.Temperate)
-  {
-    return 0x00ff00;
-    // return '#00ff00';
-  }
-  else if (biomeType == BiomeType.Tropical)
-  {
-    return 0x555555;
-    // return '#555555';
-  }
-  else if (biomeType == BiomeType.Desert)
-  {
-    return 0xffff00;
-    // return '#ffff00';
-  }
+  if (biomeType == BiomeType.Tundra) return 0x00ffff; //#00ffff
+  else if (biomeType == BiomeType.Taiga) return 0xff00ff; //#ff00ff
+  else if (biomeType == BiomeType.Temperate) return 0x00ff00; //#00ff00
+  else if (biomeType == BiomeType.Tropical) return 0x555555; //#555555
+  else if (biomeType == BiomeType.Desert) return 0xffff00; //#ffff00
 };
 
 // Get tile tint
 WorldRenderer.prototype.getTileTint = function(tileType)
 {
-  switch(tileType)
-  {
-    case TileType.Plains: return 0x74565a; //#74565a
-    case TileType.Snow: return 0xffffff; //#ffffff;
-    case TileType.Forest: return 0x427500; //#427500
-    case TileType.Grassland: return 0x4e7918; //#4e7918
-    case TileType.Swamp: return 0x273909; //#273909
-    case TileType.Arid: return 0x736357; //#736357
-    case TileType.Sand: return 0xcaac63; //#caac63
-    case TileType.Mountain: return 0x545454; //#545454
-    case TileType.Water: return 0x183f6d; //#183f6d
-    case TileType.Road: return 0x8c6239; //#8c6239
-  }
+  if (tileType == TileType.Plains) return 0x74565a; //#74565a
+  else if (tileType == TileType.Snow) return 0xffffff; //#ffffff;
+  else if (tileType == TileType.Forest) return 0x42ff00; //#42ff00
+  else if (tileType == TileType.Grassland) return 0x4e7918; //#4e7918
+  else if (tileType == TileType.Swamp) return 0x273909; //#273909
+  else if (tileType == TileType.Arid) return 0x736357; //#736357
+  else if (tileType == TileType.Sand) return 0xcaac63; //#caac63
+  else if (tileType == TileType.Mountain) return 0x545454; //#545454
+  else if (tileType == TileType.Water) return 0x183f6d; //#183f6d
+  else if (tileType == TileType.Road) return 0x8c6239; //#8c6239
+  console.error("couldn't get tile tint");
 };
 
 // Does a chunk exist?
@@ -181,11 +158,11 @@ WorldRenderer.prototype.doesChunkExist = function(chunkI, chunkJ)
 // Generate a chunk sprite
 WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 {
-  var renderTexture = new PIXI.RenderTexture(chunkSize * tileSize, chunkSize * tileSize);
+  var renderTexture = new PIXI.RenderTexture(CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE);
   var chunkSprite = new PIXI.Sprite(renderTexture);
   
-  chunkSprite.position.x = chunkI * chunkSize * tileSize;
-  chunkSprite.position.y = chunkJ * chunkSize * tileSize;
+  chunkSprite.position.x = chunkI * CHUNK_SIZE * TILE_SIZE;
+  chunkSprite.position.y = chunkJ * CHUNK_SIZE * TILE_SIZE;
   
   if (this.chunkSprites[chunkI] == null)
   {
@@ -199,72 +176,64 @@ WorldRenderer.prototype.generateChunkSprite = function(chunkI, chunkJ)
 };
 
 // Get edge transition sprite
-WorldRenderer.prototype.getEdgeTransition = function(tile, tileI, tileJ)
+WorldRenderer.prototype.getEdgeTransition = function(baseTileType, tileType, tileI, tileJ)
 {
-  var tileType = tile.type;
   var index = 0;
   var sprite;
   
-  if (this.world.getOrCreateTile(tileI - 1, tileJ).type != tileType)
+  if (this.world.getOrCreateTile(tileI - 1, tileJ).type == tileType)
   {
     index += 1;
   }
-  if (this.world.getOrCreateTile(tileI, tileJ - 1).type != tileType)
+  if (this.world.getOrCreateTile(tileI, tileJ - 1).type == tileType)
   {
     index += 2;
   }
-  if (this.world.getOrCreateTile(tileI + 1, tileJ).type != tileType)
+  if (this.world.getOrCreateTile(tileI + 1, tileJ).type == tileType)
   {
     index += 4;
   }
-  if (this.world.getOrCreateTile(tileI, tileJ + 1).type != tileType)
+  if (this.world.getOrCreateTile(tileI, tileJ + 1).type == tileType)
   {
     index += 8;
   }
   
   if (index > 0)
   {
-    sprite = this.transitionSprites[tileType][index]
-    if (sprite == null)
-    {
-      console.error("out of bounds");
-    }
+    sprite = this.transitionSprites[tileType][index];
+    sprite.tint = this.getTileTint(tileType);
     return sprite;
   }
   return null;
 };
 
 // Get corner transition sprite
-WorldRenderer.prototype.getCornerTransition = function(tile, tileI, tileJ)
+WorldRenderer.prototype.getCornerTransition = function(baseTileType, tileType, tileI, tileJ)
 {
-  var tileType = tile.type;
   var index = 0;
   var sprite;
   
-  if (this.world.getOrCreateTile(tileI - 1, tileJ - 1).type != tileType)
+  if (this.world.getOrCreateTile(tileI - 1, tileJ - 1).type == tileType)
   {
     index += 1;
   }
-  if (this.world.getOrCreateTile(tileI + 1, tileJ - 1).type != tileType)
+  if (this.world.getOrCreateTile(tileI + 1, tileJ - 1).type == tileType)
   {
     index += 2;
   }
-  if (this.world.getOrCreateTile(tileI + 1, tileJ + 1).type != tileType)
+  if (this.world.getOrCreateTile(tileI + 1, tileJ + 1).type == tileType)
   {
     index += 4;
   }
-  if (this.world.getOrCreateTile(tileI - 1, tileJ + 1).type != tileType)
+  if (this.world.getOrCreateTile(tileI - 1, tileJ + 1).type == tileType)
   {
     index += 8;
   }
   
   if (index > 0)
   {
-    sprite = this.transitionSprites[tileType][index + 16]
-    if (sprite == null)
-    {
-      console.error("out of bounds");
-    }
+    sprite = this.transitionSprites[tileType][index + 16];
+    sprite.tint = this.getTileTint(tileType);
     return sprite;
   }
   return null;
@@ -284,13 +253,11 @@ WorldRenderer.prototype.drawTile = function(i, j)
   var tile = this.world.getTile(i, j);
   var tileSprite = this.getTileSprite(tile);
   var chunkSprite = this.doesChunkExist(chunkI, chunkJ) ? this.chunkSprites[chunkI][chunkJ] : this.generateChunkSprite(chunkI, chunkJ);
-  var edgeTransition = this.getEdgeTransition(tile, i, j);
-  var cornerTransition = this.getCornerTransition(tile, i, j);
   var color;
   
   // Calculate position
-  this.tilePosition.x = (i - chunkI * chunkSize) * tileSize;
-  this.tilePosition.y = (j - chunkJ * chunkSize) * tileSize;
+  this.tilePosition.x = (i - chunkI * CHUNK_SIZE) * TILE_SIZE;
+  this.tilePosition.y = (j - chunkJ * CHUNK_SIZE) * TILE_SIZE;
 
   // Calculate tint
   //tileSprite.tint = this.getBiomeTint(tile.biomeType);
@@ -300,17 +267,23 @@ WorldRenderer.prototype.drawTile = function(i, j)
     color = color.length < 2 ? ('0' + color) : color;
     tileSprite.tint = '0x' + color + color + color;
   }
-
+  
   chunkSprite.texture.render(tileSprite, this.tilePosition);
   
   // Draw transitions
-  if (edgeTransition != null)
+  for (var height = Number(tile.type) + 1; height < NUM_TERRAIN_TYPES + 1; height++)
   {
-    chunkSprite.texture.render(edgeTransition, this.tilePosition);
-  }
-  if (cornerTransition != null)
-  {
-    chunkSprite.texture.render(cornerTransition, this.tilePosition);
+    var edgeTransition;
+    var cornerTransition;
+    
+    if ((edgeTransition = this.getEdgeTransition(tile.type, height, i, j)) != null)
+    {
+      chunkSprite.texture.render(edgeTransition, this.tilePosition);
+    }
+    if ((cornerTransition = this.getCornerTransition(tile.type, height, i, j)) != null)
+    {
+      chunkSprite.texture.render(cornerTransition, this.tilePosition);
+    }
   }
 
   // Render feature tile
@@ -333,8 +306,8 @@ WorldRenderer.prototype.moveCamera = function(deltaX, deltaY)
 // Move the camera to the home castle
 WorldRenderer.prototype.moveCameraToHome = function()
 {
-  this.camera.targetPosition.x = (this.world.playerCastleI + 2) * tileSize;
-  this.camera.targetPosition.y = (this.world.playerCastleJ + 2) * tileSize;
+  this.camera.targetPosition.x = (this.world.playerCastleI + 2) * TILE_SIZE;
+  this.camera.targetPosition.y = (this.world.playerCastleJ + 2) * TILE_SIZE;
 };
 
 // Set camera position
@@ -388,8 +361,8 @@ WorldRenderer.prototype.update = function()
   this.container.scale.y = this.camera.scale.y;
 
   // Debug...
-  this.debugSelection.position.x = this.debugGridI * tileSize;
-  this.debugSelection.position.y = this.debugGridJ * tileSize;
+  this.debugSelection.position.x = this.debugGridI * TILE_SIZE;
+  this.debugSelection.position.y = this.debugGridJ * TILE_SIZE;
   
   // Draw tiles
   this.drawTiles();

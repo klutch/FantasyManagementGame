@@ -2,11 +2,12 @@
  * Copyright 2014 Graeme Collins
  */
 
+var TILE_SIZE = 32;
+var CHUNK_SIZE = 32;
+var NUM_TERRAIN_TYPES = 9;
 var fps;
 var fpsText;
 var lastLoop = new Date();
-var tileSize = 32;
-var chunkSize = 32;
 var isLoaded = false;
 var game;
 var screenManager;

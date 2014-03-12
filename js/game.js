@@ -34,7 +34,7 @@ Game.prototype.startNewGame = function()
 {
   var worldMapScreen;
   
-  this.world = new World();
+  this.world = new World(1234);
   this.state = GameState.WorldMap;
   worldMapScreen = new WorldMapScreen(this.world);
   screenManager.addScreen(worldMapScreen);
@@ -42,7 +42,7 @@ Game.prototype.startNewGame = function()
   
   this.world.featureGenerator.generatePlayerCastle();
   this.world.discoverRadius(this.world.playerCastleI + 4, this.world.playerCastleJ + 4, 128);
-  worldMapScreen.worldRenderer.setCamera((this.world.playerCastleI + 2) * tileSize, (this.world.playerCastleJ + 2) * tileSize);
+  worldMapScreen.worldRenderer.setCamera((this.world.playerCastleI + 2) * TILE_SIZE, (this.world.playerCastleJ + 2) * TILE_SIZE);
 };
 
 Game.prototype.update = function()

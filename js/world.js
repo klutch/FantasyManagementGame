@@ -9,16 +9,16 @@ var BiomeType = Object.freeze({
 
 // Tile types
 var TileType = Object.freeze({
-  Plains: 0,
-  Snow: 1,
-  Forest: 2,
+  Water: 0,
+  Plains: 1,
+  Snow: 2,
   Grassland: 3,
   Swamp: 4,
   Arid: 5,
   Sand: 6,
-  Mountain: 7,
-  Water: 8,
-  Road: 9
+  Road: 7,
+  Mountain: 8,
+  Forest: 9
 });
 
 // Tile class
@@ -92,8 +92,8 @@ var World = function(seed)
   this.playerCastleJ = 0;
 };
 
-World.prototype.getGridI = function(x) { return Math.floor(x / tileSize); };
-World.prototype.getGridJ = function(y) { return Math.floor(y / tileSize); };
+World.prototype.getGridI = function(x) { return Math.floor(x / TILE_SIZE); };
+World.prototype.getGridJ = function(y) { return Math.floor(y / TILE_SIZE); };
 
 // Does tile exist
 World.prototype.doesTileExist = function(i, j)
