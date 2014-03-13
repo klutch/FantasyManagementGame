@@ -95,7 +95,7 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Snow][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Snow][i] = "img/tiles/snow_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Forest] = [];
   for (var i = 1; i < 32; i++)
@@ -113,7 +113,7 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Swamp][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Swamp][i] = "img/tiles/swamp_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Arid] = [];
   for (var i = 1; i < 32; i++)
@@ -131,7 +131,7 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Mountain][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Mountain][i] = "img/tiles/mountain_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Water] = [];
   for (var i = 1; i < 32; i++)

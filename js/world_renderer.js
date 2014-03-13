@@ -261,12 +261,12 @@ WorldRenderer.prototype.drawTile = function(i, j)
 
   // Calculate tint
   //tileSprite.tint = this.getBiomeTint(tile.biomeType);
-  if (tile.type == TileType.Mountain)
+  /*if (tile.type == TileType.Mountain)
   {
     color = Math.floor(tile.elevation * tile.elevation * tile.elevation * 255).toString(16)
     color = color.length < 2 ? ('0' + color) : color;
     tileSprite.tint = '0x' + color + color + color;
-  }
+  }*/
   
   chunkSprite.texture.render(tileSprite, this.tilePosition);
   
