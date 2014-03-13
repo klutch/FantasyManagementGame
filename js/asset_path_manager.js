@@ -89,19 +89,19 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Plains][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Plains][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Snow] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Snow][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Snow][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Forest] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Forest][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Forest][i] = "img/tiles/forest_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Grassland] = [];
   for (var i = 1; i < 32; i++)
@@ -113,37 +113,37 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Swamp][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Swamp][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Arid] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Arid][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Arid][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Sand] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Sand][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Sand][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Mountain] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Mountain][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Mountain][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Water] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Water][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Water][i] = "img/tiles/template_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Road] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Road][i] = "img/tiles/grassland_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Road][i] = "img/tiles/template_x_" + i + ".png";
   }
   
   // Player castle assets

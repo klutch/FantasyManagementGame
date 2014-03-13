@@ -201,7 +201,7 @@ WorldRenderer.prototype.getEdgeTransition = function(baseTileType, tileType, til
   if (index > 0)
   {
     sprite = this.transitionSprites[tileType][index];
-    sprite.tint = this.getTileTint(tileType);
+    //sprite.tint = this.getTileTint(tileType);
     return sprite;
   }
   return null;
@@ -233,7 +233,7 @@ WorldRenderer.prototype.getCornerTransition = function(baseTileType, tileType, t
   if (index > 0)
   {
     sprite = this.transitionSprites[tileType][index + 16];
-    sprite.tint = this.getTileTint(tileType);
+    //sprite.tint = this.getTileTint(tileType);
     return sprite;
   }
   return null;
