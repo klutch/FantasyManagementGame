@@ -276,13 +276,14 @@ WorldRenderer.prototype.drawTile = function(i, j)
     var edgeTransition;
     var cornerTransition;
     
-    if ((edgeTransition = this.getEdgeTransition(tile.type, height, i, j)) != null)
-    {
-      chunkSprite.texture.render(edgeTransition, this.tilePosition);
-    }
+    // BUG: Corner transitions are drawn in situations where they shouldn't be. A temporary fix is to draw it under the sides.
     if ((cornerTransition = this.getCornerTransition(tile.type, height, i, j)) != null)
     {
       chunkSprite.texture.render(cornerTransition, this.tilePosition);
+    }
+    if ((edgeTransition = this.getEdgeTransition(tile.type, height, i, j)) != null)
+    {
+      chunkSprite.texture.render(edgeTransition, this.tilePosition);
     }
   }
 
