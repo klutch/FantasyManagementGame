@@ -81,7 +81,8 @@ var AssetPathManager = function()
     "img/tiles/water_0.png"
   ];
   this.assetPaths.terrainTiles[TileType.Road] = [
-    "img/tiles/road_0.png"
+    "img/tiles/road_0.png",
+    "img/tiles/road_1.png"
   ];
   
   // Terrain transitions
@@ -143,7 +144,7 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Road][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Road][i] = "img/tiles/road_x_" + i + ".png";
   }
   
   // Player castle assets
