@@ -120,13 +120,13 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Arid][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Arid][i] = "img/tiles/arid_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Sand] = [];
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Sand][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Sand][i] = "img/tiles/sand_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Mountain] = [];
   for (var i = 1; i < 32; i++)
