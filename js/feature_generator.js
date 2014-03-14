@@ -54,40 +54,27 @@ var FeatureGenerator = function(world, seed)
 FeatureGenerator.prototype.generatePlayerCastle = function()
 {
   var found = false;
-  var feature;
   
-  while (!found)
+  for (var i = -1000; i < 1000; i++)
   {
-    var randRadius = getRandomInt(0, 2200);
-    var randAngle = Math.random() * Math.PI * 2;
-    var randX = Math.floor(Math.cos(randAngle) * randRadius);
-    var randY = Math.floor(Math.sin(randAngle) * randRadius);
-    var giveUp = false;
-    
-    for (var i = randX; i < randX + 4; i++)
+    for (var j = -1000; j < 1000; j++)
     {
-      for (var j = randY; j < randY + 4; j++)
+      if (this.checkTerrainType(TileType.Grassland, i, j, 4, 4))
       {
-        var tile = this.world.doesTileExist(i, j) ? this.world.getTile(i, j) : this.world.generateTile(i, j);
-        
-        if (tile.type != TileType.Grassland)
-        {
-          giveUp = true;
-          break;
-        }
-      }
-      if (giveUp)
-      {
+        found = true;
+        this.world.playerCastleI = i;
+        this.world.playerCastleJ = j;
         break;
       }
     }
-    
-    if (!giveUp)
-    {
-      found = true;
-      this.world.playerCastleI = randX;
-      this.world.playerCastleJ = randY;
-    }
+    if (found) { break; }
+  }
+  
+  // Debug...
+  if (!found)
+  {
+    console.error("Couldn't find a suitable spot for the player's castle.");
+    return;
   }
   
   // Create feature
