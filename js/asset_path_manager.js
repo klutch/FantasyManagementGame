@@ -90,7 +90,7 @@ var AssetPathManager = function()
   for (var i = 1; i < 32; i++)
   {
     if (i == 16) { continue; }
-    this.assetPaths.transitionTiles[TileType.Plains][i] = "img/tiles/template_x_" + i + ".png";
+    this.assetPaths.transitionTiles[TileType.Plains][i] = "img/tiles/plains_x_" + i + ".png";
   }
   this.assetPaths.transitionTiles[TileType.Snow] = [];
   for (var i = 1; i < 32; i++)
