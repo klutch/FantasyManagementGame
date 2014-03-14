@@ -72,15 +72,8 @@ var WorldRenderer = function()
   this);
 };
 
-WorldRenderer.prototype.getChunkI = function(i)
-{
-  return Math.floor(i / CHUNK_SIZE);
-};
-
-WorldRenderer.prototype.getChunkJ = function(j)
-{
-  return Math.floor(j / CHUNK_SIZE);
-};
+WorldRenderer.prototype.getChunkI = function(i) { return Math.floor(i / CHUNK_SIZE); };
+WorldRenderer.prototype.getChunkJ = function(j) { return Math.floor(j / CHUNK_SIZE); };
 
 // Get terrain tile sprites
 WorldRenderer.prototype.getTileSprite = function(tile)
@@ -239,13 +232,17 @@ WorldRenderer.prototype.getCornerTransition = function(baseTileType, tileType, t
   return null;
 };
 
+// Convert screen coordinates to world tile
+WorldRenderer.prototype.convertScreenToWorldX = function(x) { return (x - this.container.position.x) / this.camera.scale.x; };
+WorldRenderer.prototype.convertScreenToWorldY = function(y) { return (y - this.container.position.y) / this.camera.scale.y; };
+
 // Add tiles to draw
 WorldRenderer.prototype.addTileToDraw = function(i, j)
 {
   this.tilesToDraw.push([i, j]);
 };
 
-// Draw tiles
+// Draw a tile
 WorldRenderer.prototype.drawTile = function(i, j)
 {
   var chunkI = this.getChunkI(i);
@@ -258,16 +255,8 @@ WorldRenderer.prototype.drawTile = function(i, j)
   // Calculate position
   this.tilePosition.x = (i - chunkI * CHUNK_SIZE) * TILE_SIZE;
   this.tilePosition.y = (j - chunkJ * CHUNK_SIZE) * TILE_SIZE;
-
-  // Calculate tint
-  //tileSprite.tint = this.getBiomeTint(tile.biomeType);
-  /*if (tile.type == TileType.Mountain)
-  {
-    color = Math.floor(tile.elevation * tile.elevation * tile.elevation * 255).toString(16)
-    color = color.length < 2 ? ('0' + color) : color;
-    tileSprite.tint = '0x' + color + color + color;
-  }*/
   
+  // Draw base sprite
   chunkSprite.texture.render(tileSprite, this.tilePosition);
   
   // Draw transitions
@@ -362,6 +351,8 @@ WorldRenderer.prototype.update = function()
   this.container.scale.y = this.camera.scale.y;
 
   // Debug...
+  this.debugGridI = this.world.getGridI(this.convertScreenToWorldX(inputManager.mousePosition.x));
+  this.debugGridJ = this.world.getGridJ(this.convertScreenToWorldY(inputManager.mousePosition.y));
   this.debugSelection.position.x = this.debugGridI * TILE_SIZE;
   this.debugSelection.position.y = this.debugGridJ * TILE_SIZE;
   
