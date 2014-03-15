@@ -12,6 +12,7 @@ var isLoaded = false;
 var game;
 var screenManager;
 var inputManager;
+var worldManager;
 var assetPathManager = new AssetPathManager();
 var resourceManager;
 

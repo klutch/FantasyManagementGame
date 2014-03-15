@@ -1,6 +1,5 @@
-var TerrainGenerator = function(world, seed)
+var TerrainGenerator = function(seed)
 {
-  this.world = world;
   this.noise = new Noise(seed, {perlinGridWidth: 32, perlinGridHeight: 32, cellGridWidth: 64, cellGridHeight: 64});
   
   // Biome bounds

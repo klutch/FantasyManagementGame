@@ -234,19 +234,19 @@ WorldMapScreen.prototype.getEdgeTransition = function(baseTileType, tileType, ti
   var index = 0;
   var sprite;
   
-  if (this.world.getOrCreateTile(tileI - 1, tileJ).type == tileType)
+  if (worldManager.getOrCreateTile(tileI - 1, tileJ).type == tileType)
   {
     index += 1;
   }
-  if (this.world.getOrCreateTile(tileI, tileJ - 1).type == tileType)
+  if (worldManager.getOrCreateTile(tileI, tileJ - 1).type == tileType)
   {
     index += 2;
   }
-  if (this.world.getOrCreateTile(tileI + 1, tileJ).type == tileType)
+  if (worldManager.getOrCreateTile(tileI + 1, tileJ).type == tileType)
   {
     index += 4;
   }
-  if (this.world.getOrCreateTile(tileI, tileJ + 1).type == tileType)
+  if (worldManager.getOrCreateTile(tileI, tileJ + 1).type == tileType)
   {
     index += 8;
   }
@@ -266,19 +266,19 @@ WorldMapScreen.prototype.getCornerTransition = function(baseTileType, tileType, 
   var index = 0;
   var sprite;
   
-  if (this.world.getOrCreateTile(tileI - 1, tileJ - 1).type == tileType)
+  if (worldManager.getOrCreateTile(tileI - 1, tileJ - 1).type == tileType)
   {
     index += 1;
   }
-  if (this.world.getOrCreateTile(tileI + 1, tileJ - 1).type == tileType)
+  if (worldManager.getOrCreateTile(tileI + 1, tileJ - 1).type == tileType)
   {
     index += 2;
   }
-  if (this.world.getOrCreateTile(tileI + 1, tileJ + 1).type == tileType)
+  if (worldManager.getOrCreateTile(tileI + 1, tileJ + 1).type == tileType)
   {
     index += 4;
   }
-  if (this.world.getOrCreateTile(tileI - 1, tileJ + 1).type == tileType)
+  if (worldManager.getOrCreateTile(tileI - 1, tileJ + 1).type == tileType)
   {
     index += 8;
   }
@@ -307,7 +307,7 @@ WorldMapScreen.prototype.drawTile = function(i, j)
 {
   var chunkI = this.getChunkI(i);
   var chunkJ = this.getChunkJ(j);
-  var tile = this.world.getTile(i, j);
+  var tile = worldManager.getTile(i, j);
   var tileSprite = this.getTileSprite(tile);
   var chunkSprite = this.doesChunkExist(chunkI, chunkJ) ? this.chunkSprites[chunkI][chunkJ] : this.generateChunkSprite(chunkI, chunkJ);
   var color;
@@ -339,7 +339,7 @@ WorldMapScreen.prototype.drawTile = function(i, j)
   // Render feature tile
   if (tile.featureId != null)
   {
-    var feature = this.world.features[tile.featureId];
+    var feature = worldManager.world.features[tile.featureId];
     var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
     
     chunkSprite.texture.render(featureSprite, this.tilePosition);
@@ -437,8 +437,8 @@ WorldMapScreen.prototype.update = function()
   this.container.scale.y = this.camera.scale.y;
 
   // Debug...
-  this.debugGridI = this.world.getGridI(this.convertScreenToWorldX(inputManager.mousePosition.x));
-  this.debugGridJ = this.world.getGridJ(this.convertScreenToWorldY(inputManager.mousePosition.y));
+  this.debugGridI = worldManager.getGridI(this.convertScreenToWorldX(inputManager.mousePosition.x));
+  this.debugGridJ = worldManager.getGridJ(this.convertScreenToWorldY(inputManager.mousePosition.y));
   this.debugSelection.position.x = this.debugGridI * TILE_SIZE;
   this.debugSelection.position.y = this.debugGridJ * TILE_SIZE;
   

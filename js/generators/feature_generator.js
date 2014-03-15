@@ -1,7 +1,6 @@
 // Feature generator constructor
-var FeatureGenerator = function(world, seed)
+var FeatureGenerator = function(seed)
 {
-  this.world = world;
   this.seed = seed;
   this.dwellingGridSize = 512;
   this.dwellingGrid = [];
@@ -62,8 +61,8 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
       if (this.checkTerrainType(TileType.Grassland, i, j, 4, 4))
       {
         found = true;
-        this.world.playerCastleI = i;
-        this.world.playerCastleJ = j;
+        worldManager.world.playerCastleI = i;
+        worldManager.world.playerCastleJ = j;
         break;
       }
     }
@@ -78,14 +77,14 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   }
   
   // Create feature
-  feature = this.world.createFeature(FeatureType.Castle, this.world.playerCastleI, this.world.playerCastleJ, 4, 4);
+  feature = worldManager.createFeature(FeatureType.Castle, worldManager.world.playerCastleI, worldManager.world.playerCastleJ, 4, 4);
   feature.castleType = CastleType.Player;
 };
 
 // Try to generate a feature at a given tile
 FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
 {
-  var tile = this.world.getTile(tileI, tileJ);
+  var tile = worldManager.getTile(tileI, tileJ);
   
   // Try dwellings
   if (this.getDwellingValue(tileI, tileJ) == 1)
@@ -94,12 +93,12 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
-        if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
+        if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
         {
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
             // Create town
-            var feature = this.world.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
+            var feature = worldManager.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
 
             feature.dwellingType = DwellingType.Town;
           }
@@ -111,7 +110,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create grove
-        var feature = this.world.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
+        var feature = worldManager.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
         
         feature.dwellingType = DwellingType.Grove;
       }
@@ -125,7 +124,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create cave dungeon
-        var feature = this.world.createFeature(FeatureType.Dungeon, tileI, tileJ, 2, 2);
+        var feature = worldManager.createFeature(FeatureType.Dungeon, tileI, tileJ, 2, 2);
         
         feature.dungeonType = DungeonType.Cave;
       }
@@ -138,12 +137,12 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 1))
       {
-        if (this.world.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
+        if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
         {
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
             // Create tavern
-            var feature = this.world.createFeature(FeatureType.Gathering, tileI, tileJ, 2, 1);
+            var feature = worldManager.createFeature(FeatureType.Gathering, tileI, tileJ, 2, 1);
 
             feature.gatheringType = GatheringType.Tavern;
           }
@@ -178,7 +177,7 @@ FeatureGenerator.prototype.checkTerrainType = function(tileType, tileI, tileJ, w
   {
     for (var j = tileJ, limitJ = tileJ + height; j < limitJ; j++)
     {
-      var tile = this.world.doesTileExist(i, j) ? this.world.getTile(i, j) : this.world.generateTile(i, j);
+      var tile = worldManager.doesTileExist(i, j) ? worldManager.getTile(i, j) : worldManager.generateTile(i, j);
       
       if (tile.type != tileType)
       {

@@ -34,15 +34,15 @@ Game.prototype.startNewGame = function()
 {
   var worldMapScreen;
   
-  this.world = new World();
   this.state = GameState.WorldMap;
+  worldManager = new WorldManager();
   worldMapScreen = new WorldMapScreen(this.world);
   screenManager.addScreen(worldMapScreen);
   screenManager.addScreen(new TooltipScreen());
   
-  this.world.featureGenerator.generatePlayerCastle();
-  this.world.discoverRadius(this.world.playerCastleI + 4, this.world.playerCastleJ + 4, 128);
-  worldMapScreen.setCamera((this.world.playerCastleI + 2) * TILE_SIZE, (this.world.playerCastleJ + 2) * TILE_SIZE);
+  worldManager.featureGenerator.generatePlayerCastle();
+  worldManager.discoverRadius(worldManager.world.playerCastleI + 4, worldManager.world.playerCastleJ + 4, 128);
+  worldMapScreen.setCamera((worldManager.world.playerCastleI + 2) * TILE_SIZE, (worldManager.world.playerCastleJ + 2) * TILE_SIZE);
 };
 
 Game.prototype.update = function()
