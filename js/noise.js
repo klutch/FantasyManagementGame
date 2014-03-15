@@ -5,7 +5,7 @@ var Noise = function(seed, options)
   this.perlinGridHeight = options.perlinGridHeight || 32;
   this.cellGridWidth = options.cellGridWidth || 32;  // worley
   this.cellGridHeight = options.cellGridHeight || 32; // worley
-  this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
+  this.rng = new Math.seedrandom(seed);
   this.perlinGradients = [];
   this.cellGradients = [];
   

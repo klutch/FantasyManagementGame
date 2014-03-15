@@ -8,7 +8,7 @@ var FeatureGenerator = function(seed)
   this.dungeonGrid = [];
   this.gatheringGridSize = 512;
   this.gatheringGrid = [];
-  this.rng = seed == null ? new Math.seedrandom() : new Math.seedrandom(seed);
+  this.rng = new Math.seedrandom(seed);
   this.numCoinFlips = 64;
   this.coinFlips = [];
   

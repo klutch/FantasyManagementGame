@@ -1,8 +1,9 @@
-var WorldManager = function()
+var WorldManager = function(seed)
 {
-  this.world = new World();
-  this.terrainGenerator = new TerrainGenerator(this.world.seed);
-  this.featureGenerator = new FeatureGenerator(this, this.world.seed);
+  seed = seed || Math.random() * 11377;
+  this.world = new World(seed);
+  this.terrainGenerator = new TerrainGenerator(seed);
+  this.featureGenerator = new FeatureGenerator(seed);
 };
 
 WorldManager.prototype.getGridI = function(x) { return Math.floor(x / TILE_SIZE); };

@@ -356,8 +356,8 @@ WorldMapScreen.prototype.moveCamera = function(deltaX, deltaY)
 // Move the camera to the home castle
 WorldMapScreen.prototype.moveCameraToHome = function()
 {
-  this.camera.targetPosition.x = (this.world.playerCastleI + 2) * TILE_SIZE;
-  this.camera.targetPosition.y = (this.world.playerCastleJ + 2) * TILE_SIZE;
+  this.camera.targetPosition.x = (worldManager.world.playerCastleI + 2) * TILE_SIZE;
+  this.camera.targetPosition.y = (worldManager.world.playerCastleJ + 2) * TILE_SIZE;
 };
 
 // Set camera position
