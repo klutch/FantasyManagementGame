@@ -34,7 +34,7 @@ Game.prototype.startNewGame = function()
 {
   var worldMapScreen;
   
-  this.world = new World(1234);
+  this.world = new World();
   this.state = GameState.WorldMap;
   worldMapScreen = new WorldMapScreen(this.world);
   screenManager.addScreen(worldMapScreen);
