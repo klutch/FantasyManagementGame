@@ -26,7 +26,7 @@ var WorldMapScreen = function(world)
     centerX: true,
     centerY: false,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
-    onClick: function(e) { root.moveCameraToHome(); },
+    onClick: function(e) { root.worldMap.moveCameraToHome(); },
     tooltipText: "Center on home castle"
   });
   
@@ -70,23 +70,23 @@ WorldMapScreen.prototype.handleInput = function()
   // Handle input
   if (inputManager.keysPressed[65])
   {
-    this.moveCamera(-5, 0);
+    this.worldMap.moveCamera(-5, 0);
   }
   if (inputManager.keysPressed[68])
   {
-    this.moveCamera(5, 0);
+    this.worldMap.moveCamera(5, 0);
   }
   if (inputManager.keysPressed[83])
   {
-    this.moveCamera(0, 5);
+    this.worldMap.moveCamera(0, 5);
   }
   if (inputManager.keysPressed[87])
   {
-    this.moveCamera(0, -5);
+    this.worldMap.moveCamera(0, -5);
   }
   if (inputManager.mouseWheelDelta != 0)
   {
-    this.zoomCamera(inputManager.mouseWheelDelta * 0.1);
+    this.worldMap.zoomCamera(inputManager.mouseWheelDelta * 0.1);
   }
 };
 
