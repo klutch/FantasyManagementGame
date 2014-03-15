@@ -43,6 +43,13 @@ Game.prototype.startNewGame = function()
   worldManager.featureGenerator.generatePlayerCastle();
   worldManager.discoverRadius(worldManager.world.playerCastleI + 4, worldManager.world.playerCastleJ + 4, 128);
   worldMapScreen.setCamera((worldManager.world.playerCastleI + 2) * TILE_SIZE, (worldManager.world.playerCastleJ + 2) * TILE_SIZE);
+  
+  adventurerManager = new AdventurerManager();
+  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createArcher(10));
+  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createArcher(10));
+  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createKnight(10));
+  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createKnight(10));
+  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createHealer(10));
 };
 
 Game.prototype.update = function()

@@ -238,6 +238,10 @@ var AssetPathManager = function()
   this.assetPaths.ui.resources[ResourceType.Quartz] = ["img/ui/resource_quartz.png"];
   this.assetPaths.ui.resources[ResourceType.Diamond] = ["img/ui/resource_diamond.png"];
   this.assetPaths.ui.resources[ResourceType.Xenotime] = ["img/ui/resource_xenotime.png"];
+  this.assetPaths.ui.portraits = {};
+  this.assetPaths.ui.portraits[PortraitType.Archer] = ["img/ui/portraits/archer.png"];
+  this.assetPaths.ui.portraits[PortraitType.Knight] = ["img/ui/portraits/knight.png"];
+  this.assetPaths.ui.portraits[PortraitType.Healer] = ["img/ui/portraits/healer.png"];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)
