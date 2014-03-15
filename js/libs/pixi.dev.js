@@ -1156,6 +1156,7 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 {
     if(index >= 0 && index <= this.children.length)
     {
+      if (child == undefined) { console.error("child is undefined"); }
         if(child.parent)
         {
             child.parent.removeChild(child);

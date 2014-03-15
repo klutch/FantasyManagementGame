@@ -75,7 +75,7 @@ WorldManager.prototype.createFeature = function(featureType, x, y, width, height
 WorldManager.prototype.discoverRadius = function(tileI, tileJ, radius)
 {
   var radiusSq = radius * radius;
-  var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  var worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
   
   for (var i = tileI - radius, limitI = tileI + radius + 1; i < limitI; i++)
   {
@@ -93,7 +93,7 @@ WorldManager.prototype.discoverRadius = function(tileI, tileJ, radius)
       
       tile = this.doesTileExist(i, j) ? this.getTile(i, j) : this.generateTile(i, j);
       tile.discovered = true;
-      worldMapScreen.addTileToDraw(i, j);
+      worldMap.addTileToDraw(i, j);
     }
   }
 };
