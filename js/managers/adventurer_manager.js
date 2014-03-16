@@ -22,6 +22,34 @@ var AdventurerManager = function()
   this.barracksGroup = this.createGroup({name: "Barracks", takesOrders: false});
 };
 
+AdventurerManager.prototype.getNumAdventurers = function()
+{
+  var count = 0;
+  
+  for (var i = 0; i < this.adventurers.length; i++)
+  {
+    if (!this.adventurers[i].isWorker)
+    {
+      count++;
+    }
+  }
+  return count;
+};
+
+AdventurerManager.prototype.getNumWorkers = function()
+{
+  var count = 0;
+  
+  for (var i = 0; i < this.adventurers.length; i++)
+  {
+    if (this.adventurers[i].isWorker)
+    {
+      count++;
+    }
+  }
+  return count;
+};
+
 AdventurerManager.prototype.getUnusedAdventurerId = function()
 {
   for (var i = 0; i < this.adventurers.length; i++)

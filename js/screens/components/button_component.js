@@ -29,7 +29,7 @@ var ButtonComponent = function(options)
   // Text
   if (options.text != null)
   {
-    this.bitmapText = new PIXI.BitmapText(options.text, {font: "12px pixelmix", tint: 0xCCCCCC});
+    this.bitmapText = new PIXI.BitmapText(options.text, {font: "12px big_pixelmix", tint: 0xCCCCCC});
     this.addChild(this.bitmapText);
   }
   

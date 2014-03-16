@@ -7,6 +7,12 @@ var WorldMapScreen = function(world)
   this.world = world;
   this.isGroupPanelOpen = false;
   
+  // Create button container
+  this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
+  this.mainButtonsContainer.position.x = 0;
+  this.mainButtonsContainer.position.y = 26;
+  this.mainButtonsContainer.z = this.z + 2;
+  
   // Create world map component
   this.worldMap = new WorldMapComponent();
   
@@ -33,14 +39,14 @@ var WorldMapScreen = function(world)
   
   // Create group button
   this.groupButton = new ButtonComponent({
-    x: 8,
-    y: 32,
-    z: this.z + 2,
+    x: 16,
+    y: 16,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
     onClick: function(e) { root.toggleGroupPanel(); },
     tooltipText: "Group menu"
   });
+  this.mainButtonsContainer.addChild(this.groupButton);
   
   // Create group panel
   this.groupPanel = new GroupPanelComponent({
@@ -60,7 +66,7 @@ WorldMapScreen.prototype.onAddScreen = function()
   game.stage.addChild(this.worldMap);
   game.stage.addChild(this.resourceBar);
   game.stage.addChild(this.homeButton);
-  game.stage.addChild(this.groupButton);
+  game.stage.addChild(this.mainButtonsContainer);
   _.each(this.resourceIndicators, function(indicator) { game.stage.addChild(indicator); });
 };
 
@@ -69,7 +75,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.worldMap);
   game.stage.removeChild(this.resourceBar);
   game.stage.removeChild(this.homeButton);
-  game.stage.removeChild(this.groupButton);
+  game.stage.removeChild(this.mainButtonsContainer);
   _.each(this.resourceIndicators, function(indicator) { game.stage.removeChild(indicator); });
 };
 
@@ -96,10 +102,12 @@ WorldMapScreen.prototype.toggleGroupPanel = function()
   {
     game.stage.addChild(this.groupPanel);
     game.stage.children.sort(depthCompare);
+    this.mainButtonsContainer.position.x = 248;
   }
   else
   {
     game.stage.removeChild(this.groupPanel);
+    this.mainButtonsContainer.position.x = 0;
   }
 };
 
@@ -135,6 +143,9 @@ WorldMapScreen.prototype.update = function()
   
   // Update world map component
   this.worldMap.update();
+  
+  // Update group panel component
+  if (this.isGroupPanelOpen) { this.groupPanel.update(); }
   
   // Update resource indicators
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });

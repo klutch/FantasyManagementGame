@@ -2,7 +2,7 @@ var TooltipComponent = function()
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
-  this.text = new PIXI.BitmapText("", {font: "20px pixelmix", tint: 0xFFF200});
+  this.text = new PIXI.BitmapText("", {font: "20px big_pixelmix", tint: 0xFFF200});
   this.addChild(this.text);
 };
 

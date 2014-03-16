@@ -201,16 +201,14 @@ var AssetPathManager = function()
     "img/ui/panel_side_2.png",
     "img/ui/panel_side_3.png"
   ];
-  this.assetPaths.ui.panelBg = [
-    "img/ui/panel_bg.png"
-  ];
+  this.assetPaths.ui.panelBg = ["img/ui/panel_bg.png"];
   this.assetPaths.ui.black = ["img/ui/black.png"];
   this.assetPaths.ui.logo = ["img/ui/logo.png"];
-  this.assetPaths.ui.font = ["fonts/pixelmix.fnt"];
+  this.assetPaths.ui.bigFont = ["fonts/big_pixelmix.fnt"];
   this.assetPaths.ui.smallFont = ["fonts/small_pixelmix.fnt"];
   this.assetPaths.ui.mainMenuButtons = [
     "img/ui/button_0_normal.png",
-    "img/ui/button_0_hover.png"
+    "img/ui/button_0_over.png"
   ];
   this.assetPaths.ui.homeCastleButtons = [
     "img/ui/home_button.png"
@@ -223,6 +221,11 @@ var AssetPathManager = function()
     "img/ui/progress_bar_fill.png",
     "img/ui/progress_bar_border.png"
   ];
+  this.assetPaths.ui.standardButtons = [
+    "img/ui/standard_button.png",
+    "img/ui/standard_button_over.png"
+  ];
+  this.assetPaths.ui.divider = ["img/ui/divider.png"];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};
   this.assetPaths.ui.resources[ResourceType.Gold] = ["img/ui/resource_gold.png"];
