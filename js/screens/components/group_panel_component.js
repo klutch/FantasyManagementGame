@@ -35,7 +35,7 @@ var GroupPanelComponent = function(options)
   this.dividers[1] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.divider);
   this.dividers[1].anchor.x = 0.5;
   this.dividers[1].position.x = middleX;
-  this.dividers[1].position.y = this.manageGroupsButton.position.y + 26;
+  this.dividers[1].position.y = this.manageGroupsButton.position.y + 28;
   this.addChild(this.dividers[1]);
   
   // Create info text
