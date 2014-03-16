@@ -67,6 +67,9 @@ var WorldMapComponent = function()
     this);
   },
   this);
+  
+  // Add tile selection sprite
+  this.addChild(this.debugSelection);
 };
 
 WorldMapComponent.prototype = new PIXI.DisplayObjectContainer;

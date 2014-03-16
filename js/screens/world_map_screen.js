@@ -5,6 +5,7 @@ var WorldMapScreen = function(world)
   this.type = ScreenType.WorldMap;
   this.z = 90;
   this.world = world;
+  this.isGroupPanelOpen = false;
   
   // Create world map component
   this.worldMap = new WorldMapComponent();
@@ -32,12 +33,22 @@ var WorldMapScreen = function(world)
   
   // Create group button
   this.groupButton = new ButtonComponent({
-    x: 16,
+    x: 8,
     y: 32,
     z: this.z + 2,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
+    onClick: function(e) { root.toggleGroupPanel(); },
     tooltipText: "Group menu"
+  });
+  
+  // Create group panel
+  this.groupPanel = new GroupPanelComponent({
+    x: -8,
+    y: -8,
+    z: this.z - 1,
+    width: 256,
+    height: game.containerHeight + 16
   });
   
   // Create resource indicators
@@ -75,6 +86,21 @@ WorldMapScreen.prototype.buildResourceIndicators = function()
       counter++;
     },
     this);
+};
+
+WorldMapScreen.prototype.toggleGroupPanel = function()
+{
+  this.isGroupPanelOpen = !this.isGroupPanelOpen;
+  
+  if (this.isGroupPanelOpen)
+  {
+    game.stage.addChild(this.groupPanel);
+    game.stage.children.sort(depthCompare);
+  }
+  else
+  {
+    game.stage.removeChild(this.groupPanel);
+  }
 };
 
 WorldMapScreen.prototype.handleInput = function()
