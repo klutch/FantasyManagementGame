@@ -30,6 +30,16 @@ var WorldMapScreen = function(world)
     tooltipText: "Center on home castle"
   });
   
+  // Create group button
+  this.groupButton = new ButtonComponent({
+    x: 16,
+    y: 32,
+    z: this.z + 2,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
+    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
+    tooltipText: "Group menu"
+  });
+  
   // Create resource indicators
   this.buildResourceIndicators();
 };
@@ -39,6 +49,7 @@ WorldMapScreen.prototype.onAddScreen = function()
   game.stage.addChild(this.worldMap);
   game.stage.addChild(this.resourceBar);
   game.stage.addChild(this.homeButton);
+  game.stage.addChild(this.groupButton);
   _.each(this.resourceIndicators, function(indicator) { game.stage.addChild(indicator); });
 };
 
@@ -47,6 +58,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.worldMap);
   game.stage.removeChild(this.resourceBar);
   game.stage.removeChild(this.homeButton);
+  game.stage.removeChild(this.groupButton);
   _.each(this.resourceIndicators, function(indicator) { game.stage.removeChild(indicator); });
 };
 

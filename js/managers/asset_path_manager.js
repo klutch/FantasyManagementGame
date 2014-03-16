@@ -215,6 +215,10 @@ var AssetPathManager = function()
   this.assetPaths.ui.homeCastleButtons = [
     "img/ui/home_button.png"
   ];
+  this.assetPaths.ui.groupButtons = [
+    "img/ui/group_button.png",
+    "img/ui/group_button_over.png"
+  ];
   this.assetPaths.ui.progressBar = [
     "img/ui/progress_bar_fill.png",
     "img/ui/progress_bar_border.png"
