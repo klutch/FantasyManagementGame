@@ -11,7 +11,6 @@ var Game = function()
   this.containerWidth = $('#container').width();
   this.containerHeight = $('#container').height();
   this.stage = new PIXI.Stage(0x000000);
-  //this.renderer = PIXI.autoDetectRenderer(this.containerWidth, this.containerHeight);
   this.renderer = new PIXI.CanvasRenderer(this.containerWidth, this.containerHeight);
   $('#container').append(this.renderer.view);
   
@@ -33,6 +32,7 @@ Game.prototype.closeMainMenu = function()
 Game.prototype.startNewGame = function()
 {
   var worldMapScreen;
+  var startingGroup;
   
   this.state = GameState.WorldMap;
   worldManager = new WorldManager();
@@ -45,11 +45,12 @@ Game.prototype.startNewGame = function()
   worldMapScreen.worldMap.setCamera((worldManager.world.playerCastleI + 2) * TILE_SIZE, (worldManager.world.playerCastleJ + 2) * TILE_SIZE);
   
   adventurerManager = new AdventurerManager();
-  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createArcher(10));
-  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createArcher(10));
-  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createKnight(10));
-  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createKnight(10));
-  adventurerManager.addAdventurer(adventurerManager.barracksGroup.id, AdventurerFactory.createHealer(10));
+  startingGroup = adventurerManager.createGroup({name: "Starting Group", featureId: 0});
+  adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
+  adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
+  adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
+  adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
+  adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createHealer(10));
 };
 
 Game.prototype.update = function()

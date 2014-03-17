@@ -225,7 +225,12 @@ var AssetPathManager = function()
     "img/ui/standard_button.png",
     "img/ui/standard_button_over.png"
   ];
+  this.assetPaths.ui.transparent = ["img/ui/transparent.png"];
   this.assetPaths.ui.divider = ["img/ui/divider.png"];
+  this.assetPaths.ui.groupNameButtons = [
+    "img/ui/group_name.png",
+    "img/ui/group_name_over.png"
+  ];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};
   this.assetPaths.ui.resources[ResourceType.Gold] = ["img/ui/resource_gold.png"];

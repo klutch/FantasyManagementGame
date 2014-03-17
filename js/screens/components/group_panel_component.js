@@ -9,6 +9,9 @@ var GroupPanelComponent = function(options)
   this.width = options.width;
   this.z = options.z;
   delete options.z;
+  this.groupButtons = [];
+  
+  // Create background panel
   this.panel = new PanelComponent(options);
   this.addChild(this.panel);
   
@@ -57,6 +60,28 @@ var GroupPanelComponent = function(options)
 };
 
 GroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
+
+GroupPanelComponent.prototype.addGroupButton = function(groupId)
+{
+  var group = adventurerManager.groups[groupId];
+  
+  this.groupButtons[groupId] = new ButtonComponent({
+      x: 0,
+      y: 200 + this.groupButtons.length * 32,
+      centerX: false,
+      centerY: true,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]),
+      text: "  " + group.name
+    });
+  this.addChild(this.groupButtons[groupId]);
+};
+
+GroupPanelComponent.prototype.removeGroupButton = function(groupId)
+{
+  this.removeChild(this.groupButtons[groupId]);
+  delete this.groupButtons[groupId];
+};
 
 GroupPanelComponent.prototype.update = function()
 {

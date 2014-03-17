@@ -18,8 +18,8 @@ var AdventurerManager = function()
     },
     this);
   
-  // Create a barracks group
-  this.barracksGroup = this.createGroup({name: "Barracks", takesOrders: false});
+  // Create a special barracks group
+  this.barracksGroup = new Group(-1, {name: "Barracks", featureId: 0});
 };
 
 AdventurerManager.prototype.getNumAdventurers = function()
@@ -79,6 +79,8 @@ AdventurerManager.prototype.createGroup = function(options)
   var id = this.getUnusedGroupId();
   
   this.groups[id] = new Group(id, options);
+  screenManager.screens[ScreenType.WorldMap].groupPanel.addGroupButton(id);
+  
   return this.groups[id];
 };
 
