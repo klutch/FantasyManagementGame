@@ -10,7 +10,6 @@ var GroupPreviewComponent = function(groupId, options)
   this.base();
   this.groupId = groupId;
   this.group = adventurerManager.groups[groupId];
-  this.portraitSprites = [];
   this.position.x = options.x;
   this.position.y = options.y;
   this.z = options.z;
@@ -22,16 +21,19 @@ var GroupPreviewComponent = function(groupId, options)
   this.panel = new PanelComponent(options);
   this.addChild(this.panel);
   
-  // Create portraits
+  // Create adventurer portraits and labels
   for (var i = 0; i < this.group.adventurerIds.length; i++)
   {
     var adventurer = adventurerManager.adventurers[this.group.adventurerIds[i]];
     var sprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[adventurer.type]);
+    var text = new PIXI.BitmapText(adventurer.type, {font: "14px big_pixelmix"});
     
     sprite.position.x = 16;
     sprite.position.y = 16 + 64 * i;
+    text.position.x = 64;
+    text.position.y = sprite.position.y + 22;
     this.addChild(sprite);
-    this.portraitSprites.push(sprite);
+    this.addChild(text);
   }
 };
 

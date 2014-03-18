@@ -47,7 +47,7 @@ var GroupPanelComponent = function(options)
   this.totalAdventurersLeft.position.x = 16;
   this.totalAdventurersLeft.position.y = 48;
   this.addChild(this.totalAdventurersLeft);
-  this.totalAdventurersRight = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xFFFF00});
+  this.totalAdventurersRight = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xFFF568});
   this.totalAdventurersRight.position.y = this.totalAdventurersLeft.position.y;
   this.addChild(this.totalAdventurersRight);
   
@@ -55,7 +55,7 @@ var GroupPanelComponent = function(options)
   this.totalWorkersLeft.position.x = 16;
   this.totalWorkersLeft.position.y = 64;
   this.addChild(this.totalWorkersLeft);
-  this.totalWorkersRight = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xFFFF00});
+  this.totalWorkersRight = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xFFF568});
   this.totalWorkersRight.position.y = this.totalWorkersLeft.position.y;
   this.addChild(this.totalWorkersRight);
 };
