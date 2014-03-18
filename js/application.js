@@ -5,6 +5,9 @@
 var TILE_SIZE = 32;
 var CHUNK_SIZE = 32;
 var NUM_TERRAIN_TYPES = 9;
+var OFFENSE_COLOR = 0xed2129;
+var DEFENSE_COLOR = 0x0072bc;
+var SUPPORT_COLOR = 0x8fd82c;
 var fps;
 var fpsText;
 var lastLoop = new Date();

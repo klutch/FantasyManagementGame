@@ -11,6 +11,7 @@ var GroupPanelComponent = function(options)
   delete options.z;
   this.groupButtons = [];
   this.groupPreviews = [];
+  this.openedPreview = null;
   
   // Create background panel
   this.panel = new PanelComponent(options);
@@ -65,22 +66,11 @@ GroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 GroupPanelComponent.prototype.addGroup = function(groupId)
 {
   var group = adventurerManager.groups[groupId];
-  var root = this;
+  var groupButton = new GroupButtonComponent(this, groupId);
   
   // Create button
-  this.groupButtons[groupId] = new ButtonComponent({
-      x: 0,
-      y: 200 + this.groupButtons.length * 32,
-      z: this.z + 1,
-      centerX: false,
-      centerY: true,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]),
-      onMouseOver: function(e) { root.showPreviewPanel(groupId); },
-      onMouseOut: function(e) { root.hidePreviewPanel(groupId); },
-      text: "  " + group.name
-    });
-  this.addChild(this.groupButtons[groupId]);
+  this.groupButtons[groupId] = groupButton;
+  this.addChild(groupButton);
   
   // Create preview
   this.groupPreviews[groupId] = new GroupPreviewComponent(
@@ -102,12 +92,14 @@ GroupPanelComponent.prototype.removeGroup = function(groupId)
 
 GroupPanelComponent.prototype.showPreviewPanel = function(groupId)
 {
+  this.openedPreview = this.groupPreviews[groupId];
   this.addChild(this.groupPreviews[groupId]);
   this.children.sort(depthCompare);
 };
 
 GroupPanelComponent.prototype.hidePreviewPanel = function(groupId)
 {
+  this.openedPreview = null;
   this.removeChild(this.groupPreviews[groupId]);
 };
 
@@ -118,4 +110,9 @@ GroupPanelComponent.prototype.update = function()
   this.totalAdventurersRight.position.x = this.width - (28 + this.totalAdventurersRight.textWidth);
   this.totalWorkersRight.setText(adventurerManager.getNumWorkers().toString());
   this.totalWorkersRight.position.x = this.width - (28 + this.totalWorkersRight.textWidth);
+  
+  if (this.openedPreview != null)
+  {
+    this.openedPreview.update();
+  }
 };

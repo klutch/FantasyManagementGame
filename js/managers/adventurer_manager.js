@@ -36,6 +36,21 @@ AdventurerManager.prototype.getNumWorkers = function()
   return count;
 };
 
+AdventurerManager.prototype.getAdventurerOffense = function(adventurerId)
+{
+  return this.adventurers[adventurerId].baseOffense;
+};
+
+AdventurerManager.prototype.getAdventurerDefense = function(adventurerId)
+{
+  return this.adventurers[adventurerId].baseDefense;
+};
+
+AdventurerManager.prototype.getAdventurerSupport = function(adventurerId)
+{
+  return this.adventurers[adventurerId].baseSupport;
+};
+
 AdventurerManager.prototype.getUnusedAdventurerId = function()
 {
   for (var i = 0; i < this.adventurers.length; i++)

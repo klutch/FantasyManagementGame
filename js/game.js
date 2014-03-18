@@ -41,7 +41,7 @@ Game.prototype.startNewGame = function()
   screenManager.addScreen(new TooltipScreen());
   
   worldManager.featureGenerator.generatePlayerCastle();
-  worldManager.discoverRadius(worldManager.world.playerCastleI + 4, worldManager.world.playerCastleJ + 4, 128);
+  worldManager.discoverRadius(worldManager.world.playerCastleI + 4, worldManager.world.playerCastleJ + 4, 32);
   worldMapScreen.worldMap.setCamera((worldManager.world.playerCastleI + 2) * TILE_SIZE, (worldManager.world.playerCastleJ + 2) * TILE_SIZE);
   
   adventurerManager = new AdventurerManager();
