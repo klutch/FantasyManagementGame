@@ -1,4 +1,4 @@
-var GroupButtonComponent = function(groupPanel, groupId)
+var GroupButtonComponent = function(groupPanel, groupId, options)
 {
   var root = this;
   
@@ -8,6 +8,8 @@ var GroupButtonComponent = function(groupPanel, groupId)
   this.group = adventurerManager.groups[groupId];
   this.position.x = 0;
   this.position.y = 200 + this.groupPanel.groupButtons.length * 32;
+  this.z = options.z;
+  delete options.z;
   
   // Create basic button
   this.button = new ButtonComponent({

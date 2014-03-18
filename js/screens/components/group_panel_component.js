@@ -66,14 +66,15 @@ GroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 GroupPanelComponent.prototype.addGroup = function(groupId)
 {
   var group = adventurerManager.groups[groupId];
-  var groupButton = new GroupButtonComponent(this, groupId);
+  var groupButton = new GroupButtonComponent(this, groupId, {z: this.z + 1});
+  var groupPreview;
   
   // Create button
   this.groupButtons[groupId] = groupButton;
   this.addChild(groupButton);
   
   // Create preview
-  this.groupPreviews[groupId] = new GroupPreviewComponent(
+  groupPreview = new GroupPreviewComponent(
     groupId,
     {
       x: 258,
@@ -82,6 +83,8 @@ GroupPanelComponent.prototype.addGroup = function(groupId)
       width: 400,
       height: 150 + group.adventurerIds.length * 64
     });
+  groupPreview.rect = new PIXI.Rectangle(groupPreview.position.x, groupPreview.position.y, groupPreview.panel.width, groupPreview.panel.height);
+  this.groupPreviews[groupId] = groupPreview;
 };
 
 GroupPanelComponent.prototype.removeGroup = function(groupId)
