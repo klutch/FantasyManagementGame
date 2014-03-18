@@ -10,6 +10,7 @@ var GroupPanelComponent = function(options)
   this.z = options.z;
   delete options.z;
   this.groupButtons = [];
+  this.groupPreviews = [];
   
   // Create background panel
   this.panel = new PanelComponent(options);
@@ -61,26 +62,53 @@ var GroupPanelComponent = function(options)
 
 GroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
-GroupPanelComponent.prototype.addGroupButton = function(groupId)
+GroupPanelComponent.prototype.addGroup = function(groupId)
 {
   var group = adventurerManager.groups[groupId];
+  var root = this;
   
+  // Create button
   this.groupButtons[groupId] = new ButtonComponent({
       x: 0,
       y: 200 + this.groupButtons.length * 32,
+      z: this.z + 1,
       centerX: false,
       centerY: true,
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]),
       hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]),
+      onMouseOver: function(e) { root.showPreviewPanel(groupId); },
+      onMouseOut: function(e) { root.hidePreviewPanel(groupId); },
       text: "  " + group.name
     });
   this.addChild(this.groupButtons[groupId]);
+  
+  // Create preview
+  this.groupPreviews[groupId] = new GroupPreviewComponent(
+    groupId,
+    {
+      x: 258,
+      y: this.groupButtons[groupId].position.y - 32,
+      z: this.z - 1,
+      width: 400,
+      height: 300
+    });
 };
 
-GroupPanelComponent.prototype.removeGroupButton = function(groupId)
+GroupPanelComponent.prototype.removeGroup = function(groupId)
 {
   this.removeChild(this.groupButtons[groupId]);
   delete this.groupButtons[groupId];
+};
+
+GroupPanelComponent.prototype.showPreviewPanel = function(groupId)
+{
+  this.addChild(this.groupPreviews[groupId]);
+  this.children.sort(depthCompare);
+};
+
+GroupPanelComponent.prototype.hidePreviewPanel = function(groupId)
+{
+  this.removeChild(this.groupPreviews[groupId]);
 };
 
 GroupPanelComponent.prototype.update = function()

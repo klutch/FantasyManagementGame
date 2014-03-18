@@ -1,4 +1,11 @@
-var Adventurer = function(id, portraitType, options)
+var AdventurerType = Object.freeze({
+  Worker: "Worker",
+  Archer: "Archer",
+  Knight: "Knight",
+  Healer: "Healer"
+});
+
+var Adventurer = function(id, type, options)
 {
   options = options || {};
   options.baseOffense = options.baseOffense || 0;
@@ -9,7 +16,7 @@ var Adventurer = function(id, portraitType, options)
   options.description = options.description || "TODO: This adventurer needs a description.";
   
   this.id = id;
-  this.portraitType = portraitType;
+  this.type = type;
   this.baseOffense = options.baseOffense;
   this.baseDefense = options.baseDefense;
   this.baseSupport = options.baseSupport;

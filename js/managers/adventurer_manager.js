@@ -1,9 +1,3 @@
-var PortraitType = Object.freeze({
-  Archer: 0,
-  Knight: 1,
-  Healer: 2
-});
-
 var AdventurerManager = function()
 {
   this.adventurers = [];
@@ -12,7 +6,7 @@ var AdventurerManager = function()
   this.barracksGroup;
   
   // Create portrait sprites
-  _.each(PortraitType, function(type)
+  _.each(AdventurerType, function(type)
     {
       this.adventurerSprites[type] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[type]);
     },
@@ -79,7 +73,7 @@ AdventurerManager.prototype.createGroup = function(options)
   var id = this.getUnusedGroupId();
   
   this.groups[id] = new Group(id, options);
-  screenManager.screens[ScreenType.WorldMap].groupPanel.addGroupButton(id);
+  screenManager.screens[ScreenType.WorldMap].groupPanel.addGroup(id);
   
   return this.groups[id];
 };

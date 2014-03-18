@@ -4,7 +4,7 @@ AdventurerFactory.createArcher = function(powerLevel)
 {
   return new Adventurer(
     adventurerManager.getUnusedAdventurerId(),
-    PortraitType.Archer,
+    AdventurerType.Archer,
     {
       baseOffense: Math.ceil(0.85 * powerLevel),
       baseDefense: 0,
@@ -18,7 +18,7 @@ AdventurerFactory.createKnight = function(powerLevel)
 {
   return new Adventurer(
     adventurerManager.getUnusedAdventurerId(),
-    PortraitType.Knight,
+    AdventurerType.Knight,
     {
       baseOffense: Math.ceil(0.5 * powerLevel),
       baseDefense: Math.ceil(0.5 * powerLevel),
@@ -32,7 +32,7 @@ AdventurerFactory.createHealer = function(powerLevel)
 {
   return new Adventurer(
     adventurerManager.getUnusedAdventurerId(),
-    PortraitType.Healer,
+    AdventurerType.Healer,
     {
       baseOffense: 0,
       baseDefense: 0,
