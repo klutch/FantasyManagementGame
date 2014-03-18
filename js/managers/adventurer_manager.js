@@ -1,16 +1,8 @@
 var AdventurerManager = function()
 {
   this.adventurers = [];
-  this.adventurerSprites = {};
   this.groups = [];
   this.barracksGroup;
-  
-  // Create portrait sprites
-  _.each(AdventurerType, function(type)
-    {
-      this.adventurerSprites[type] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[type]);
-    },
-    this);
   
   // Create a special barracks group
   this.barracksGroup = new Group(-1, {name: "Barracks", featureId: 0});
@@ -73,8 +65,6 @@ AdventurerManager.prototype.createGroup = function(options)
   var id = this.getUnusedGroupId();
   
   this.groups[id] = new Group(id, options);
-  screenManager.screens[ScreenType.WorldMap].groupPanel.addGroup(id);
-  
   return this.groups[id];
 };
 

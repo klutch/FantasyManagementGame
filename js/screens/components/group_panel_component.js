@@ -90,7 +90,7 @@ GroupPanelComponent.prototype.addGroup = function(groupId)
       y: this.groupButtons[groupId].position.y - 32,
       z: this.z - 1,
       width: 400,
-      height: 300
+      height: 150 + group.adventurerIds.length * 64
     });
 };
 

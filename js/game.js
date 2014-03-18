@@ -51,6 +51,7 @@ Game.prototype.startNewGame = function()
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createHealer(10));
+  worldMapScreen.groupPanel.addGroup(startingGroup.id);
 };
 
 Game.prototype.update = function()
