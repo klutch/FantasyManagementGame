@@ -7,11 +7,9 @@ var GroupPanelComponent = function(options)
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.width = options.width;
+  this.selectors = [];
   this.z = options.z;
   delete options.z;
-  this.groupButtons = [];
-  this.groupPreviews = [];
-  this.openedPreview = null;
   
   // Create background panel
   this.panel = new PanelComponent(options);
@@ -65,45 +63,16 @@ GroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
 GroupPanelComponent.prototype.addGroup = function(groupId)
 {
-  var group = adventurerManager.groups[groupId];
-  var groupButton = new GroupButtonComponent(this, groupId, {z: this.z + 1});
-  var groupPreview;
+  var groupSelector = new GroupSelectorComponent(this, groupId);
   
-  // Create button
-  this.groupButtons[groupId] = groupButton;
-  this.addChild(groupButton);
-  
-  // Create preview
-  groupPreview = new GroupPreviewComponent(
-    groupId,
-    {
-      x: 258,
-      y: this.groupButtons[groupId].position.y - 32,
-      z: this.z - 1,
-      width: 400,
-      height: 150 + group.adventurerIds.length * 64
-    });
-  groupPreview.rect = new PIXI.Rectangle(groupPreview.position.x, groupPreview.position.y, groupPreview.panel.width, groupPreview.panel.height);
-  this.groupPreviews[groupId] = groupPreview;
+  this.selectors[groupId] = groupSelector;
+  this.addChild(groupSelector);
 };
 
 GroupPanelComponent.prototype.removeGroup = function(groupId)
 {
-  this.removeChild(this.groupButtons[groupId]);
-  delete this.groupButtons[groupId];
-};
-
-GroupPanelComponent.prototype.showPreviewPanel = function(groupId)
-{
-  this.openedPreview = this.groupPreviews[groupId];
-  this.addChild(this.groupPreviews[groupId]);
-  this.children.sort(depthCompare);
-};
-
-GroupPanelComponent.prototype.hidePreviewPanel = function(groupId)
-{
-  this.openedPreview = null;
-  this.removeChild(this.groupPreviews[groupId]);
+  this.removeChild(this.selectors[groupId]);
+  delete this.selectors[groupId];
 };
 
 GroupPanelComponent.prototype.update = function()
@@ -114,8 +83,6 @@ GroupPanelComponent.prototype.update = function()
   this.totalWorkersRight.setText(adventurerManager.getNumWorkers().toString());
   this.totalWorkersRight.position.x = this.width - (28 + this.totalWorkersRight.textWidth);
   
-  if (this.openedPreview != null)
-  {
-    this.openedPreview.update();
-  }
+  // Update selectors
+  _.each(this.selectors, function(selector) { selector.update(); });
 };
