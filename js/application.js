@@ -19,6 +19,7 @@ var worldManager;
 var adventurerManager;
 var assetPathManager = new AssetPathManager();
 var resourceManager;
+var orderManager;
 
 // Initialize
 function initialize()

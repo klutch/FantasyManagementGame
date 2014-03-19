@@ -1,3 +1,5 @@
+// TODO: Move logic out of this file and into a GameManager class.
+
 var GameState = Object.freeze({
   MainMenu: 0,
   WorldMap: 1
@@ -34,16 +36,19 @@ Game.prototype.startNewGame = function()
   var worldMapScreen;
   var startingGroup;
   
+  // Change state
   this.state = GameState.WorldMap;
+  
+  // Setup world
   worldManager = new WorldManager();
   worldMapScreen = new WorldMapScreen(this.world);
   screenManager.addScreen(worldMapScreen);
   screenManager.addScreen(new TooltipScreen());
-  
   worldManager.featureGenerator.generatePlayerCastle();
-  worldManager.discoverRadius(worldManager.world.playerCastleI + 4, worldManager.world.playerCastleJ + 4, 32);
+  worldManager.discoverRadius(worldManager.world.playerCastleI + 2, worldManager.world.playerCastleJ + 2, 32);
   worldMapScreen.worldMap.setCamera((worldManager.world.playerCastleI + 2) * TILE_SIZE, (worldManager.world.playerCastleJ + 2) * TILE_SIZE);
   
+  // Setup adventurer manager and initial groups
   adventurerManager = new AdventurerManager();
   startingGroup = adventurerManager.createGroup({name: "Starting Group", featureId: 0});
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
@@ -62,6 +67,9 @@ Game.prototype.startNewGame = function()
     adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
     worldMapScreen.groupPanel.addGroup(group.id);
   }
+  
+  // Setup order manager
+  orderManager = new OrderManager();
 };
 
 Game.prototype.update = function()

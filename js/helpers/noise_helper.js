@@ -1,4 +1,4 @@
-var Noise = function(seed, options)
+var NoiseHelper = function(seed, options)
 {
   options = options || {};
   this.perlinGridWidth = options.perlinGridWidth || 32;
@@ -33,20 +33,20 @@ var Noise = function(seed, options)
 };
 
 // 2D dot product
-Noise.prototype.dot = function(a, b)
+NoiseHelper.prototype.dot = function(a, b)
 {
   return a[0] * b[0] + a[1] * b[1];
 };
 
 // Perlin weight
-Noise.prototype.perlinWeight = function(x)
+NoiseHelper.prototype.perlinWeight = function(x)
 {
   return x*x*x*(x*(x*6-15)+10);
 };
 
 // Perlin noise algorithm (slightly modified from 'Simplex Noise Demystified')
 // http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-Noise.prototype.perlin = function(x, y)
+NoiseHelper.prototype.perlin = function(x, y)
 {
   // Modify x and y values, otherwise we'll always be dealing with whole numbers
   var noiseX = x / this.perlinGridWidth;
@@ -81,7 +81,7 @@ Noise.prototype.perlin = function(x, y)
 };
 
 // Cell noise algorithm
-Noise.prototype.cell = function(x, y)
+NoiseHelper.prototype.cell = function(x, y)
 {
   var result;
   
@@ -126,7 +126,7 @@ Noise.prototype.cell = function(x, y)
 };
 
 // Solid cell noise algorithm
-Noise.prototype.solidCell = function(x, y)
+NoiseHelper.prototype.solidCell = function(x, y)
 {
   var result;
   
@@ -173,7 +173,7 @@ Noise.prototype.solidCell = function(x, y)
 };
 
 // Cell edge noise
-Noise.prototype.cellEdge = function(x, y)
+NoiseHelper.prototype.cellEdge = function(x, y)
 {
   var v1 = this.solidCell(x, y);
   var v2 = this.solidCell(x + 1, y + 1);
@@ -190,7 +190,7 @@ Noise.prototype.cellEdge = function(x, y)
 };
 
 // Ridged perlin noise
-Noise.prototype.ridgedPerlin = function(x, y)
+NoiseHelper.prototype.ridgedPerlin = function(x, y)
 {
   var signal = Math.min(this.perlin(x, y), 0.7) * 2 - 1;
   var offset = 1;
@@ -207,7 +207,7 @@ Noise.prototype.ridgedPerlin = function(x, y)
 };
 
 // Fractional brownian motion
-Noise.prototype.fbm = function(x, y, noiseMethod, options)
+NoiseHelper.prototype.fbm = function(x, y, noiseMethod, options)
 {
   options = options || {};
   
