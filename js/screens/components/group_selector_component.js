@@ -8,7 +8,7 @@ var GroupSelectorComponent = function(groupPanel, groupId)
   this.buttonTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]);
   this.buttonOverTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]);
   this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupPanel.selectors.length, this.buttonTexture.width - 8, this.buttonTexture.height);
-  this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 300, 76 + this.group.adventurerIds.length * 64);
+  this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 320, 76 + this.group.adventurerIds.length * 64);
   this.isPanelOpen = false;
   this.statTexts = [];
   
@@ -82,6 +82,12 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
     onClick: function(e) { alert("Edit this group"); }
   });
   this.previewPanel.addChild(editButton);
+  
+  // Group stats
+  this.groupStats = new PIXI.BitmapText("...", {font: "16px big_pixelmix", tint: 0xFFFF00});
+  this.groupStats.position.x = 180;
+  this.groupStats.position.y = 20;
+  this.previewPanel.addChild(this.groupStats);
 };
 
 GroupSelectorComponent.prototype.select = function()
@@ -128,4 +134,10 @@ GroupSelectorComponent.prototype.update = function()
       adventurerManager.getAdventurerDefense(statText.adventurerId).toString() + " / " +
       adventurerManager.getAdventurerSupport(statText.adventurerId).toString());
   }
+  
+  // Update group stat text
+  this.groupStats.setText(
+      adventurerManager.getGroupOffense(this.groupId).toString() + " / " +
+      adventurerManager.getGroupDefense(this.groupId).toString() + " / " +
+      adventurerManager.getGroupSupport(this.groupId).toString());
 };
