@@ -3,6 +3,7 @@ var AdventurerManager = function()
   this.adventurers = [];
   this.groups = [];
   this.barracksGroup;
+  this.selectedGroup = -1;
   
   // Create a special barracks group
   this.barracksGroup = new Group(-1, {name: "Barracks", featureId: 0});
@@ -128,4 +129,17 @@ AdventurerManager.prototype.addAdventurer = function(groupId, adventurer)
   
   this.adventurers[adventurer.id] = adventurer;
   group.adventurerIds.push(adventurer.id);
+};
+
+AdventurerManager.prototype.selectGroup = function(groupId)
+{
+  var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  
+  if (this.selectedGroup != -1)
+  {
+    worldMapScreen.closeSelectedGroupPanel();
+  }
+  
+  this.selectedGroup = groupId;
+  worldMapScreen.openSelectedGroupPanel(groupId);
 };

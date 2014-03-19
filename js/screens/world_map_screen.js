@@ -6,6 +6,7 @@ var WorldMapScreen = function(world)
   this.z = 90;
   this.world = world;
   this.isGroupPanelOpen = false;
+  this.selectedGroupPanel = null;
   
   // Create button container
   this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
@@ -109,6 +110,18 @@ WorldMapScreen.prototype.toggleGroupPanel = function()
     game.stage.removeChild(this.groupPanel);
     this.mainButtonsContainer.position.x = 0;
   }
+};
+
+WorldMapScreen.prototype.openSelectedGroupPanel = function(groupId)
+{
+  this.selectedGroupPanel = new SelectedGroupPanelComponent(groupId, {z: this.z + 1});
+  game.stage.addChild(this.selectedGroupPanel);
+  game.stage.children.sort(depthCompare);
+};
+
+WorldMapScreen.prototype.closeSelectedGroupPanel = function()
+{
+  game.stage.removeChild(this.selectedGroupPanel);
 };
 
 WorldMapScreen.prototype.handleInput = function()

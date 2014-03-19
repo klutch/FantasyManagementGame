@@ -92,7 +92,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
 
 GroupSelectorComponent.prototype.select = function()
 {
-  alert("select this group (" + this.groupId + ")");
+  adventurerManager.selectGroup(this.groupId);
 };
 
 GroupSelectorComponent.prototype.update = function()
