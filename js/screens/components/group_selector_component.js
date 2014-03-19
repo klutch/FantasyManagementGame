@@ -7,7 +7,7 @@ var GroupSelectorComponent = function(groupPanel, groupId)
   this.group = adventurerManager.groups[groupId];
   this.buttonTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]);
   this.buttonOverTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]);
-  this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupPanel.selectors.length, this.buttonTexture.width, this.buttonTexture.height);
+  this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupPanel.selectors.length, this.buttonTexture.width - 8, this.buttonTexture.height);
   this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 300, 76 + this.group.adventurerIds.length * 64);
   this.isPanelOpen = false;
   this.statTexts = [];
@@ -55,7 +55,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
     var portrait = new PortraitComponent(adventurer.id, {x: 16, y: 16 + 64 * i});
     var typeText = new PIXI.BitmapText(adventurer.type, {font: "14px big_pixelmix", tint: 0xFFFF00});
     var statText = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xCCCCCC});
-    var selectButton;
+    var editButton;
     
     typeText.position.x = 64;
     typeText.position.y = portrait.position.y + 4;
@@ -70,23 +70,23 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
     this.previewPanel.addChild(statText);
   }
   
-  // Create a select button
-  selectButton = new ButtonComponent({
+  // Create an edit button
+  editButton = new ButtonComponent({
     x: 96,
     y: this.group.adventurerIds.length * 64 + 40,
     centerX: true,
     centerY: true,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
-    text: "Select",
-    onClick: function(e) { root.select(); }
+    text: "Edit Group",
+    onClick: function(e) { alert("Edit this group"); }
   });
-  this.previewPanel.addChild(selectButton);
+  this.previewPanel.addChild(editButton);
 };
 
 GroupSelectorComponent.prototype.select = function()
 {
-  alert("select this group");
+  alert("select this group (" + this.groupId + ")");
 };
 
 GroupSelectorComponent.prototype.update = function()

@@ -51,6 +51,45 @@ AdventurerManager.prototype.getAdventurerSupport = function(adventurerId)
   return this.adventurers[adventurerId].baseSupport;
 };
 
+AdventurerManager.prototype.getGroupOffense = function(groupId)
+{
+  var total = 0;
+  var group = this.groups[groupId];
+  
+  for (var i = 0; i < group.adventurerIds.length; i++)
+  {
+    total += this.getAdventurerOffense(group.adventurerIds[i]);
+  }
+  
+  return total;
+};
+
+AdventurerManager.prototype.getGroupDefense = function(groupId)
+{
+  var total = 0;
+  var group = this.groups[groupId];
+  
+  for (var i = 0; i < group.adventurerIds.length; i++)
+  {
+    total += this.getAdventurerDefense(group.adventurerIds[i]);
+  }
+  
+  return total;
+};
+
+AdventurerManager.prototype.getGroupSupport = function(groupId)
+{
+  var total = 0;
+  var group = this.groups[groupId];
+  
+  for (var i = 0; i < group.adventurerIds.length; i++)
+  {
+    total += this.getAdventurerSupport(group.adventurerIds[i]);
+  }
+  
+  return total;
+};
+
 AdventurerManager.prototype.getUnusedAdventurerId = function()
 {
   for (var i = 0; i < this.adventurers.length; i++)
