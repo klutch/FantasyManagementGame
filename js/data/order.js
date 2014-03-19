@@ -11,10 +11,12 @@ var TravelType = Object.freeze({
   Explore: 2
 });
 
-var Order = function(type, options)
+var Order = function(type, groupId, options)
 {
   this.type = type;
+  this.groupId = groupId;
   this.isComplete = options.isComplete;
+  this.onComplete = options.onComplete;
   
   if (type == OrderType.Travel)
   {
