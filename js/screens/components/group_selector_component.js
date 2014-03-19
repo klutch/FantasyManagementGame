@@ -7,8 +7,8 @@ var GroupSelectorComponent = function(groupPanel, groupId)
   this.group = adventurerManager.groups[groupId];
   this.buttonTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]);
   this.buttonOverTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]);
-  this.buttonRect = new PIXI.Rectangle(0, 200 + 48 * groupPanel.selectors.length, this.buttonTexture.width, this.buttonTexture.height);
-  this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 400, 200 + this.group.adventurerIds.length * 64);
+  this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupPanel.selectors.length, this.buttonTexture.width, this.buttonTexture.height);
+  this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 300, 76 + this.group.adventurerIds.length * 64);
   this.isPanelOpen = false;
   this.statTexts = [];
   
@@ -30,6 +30,7 @@ var GroupSelectorComponent = function(groupPanel, groupId)
   this.addChild(this.buttonSprite);
   this.addChild(this.buttonText);
   
+  // Build preview panel
   this.buildPreviewPanel();
 };
 
@@ -37,6 +38,8 @@ GroupSelectorComponent.prototype = new PIXI.DisplayObjectContainer;
 
 GroupSelectorComponent.prototype.buildPreviewPanel = function()
 {
+  var root = this;
+  
   // Create panel
   this.previewPanel = new PanelComponent({
     x: this.previewRect.x,
@@ -52,6 +55,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
     var portrait = new PortraitComponent(adventurer.id, {x: 16, y: 16 + 64 * i});
     var typeText = new PIXI.BitmapText(adventurer.type, {font: "14px big_pixelmix", tint: 0xFFFF00});
     var statText = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xCCCCCC});
+    var selectButton;
     
     typeText.position.x = 64;
     typeText.position.y = portrait.position.y + 4;
@@ -65,6 +69,24 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
     this.previewPanel.addChild(typeText);
     this.previewPanel.addChild(statText);
   }
+  
+  // Create a select button
+  selectButton = new ButtonComponent({
+    x: 96,
+    y: this.group.adventurerIds.length * 64 + 40,
+    centerX: true,
+    centerY: true,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
+    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+    text: "Select",
+    onClick: function(e) { root.select(); }
+  });
+  this.previewPanel.addChild(selectButton);
+};
+
+GroupSelectorComponent.prototype.select = function()
+{
+  alert("select this group");
 };
 
 GroupSelectorComponent.prototype.update = function()
@@ -72,6 +94,7 @@ GroupSelectorComponent.prototype.update = function()
   var isOverButtonRect = this.buttonRect.contains(inputManager.mousePosition.x, inputManager.mousePosition.y);
   var isOverPanelRect = this.previewRect.contains(inputManager.mousePosition.x, inputManager.mousePosition.y);
   
+  // Handle mouse over states
   if (!this.isPanelOpen && isOverButtonRect)
   {
     this.isPanelOpen = true;
@@ -87,6 +110,12 @@ GroupSelectorComponent.prototype.update = function()
     this.buttonText.tint = 0xCCCCCC;
     this.buttonText.dirty = true;
     this.removeChild(this.previewPanel);
+  }
+  
+  // Handle mouse clicks
+  if (isOverButtonRect && inputManager.leftButton && !inputManager.leftButtonLastFrame)
+  {
+    this.select();
   }
   
   // Update stat text
