@@ -52,6 +52,16 @@ Game.prototype.startNewGame = function()
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createHealer(10));
   worldMapScreen.groupPanel.addGroup(startingGroup.id);
+  
+  for (var i = 0; i < 7; i++)
+  {
+    var group = adventurerManager.createGroup();
+    
+    adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
+    adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
+    adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
+    worldMapScreen.groupPanel.addGroup(group.id);
+  }
 };
 
 Game.prototype.update = function()

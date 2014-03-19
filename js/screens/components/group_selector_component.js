@@ -12,6 +12,12 @@ var GroupSelectorComponent = function(groupPanel, groupId)
   this.isPanelOpen = false;
   this.statTexts = [];
   
+  // Enforce boundaries on preview rectangle
+  if (this.previewRect.y + this.previewRect.height > game.containerHeight)
+  {
+    this.previewRect.y = game.containerHeight - this.previewRect.height;
+  }
+  
   // Create button
   this.buttonSprite = new PIXI.Sprite(this.buttonTexture);
   this.buttonSprite.position.x = 0;
