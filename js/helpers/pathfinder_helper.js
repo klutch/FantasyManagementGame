@@ -18,6 +18,8 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
   var targetTile = worldManager.getOrCreateTile(endI, endJ);
   var targetKey = targetTile.toString();
   
+  //alert(targetTile.type);
+  
   // Find range
   var diffI = endI - startI;
   var diffJ = endJ - startJ;
@@ -43,8 +45,6 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
     var selectedTile = this.findLowestF(openList);
     var selectedKey = selectedTile.toString();
     
-    //alert("Selected tile: " + selectedKey + ". Size of openList: " + _.size(openList) + ". Size of closedList: " + _.size(closedList));
-    
     // Move selected tile to the closed list
     closedList[selectedKey] = selectedTile;
     delete openList[selectedKey];
@@ -61,31 +61,35 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         // Skip selected tile
         if (i == selectedTile.i && j == selectedTile.j)
         {
-          //alert("skipping because neighbor tile matches selected tile");
           continue;
         }
         
         // Skip out of range neighbor tiles
         if (i < upperBoundI || j < upperBoundJ || i > lowerBoundI || j > lowerBoundJ)
         {
-          //console.log("Skipping tile because it's out of bounds");
           continue;
         }
         
         // Get neighbor tile (create if necessary)
-        neighborTile = worldManager.getOrCreateTile(i, j);
-        neighborKey = neighborTile.toString();
+        //neighborTile = worldManager.getOrCreateTile(i, j);
+        //neighborKey = neighborTile.toString();
         
         // Check if neighbor tile exists
-        /*if (worldManager.doesTileExist(i, j))
+        if (worldManager.doesTileExist(i, j))
         {
           neighborTile = worldManager.getTile(i, j);
           neighborKey = neighborTile.toString();
         }
         else
         {
-          break;
-        }*/
+          continue;
+        }
+        
+        // Check to make sure tile is discovered
+        if (!neighborTile.discovered)
+        {
+          continue;
+        }
         
         // Check if neighbor tile is walkable
         if (!neighborTile.walkable)
@@ -124,7 +128,6 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
             neighborTile.tempF = neighborTile.tempG + neighborTile.tempH;
           }
         }
-        //alert("finished a processing step for: " + neighborKey);
       }
     }
     

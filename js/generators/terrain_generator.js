@@ -196,17 +196,21 @@ TerrainGenerator.prototype.generateTile = function(x, y)
     {
       // Mountains
       tileType = TileType.Mountain;
+      walkable = false;
     }
     else if (finalElevation < 0.05)
     {
       // Water
       tileType = TileType.Water;
+      walkable = false;
     }
     else
     {
+      // River
       if (biomeType != BiomeType.Desert && this.isRiver(x, y))
       {
         tileType = TileType.Water;
+        walkable = false;
       }
       else
       {
