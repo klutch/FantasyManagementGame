@@ -1,6 +1,7 @@
 var OrderManager = function()
 {
   this.queuedOrders = [];
+  this.settingUpOrderType = null;
 };
 
 OrderManager.prototype.getUnusedId = function()
@@ -22,11 +23,22 @@ OrderManager.prototype.cancelOrder = function(orderId)
   delete this.queuedOrders[order.id];
 };
 
+OrderManager.prototype.startOrderSetup = function(orderType)
+{
+  this.settingUpOrderType = orderType;
+};
+
+OrderManager.prototype.cancelOrderSetup = function()
+{
+  // TODO: handle clean-up here
+  this.settingUpOrderType = null;
+};
+
 OrderManager.prototype.processOrder = function(order)
 {
 };
 
-OrderManager.prototype.update = function()
+OrderManager.onTurnEnd = function()
 {
   var completedOrders = [];
   
@@ -51,5 +63,14 @@ OrderManager.prototype.update = function()
       order.onComplete();
     }
     delete this.queuedOrders[order.id];
+  }
+};
+
+OrderManager.prototype.update = function()
+{
+  // Handle order setup
+  if (this.settingUpOrderType != null)
+  {
+    
   }
 };

@@ -49,7 +49,7 @@ var SelectedGroupPanelComponent = function(groupId, options)
     y: this.panel.height + 8,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
     tooltipText: "Travel",
-    onClick: function(e) { alert('do something tons of fun'); }
+    onClick: function(e) { orderManager.startOrderSetup(OrderType.Travel); }
   });
   this.panel.addChild(this.travelButton);
 };
