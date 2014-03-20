@@ -34,6 +34,8 @@ OrderManager.prototype.startOrderSetup = function(orderType)
 OrderManager.prototype.cancelOrderSetup = function()
 {
   // TODO: handle clean-up here
+  this.lastMouseGridI = -999999;
+  this.lastMouseGridJ = -999999;
   screenManager.screens[ScreenType.Tooltip].disableTooltip();
   this.settingUpOrderType = null;
 };
@@ -126,6 +128,14 @@ OrderManager.prototype.update = function()
     // Update tooltip
     this.updateTooltip();
     
+    // Check for escape
+    if (inputManager.keysPressed[27] && !inputManager.keysPressedLastFrame[27])
+    {
+      inputManager.escapeHandled = true;
+      this.cancelOrderSetup();
+    }
+    
+    // Cache mouse tile position
     this.lastMouseGridI = worldMap.tileGridI;
     this.lastMouseGridJ = worldMap.tileGridJ;
   }
