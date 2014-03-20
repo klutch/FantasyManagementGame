@@ -215,7 +215,7 @@ TerrainGenerator.prototype.generateTile = function(x, y)
     }
   }
   
-  return new Tile(tileType, biomeType, walkable, movementCost, finalElevation, false);
+  return new Tile(tileType, biomeType, x, y, walkable, movementCost, finalElevation, false);
 };
 
 TerrainGenerator.prototype.getBiomeType = function(temperature, precipitation)

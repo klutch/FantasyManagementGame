@@ -22,14 +22,27 @@ var TileType = Object.freeze({
 });
 
 // Tile class
-var Tile = function(type, biomeType, walkable, movementCost, elevation, discovered)
+var Tile = function(type, biomeType, i, j, walkable, movementCost, elevation, discovered)
 {
   this.type = type;
   this.biomeType = biomeType;
+  this.i = i;
+  this.j = j;
   this.walkable = walkable;
   this.movementCost = movementCost;
   this.elevation = elevation;
   this.discovered = discovered;
+  
+  // Temporary pathfinding values (actual paths will use PathNodes defined in pathfinder_helper.js)
+  this.tempF = 0;
+  this.tempG = 0;
+  this.tempH = 0;
+  this.tempParent = null;
+};
+
+Tile.prototype.toString = function()
+{
+  return this.i + ", " + this.j;
 };
 
 // Feature types

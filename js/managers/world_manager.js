@@ -26,6 +26,8 @@ WorldManager.prototype.doesTileExist = function(i, j)
 // Get a tile
 WorldManager.prototype.getTile = function(i, j)
 {
+  if (this.world.tiles[i] == null) { console.error("tileI doesn't exist"); }
+  if (this.world.tiles[i][j] == null) { console.error("tileJ doesn't exist"); }
   return this.world.tiles[i][j];
 };
 

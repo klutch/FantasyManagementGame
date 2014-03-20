@@ -60,7 +60,7 @@ Game.prototype.startNewGame = function()
   
   for (var i = 0; i < 7; i++)
   {
-    var group = adventurerManager.createGroup();
+    var group = adventurerManager.createGroup({featureId: 0});
     
     adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
     adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
@@ -75,11 +75,11 @@ Game.prototype.startNewGame = function()
 Game.prototype.update = function()
 {
   inputManager.update();
-  screenManager.update();
   if (orderManager != null)
   {
     orderManager.update();
   }
+  screenManager.update();
   inputManager.postUpdate();
 };
 

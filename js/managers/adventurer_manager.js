@@ -3,7 +3,7 @@ var AdventurerManager = function()
   this.adventurers = [];
   this.groups = [];
   this.barracksGroup;
-  this.selectedGroup = -1;
+  this.selectedGroupId = -1;
   
   // Create a special barracks group
   this.barracksGroup = new Group(-1, {name: "Barracks", featureId: 0});
@@ -118,9 +118,11 @@ AdventurerManager.prototype.getUnusedGroupId = function()
 AdventurerManager.prototype.createGroup = function(options)
 {
   var id = this.getUnusedGroupId();
+  var group = new Group(id, options);
   
-  this.groups[id] = new Group(id, options);
-  return this.groups[id];
+  this.groups[id] = group;
+  
+  return group;
 };
 
 AdventurerManager.prototype.addAdventurer = function(groupId, adventurer)
@@ -135,11 +137,29 @@ AdventurerManager.prototype.selectGroup = function(groupId)
 {
   var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   
-  if (this.selectedGroup != -1)
+  if (this.selectedGroupId != -1)
   {
     worldMapScreen.closeSelectedGroupPanel();
   }
   
-  this.selectedGroup = groupId;
+  this.selectedGroupId = groupId;
   worldMapScreen.openSelectedGroupPanel(groupId);
+};
+
+AdventurerManager.prototype.getGroupTile = function(groupId)
+{
+  var group = this.groups[groupId];
+  
+  if (group.isInFeature())
+  {
+    var feature = worldManager.world.features[group.featureId];
+    
+    console.log("getting feature i: " + feature.tileI + ", " + feature.tileJ);
+    return worldManager.getTile(feature.tileI, feature.tileJ);
+  }
+  else
+  {
+    console.log("getting group i: " + group.tileI + ", " + group.tileJ);
+    return worldManager.getTile(group.tileI, group.tileJ);
+  }
 };

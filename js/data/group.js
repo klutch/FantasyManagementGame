@@ -4,7 +4,7 @@ var Group = function(id, options)
   options.adventurerIds = options.adventurerIds || [];
   options.tileI = options.tileI || 0;
   options.tileJ = options.tileJ || 0;
-  options.featureId = options.featureId || -1;
+  options.featureId = options.featureId == null ? -1 : options.featureId;
   options.name = options.name || "Group " + id;
   options.takesOrders = options.takesOrders || false;
   

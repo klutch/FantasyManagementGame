@@ -135,6 +135,17 @@ OrderManager.prototype.update = function()
       this.cancelOrderSetup();
     }
     
+    // Check for mouse down
+    if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
+    {
+      var path;
+      var startTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
+      
+      inputManager.leftButtonHandled = true;
+      path = PathfinderHelper.findPath(startTile.i, startTile.j, worldMap.mouseGridI, worldMap.mouseGridJ);
+      alert("results of pathfinding: " + path);
+    }
+    
     // Cache mouse tile position
     this.lastMouseGridI = worldMap.tileGridI;
     this.lastMouseGridJ = worldMap.tileGridJ;
