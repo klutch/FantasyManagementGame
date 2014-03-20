@@ -18,12 +18,10 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
   var targetTile = worldManager.getOrCreateTile(endI, endJ);
   var targetKey = targetTile.toString();
   
-  //alert(targetTile.type);
-  
   // Find range
   var diffI = endI - startI;
   var diffJ = endJ - startJ;
-  var sideHalfLength = Math.floor(Math.sqrt(diffI * diffI + diffJ * diffJ));
+  var sideHalfLength = Math.min(Math.max(Math.floor(Math.sqrt(diffI * diffI + diffJ * diffJ)), 128), 1024);
   var middlePointI = Math.floor((startI + endI) * 0.5);
   var middlePointJ = Math.floor((startJ + endJ) * 0.5);
   var upperBoundI = middlePointI - sideHalfLength;
