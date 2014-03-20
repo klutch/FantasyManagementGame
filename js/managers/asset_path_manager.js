@@ -231,6 +231,7 @@ var AssetPathManager = function()
     "img/ui/group_name.png",
     "img/ui/group_name_over.png"
   ];
+  this.assetPaths.ui.travelOrderButtons = ["img/ui/travel_order_button.png"];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};
   this.assetPaths.ui.resources[ResourceType.Gold] = ["img/ui/resource_gold.png"];

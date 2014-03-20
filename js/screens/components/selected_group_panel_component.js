@@ -42,6 +42,16 @@ var SelectedGroupPanelComponent = function(groupId, options)
     
     this.panel.addChild(portrait);
   }
+  
+  // Order buttons
+  this.travelButton = new ButtonComponent({
+    x: 0,
+    y: this.panel.height + 8,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
+    tooltipText: "Travel",
+    onClick: function(e) { alert('do something tons of fun'); }
+  });
+  this.panel.addChild(this.travelButton);
 };
 
 SelectedGroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
