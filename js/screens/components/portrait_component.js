@@ -21,5 +21,5 @@ PortraitComponent.prototype = new PIXI.DisplayObjectContainer;
 
 PortraitComponent.prototype.onClick = function()
 {
-  alert('TODO: portrait clicked');
+  inputManager.leftButtonHandled = true;
 };

@@ -76,6 +76,10 @@ Game.prototype.update = function()
 {
   inputManager.update();
   screenManager.update();
+  if (orderManager != null)
+  {
+    orderManager.update();
+  }
   inputManager.postUpdate();
 };
 

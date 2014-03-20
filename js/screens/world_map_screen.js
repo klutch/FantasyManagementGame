@@ -147,13 +147,14 @@ WorldMapScreen.prototype.handleInput = function()
   {
     this.worldMap.zoomCamera(inputManager.mouseWheelDelta * 0.1);
   }
+  if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
+  {
+    alert("world map clicked: [" + this.worldMap.tileGridI + ", " + this.worldMap.tileGridJ + "]");
+  }
 };
 
 WorldMapScreen.prototype.update = function()
 {
-  // Handle input
-  this.handleInput();
-  
   // Update world map component
   this.worldMap.update();
   
@@ -162,4 +163,7 @@ WorldMapScreen.prototype.update = function()
   
   // Update resource indicators
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });
+  
+  // Handle input
+  this.handleInput();
 };

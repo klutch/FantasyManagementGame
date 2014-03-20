@@ -79,7 +79,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
     text: "Edit Group",
-    onClick: function(e) { alert("Edit this group"); }
+    onClick: function(e) { }
   });
   this.previewPanel.addChild(editButton);
   
@@ -121,6 +121,7 @@ GroupSelectorComponent.prototype.update = function()
   // Handle mouse clicks
   if (isOverButtonRect && inputManager.leftButton && !inputManager.leftButtonLastFrame)
   {
+    inputManager.leftButtonHandled = true;
     this.select();
   }
   

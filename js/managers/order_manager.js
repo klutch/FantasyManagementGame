@@ -2,6 +2,8 @@ var OrderManager = function()
 {
   this.queuedOrders = [];
   this.settingUpOrderType = null;
+  this.lastMouseGridI = -999999;
+  this.lastMouseGridJ = -999999;
 };
 
 OrderManager.prototype.getUnusedId = function()
@@ -26,11 +28,13 @@ OrderManager.prototype.cancelOrder = function(orderId)
 OrderManager.prototype.startOrderSetup = function(orderType)
 {
   this.settingUpOrderType = orderType;
+  screenManager.screens[ScreenType.Tooltip].enableTooltip("Travel");
 };
 
 OrderManager.prototype.cancelOrderSetup = function()
 {
   // TODO: handle clean-up here
+  screenManager.screens[ScreenType.Tooltip].disableTooltip();
   this.settingUpOrderType = null;
 };
 
@@ -66,11 +70,63 @@ OrderManager.onTurnEnd = function()
   }
 };
 
+OrderManager.prototype.updateTooltip = function()
+{
+  var worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
+  var tooltip = screenManager.screens[ScreenType.Tooltip].tooltip;
+  
+  if (worldMap.tileGridI == this.lastMouseGridI && worldMap.tileGridJ == this.lastMouseGridJ)
+  {
+    return;
+  }
+  
+  if (worldManager.doesTileExist(worldMap.tileGridI, worldMap.tileGridJ))
+  {
+    var tile = worldManager.getTile(worldMap.tileGridI, worldMap.tileGridJ);
+
+    if (tile.featureId != null)
+    {
+      var feature = worldManager.world.features[tile.featureId];
+
+      if (feature.type == FeatureType.Castle)
+      {
+        tooltip.setText("Return to castle");
+      }
+      else if (feature.type == FeatureType.Dungeon)
+      {
+        tooltip.setText("Raid dungeon");
+      }
+      else if (feature.type == FeatureType.Dwelling)
+      {
+        tooltip.setText("Visit dwelling");
+      }
+      else if (feature.type == FeatureType.Gathering)
+      {
+        tooltip.setText("Visit gathering");
+      }
+    }
+    else
+    {
+      tooltip.setText("Explore");
+    }
+  }
+  else
+  {
+    tooltip.setText("Explore");
+  }
+};
+
 OrderManager.prototype.update = function()
 {
+  var worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
+  
   // Handle order setup
   if (this.settingUpOrderType != null)
   {
+    // Update tooltip
+    this.updateTooltip();
     
+    this.lastMouseGridI = worldMap.tileGridI;
+    this.lastMouseGridJ = worldMap.tileGridJ;
   }
 };

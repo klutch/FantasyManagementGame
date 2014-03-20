@@ -10,9 +10,9 @@ var WorldMapComponent = function()
   this.position.x = this.halfScreen.x;
   this.position.y = this.halfScreen.y;
   this.z = 0;
-  this.debugGridI = 0;
-  this.debugGridJ = 0;
-  this.debugSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.debugTileSelection));
+  this.mouseGridI = 0;
+  this.mouseGridJ = 0;
+  this.tileSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.tileSelection));
   this.minScale = 0.05;
   this.maxScale = 1;
   this.detectionBuffer = 1;   // Number of chunks surrounding the current chunk to check
@@ -69,7 +69,7 @@ var WorldMapComponent = function()
   this);
   
   // Add tile selection sprite
-  this.addChild(this.debugSelection);
+  this.addChild(this.tileSelection);
 };
 
 WorldMapComponent.prototype = new PIXI.DisplayObjectContainer;
@@ -352,11 +352,11 @@ WorldMapComponent.prototype.update = function()
   this.scale.x = this.camera.scale.x;
   this.scale.y = this.camera.scale.y;
 
-  // Debug...
-  this.debugGridI = worldManager.getGridI(this.convertScreenToWorldX(inputManager.mousePosition.x));
-  this.debugGridJ = worldManager.getGridJ(this.convertScreenToWorldY(inputManager.mousePosition.y));
-  this.debugSelection.position.x = this.debugGridI * TILE_SIZE;
-  this.debugSelection.position.y = this.debugGridJ * TILE_SIZE;
+  // Tile grid
+  this.tileGridI = worldManager.getGridI(this.convertScreenToWorldX(inputManager.mousePosition.x));
+  this.tileGridJ = worldManager.getGridJ(this.convertScreenToWorldY(inputManager.mousePosition.y));
+  this.tileSelection.position.x = this.tileGridI * TILE_SIZE;
+  this.tileSelection.position.y = this.tileGridJ * TILE_SIZE;
   
   // Draw tiles
   this.drawTiles();

@@ -62,6 +62,8 @@ ButtonComponent.prototype = new PIXI.DisplayObjectContainer;
 
 ButtonComponent.prototype.click = function(interactionData)
 {
+  inputManager.leftButtonHandled = true;
+  
   if (this.onClick != null)
   {
     this.onClick(interactionData);

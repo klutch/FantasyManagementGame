@@ -8,6 +8,8 @@ var InputManager = function()
   this.keysPressedLastFrame = [];
   this.leftButton = false;
   this.leftButtonLastFrame = false;
+  this.leftButtonHandled = false;
+  this.escapeHandled = false;
   this.mouseWheelDelta = 0;
   this.mousePosition;
   
@@ -37,5 +39,7 @@ InputManager.prototype.postUpdate = function()
   this.keysPressedLastFrame = this.keysPressed.slice(0);
   this.leftButtonLastFrame = this.leftButton;
   this.leftButton = false;
+  this.leftButtonHandled = false;
+  this.escapeHandled = false;
   this.mouseWheelDelta = 0;
 };
