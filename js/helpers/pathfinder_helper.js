@@ -116,7 +116,7 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         }
         else
         {
-          // See if G value to neighbor tile from the selected tile is
+          // See if G value to neighbor tile from the selected tile is shorter than its current path
           var newG = selectedTile.tempG + (isDiagonal ? 14 : 10);
           
           if (newG < neighborTile.tempG)
