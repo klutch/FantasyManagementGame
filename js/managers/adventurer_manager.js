@@ -154,12 +154,10 @@ AdventurerManager.prototype.getGroupTile = function(groupId)
   {
     var feature = worldManager.world.features[group.featureId];
     
-    console.log("getting feature i: " + feature.tileI + ", " + feature.tileJ);
     return worldManager.getTile(feature.tileI, feature.tileJ);
   }
   else
   {
-    console.log("getting group i: " + group.tileI + ", " + group.tileJ);
     return worldManager.getTile(group.tileI, group.tileJ);
   }
 };

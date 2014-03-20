@@ -142,8 +142,8 @@ OrderManager.prototype.update = function()
       var startTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
       
       inputManager.leftButtonHandled = true;
-      path = PathfinderHelper.findPath(startTile.i, startTile.j, worldMap.mouseGridI, worldMap.mouseGridJ);
-      alert("results of pathfinding: " + path);
+      path = PathfinderHelper.findPath(startTile.i, startTile.j, worldMap.tileGridI, worldMap.tileGridJ);
+      alert("path results: " + path);
     }
     
     // Cache mouse tile position

@@ -35,7 +35,7 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
   var initialTile = worldManager.getTile(startI, startJ);
   
   openList[initialTile.toString()] = initialTile;
-  initalTile.tempParent = null;
+  initialTile.tempParent = null;
   
   // Find path
   while (!finished)
@@ -43,9 +43,11 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
     var selectedTile = this.findLowestF(openList);
     var selectedKey = selectedTile.toString();
     
+    //alert("Selected tile: " + selectedKey + ". Size of openList: " + _.size(openList) + ". Size of closedList: " + _.size(closedList));
+    
     // Move selected tile to the closed list
-    this.closedList[selectedKey] = selectedTile;
-    delete this.openList[selectedKey];
+    closedList[selectedKey] = selectedTile;
+    delete openList[selectedKey];
     
     // Process neighbors
     for (var i = selectedTile.i - 1; i < selectedTile.i + 2; i++)
@@ -59,17 +61,20 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         // Skip selected tile
         if (i == selectedTile.i && j == selectedTile.j)
         {
-          break;
+          //alert("skipping because neighbor tile matches selected tile");
+          continue;
         }
         
         // Skip out of range neighbor tiles
         if (i < upperBoundI || j < upperBoundJ || i > lowerBoundI || j > lowerBoundJ)
         {
-          break;
+          //console.log("Skipping tile because it's out of bounds");
+          continue;
         }
         
         // Get neighbor tile (create if necessary)
         neighborTile = worldManager.getOrCreateTile(i, j);
+        neighborKey = neighborTile.toString();
         
         // Check if neighbor tile exists
         /*if (worldManager.doesTileExist(i, j))
@@ -85,13 +90,13 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         // Check if neighbor tile is walkable
         if (!neighborTile.walkable)
         {
-          break;
+          continue;
         }
         
         // Check if neighbor tile is in closed list
         if (closedList[neighborKey] != null)
         {
-          break;
+          continue;
         }
         
         // Determine whether neighbor is diagonally adjacent
@@ -101,7 +106,7 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         if (openList[neighborKey] == null)
         {
           // Calculate F, G, H, and parent values and add to open list
-          openList[neighborKey] = neighorTile;
+          openList[neighborKey] = neighborTile;
           neighborTile.tempParent = selectedTile;
           neighborTile.tempG = selectedTile.tempG + (isDiagonal ? 14 : 10);
           neighborTile.tempH = Math.abs(i - endI) + Math.abs(j - endJ);
@@ -119,6 +124,7 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
             neighborTile.tempF = neighborTile.tempG + neighborTile.tempH;
           }
         }
+        //alert("finished a processing step for: " + neighborKey);
       }
     }
     
