@@ -11,8 +11,9 @@ var TravelType = Object.freeze({
   Explore: 2
 });
 
-var Order = function(type, groupId, options)
+var Order = function(id, type, groupId, options)
 {
+  this.id = id;
   this.type = type;
   this.groupId = groupId;
   this.isComplete = options.isComplete;

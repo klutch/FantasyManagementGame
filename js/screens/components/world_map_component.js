@@ -21,6 +21,7 @@ var WorldMapComponent = function()
   this.totalChunksToGenerate = 0;
   this.tilesToDraw = [];
   this.tilePosition = new PIXI.Point(0, 0); // Reusable position. Used in drawTile()
+  this.pathOverlaySprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.pathOverlay);
   
   // Create terrain sprites
   this.terrainSprites = {};
@@ -286,6 +287,41 @@ WorldMapComponent.prototype.drawTile = function(i, j)
     var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
     
     chunkSprite.texture.render(featureSprite, this.tilePosition);
+  }
+};
+
+// Clear a path
+WorldMapComponent.prototype.clearPath = function(path)
+{
+  var currentNode = path;
+  
+  while (currentNode != null)
+  {
+    this.addTileToDraw(currentNode.i, currentNode.j);
+    currentNode = currentNode.next;
+  }
+};
+
+// Draw a path
+WorldMapComponent.prototype.drawPath = function(path, tint)
+{
+  var currentNode = path;
+  var tilePosition = new PIXI.Point(0, 0);
+  
+  this.pathOverlaySprite.tint = tint == null ? 0xFFFF00 : tint;
+  
+  while (currentNode != null)
+  {
+    var i = currentNode.i;
+    var j = currentNode.j;
+    var chunkI = this.getChunkI(i);
+    var chunkJ = this.getChunkJ(j);
+    var chunkSprite = this.chunkSprites[chunkI][chunkJ];
+    
+    tilePosition.x = (i - chunkI * CHUNK_SIZE) * TILE_SIZE;
+    tilePosition.y = (j - chunkJ * CHUNK_SIZE) * TILE_SIZE;
+    chunkSprite.texture.render(this.pathOverlaySprite, tilePosition);
+    currentNode = currentNode.next;
   }
 };
 
