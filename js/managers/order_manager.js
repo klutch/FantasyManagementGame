@@ -99,6 +99,27 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
   this.addOrder(order);
 };
 
+OrderManager.prototype.createRaidOrder = function(groupId, featureId)
+{
+  var order = new Order(
+    this.getUnusedId(),
+    OrderType.Travel,
+    groupId,
+    {
+      travelType: TravelType.Raid,
+      featureId: featureId,
+      isComplete: function()
+      {
+        var group = adventurerManager.groups[groupId];
+        var feature = worldManager.world.features[featureId];
+        
+        return feature.containsTileI(group.tileI) && feature.containsTileJ(group.tileJ);
+      },
+      onComplete: function() { alert("Group at destination"); }
+    });
+  this.addOrder(order);
+};
+
 OrderManager.prototype.handleTravelOrderSetup = function()
 {
   // Handle tile context
@@ -171,7 +192,14 @@ OrderManager.prototype.handleTravelOrderSetup = function()
 
     if (path != null)
     {
-      this.createExploreOrder(adventurerManager.selectedGroupId, this.worldMap.tileGridI, this.worldMap.tileGridJ);
+      if (this.settingUpTravelOrderType == TravelType.Explore)
+      {
+        this.createExploreOrder(adventurerManager.selectedGroupId, this.worldMap.tileGridI, this.worldMap.tileGridJ);
+      }
+      else if (this.settingUpTravelOrderType == TravelType.Raid)
+      {
+        this.createRaidOrder(adventurerManager.selectedGroupId, this.travelToFeatureId);
+      }
       this.endOrderSetup();
       this.worldMap.drawPath(path);
     }
