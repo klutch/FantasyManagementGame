@@ -12,12 +12,14 @@ var ButtonComponent = function(options)
   this.z = options.z;
   this.normalTexture = options.normalTexture;
   this.hoverTexture = options.hoverTexture;
+  this.disabledTexture = options.disabledTexture;
   this.interactive = true;
   this.buttonMode = true;
   this.onMouseOver = options.onMouseOver;
   this.onMouseOut = options.onMouseOut;
   this.onClick = options.onClick;
   this.tooltipText = options.tooltipText;
+  this.enabled = true;
   
   // Textures
   if (this.normalTexture != null)
@@ -80,7 +82,7 @@ ButtonComponent.prototype.mouseover = function(interactionData)
   }
   if (this.textureSprite != null)
   {
-    if (this.hoverTexture != null)
+    if (this.hoverTexture != null && this.enabled)
     {
       this.textureSprite.setTexture(this.hoverTexture);
     }
@@ -107,7 +109,7 @@ ButtonComponent.prototype.mouseout = function(interactionData)
     this.bitmapText.tint = 0xCCCCCC;
     this.bitmapText.dirty = true;
   }
-  if (this.textureSprite != null)
+  if (this.textureSprite != null && this.enabled)
   {
     this.textureSprite.setTexture(this.normalTexture);
   }
@@ -123,4 +125,10 @@ ButtonComponent.prototype.mouseout = function(interactionData)
   {
     this.onMouseOut(interactionData);
   }
+};
+
+ButtonComponent.prototype.setEnabled = function(value)
+{
+  this.enabled = value;
+  this.textureSprite.setTexture(this.enabled ? this.normalTexture : this.disabledTexture);
 };

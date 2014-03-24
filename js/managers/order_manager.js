@@ -28,8 +28,32 @@ OrderManager.prototype.addOrder = function(order)
   this.queuedOrders[order.id] = order;
 };
 
-OrderManager.prototype.cancelOrder = function(orderId)
+OrderManager.prototype.getGroupOrder = function(groupId)
 {
+  for (var key in this.queuedOrders)
+  {
+    if (this.queuedOrders.hasOwnProperty(key))
+    {
+      var order = this.queuedOrders[key];
+      
+      if (order.groupId == groupId)
+      {
+        return order;
+      }
+    }
+  }
+  return null;
+}
+
+OrderManager.prototype.doesGroupHaveOrders = function(groupId)
+{
+  return this.getGroupOrder(groupId) != null;
+};
+
+OrderManager.prototype.cancelGroupOrder = function(groupId)
+{
+  var order = this.getGroupOrder(groupId);
+  
   delete this.queuedOrders[order.id];
 };
 
@@ -169,17 +193,23 @@ OrderManager.prototype.handleTravelOrderSetup = function()
   // Create order
   if (createOrder)
   {
-    if (raidContext)
+    var startTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
+    var path = PathfinderHelper.findPath(startTile.i, startTile.j, mouseI, mouseJ);
+    
+    if (path != null)
     {
-      inputManager.leftButtonHandled = true;
-      this.createRaidOrder(adventurerManager.selectedGroupId, feature.id);
-      this.endOrderSetup();
-    }
-    else if (exploreContext)
-    {
-      inputManager.leftButtonHandled = true;
-      this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
-      this.endOrderSetup();
+      if (raidContext)
+      {
+        inputManager.leftButtonHandled = true;
+        this.createRaidOrder(adventurerManager.selectedGroupId, feature.id);
+        this.endOrderSetup();
+      }
+      else if (exploreContext)
+      {
+        inputManager.leftButtonHandled = true;
+        this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+        this.endOrderSetup();
+      }
     }
   }
 };

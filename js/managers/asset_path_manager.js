@@ -236,6 +236,11 @@ var AssetPathManager = function()
     "img/ui/travel_order_button.png",
     "img/ui/travel_order_button_disabled.png"
   ];
+  this.assetPaths.ui.cancelOrderButtons = [
+    "img/ui/cancel_order_button.png",
+    "img/ui/cancel_order_button.png",
+    "img/ui/cancel_order_button_disabled.png"
+  ];
   this.assetPaths.ui.pathOverlay = ["img/ui/path_overlay.png"];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};

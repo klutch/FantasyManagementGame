@@ -164,6 +164,9 @@ WorldMapScreen.prototype.update = function()
   // Update resource indicators
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });
   
+  // Update selected group panel
+  if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }
+  
   // Handle input
   this.handleInput();
 };
