@@ -1,14 +1,10 @@
 var OrderType = Object.freeze({
-  Travel: 0,
+  Explore: 0,
   BuildRoad: 1,
   Log: 2,
-  Mine: 3
-});
-
-var TravelType = Object.freeze({
-  Raid: 0,
-  Fight: 1,
-  Explore: 2
+  Mine: 3,
+  Raid: 4,
+  Fight: 5
 });
 
 var Order = function(id, type, groupId, options)
@@ -16,39 +12,12 @@ var Order = function(id, type, groupId, options)
   this.id = id;
   this.type = type;
   this.groupId = groupId;
-  this.isComplete = options.isComplete;
-  this.onComplete = options.onComplete;
   
-  if (type == OrderType.Travel)
+  for (var key in options)
   {
-    this.travelType = options.travelType;
-    
-    if (this.travelType == TravelType.Raid)
+    if (options.hasOwnProperty(key))
     {
-      this.featureId = options.featureId;
+      this[key] = options[key];
     }
-    else if (this.travelType == TravelType.Fight)
-    {
-      this.enemyId = options.enemyId;
-    }
-    else if (this.travelType == TravelType.Explore)
-    {
-      this.tileI = options.tileI;
-      this.tileJ = options.tileJ;
-    }
-  }
-  else if (type == OrderType.BuildRoad)
-  {
-    this.waypoints = options.waypoints;
-  }
-  else if (type == OrderType.Log)
-  {
-    this.tileI = options.tileI;
-    this.tileJ = options.tileJ;
-  }
-  else if (type == OrderType.Mine)
-  {
-    this.tileI = options.tileI;
-    this.tileJ = options.tileJ;
   }
 };

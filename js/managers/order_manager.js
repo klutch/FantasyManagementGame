@@ -1,16 +1,17 @@
 var OrderManager = function()
 {
   this.queuedOrders = [];
-  this.settingUpOrderType = null;
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
   this.hasMouseChangedTiles = false;
   this.worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
   this.tooltip = screenManager.screens[ScreenType.Tooltip].tooltip;
-  
-  // Travel order specific variables
-  this.settingUpTravelOrderType = null;
-  this.travelToFeatureId = null;
+  this.settingUpOrder = false;
+  this.settingUpTravelOrder = false;
+  this.settingUpBuildRoadOrder = false;
+  this.settingUpMineOrder = false;
+  this.settingUpLogOrder = false;
+  this.raidFeatureId = null;
 };
 
 OrderManager.prototype.getUnusedId = function()
@@ -32,18 +33,23 @@ OrderManager.prototype.cancelOrder = function(orderId)
   delete this.queuedOrders[order.id];
 };
 
-OrderManager.prototype.startOrderSetup = function(orderType)
+OrderManager.prototype.startOrderSetup = function()
 {
-  this.settingUpOrderType = orderType;
-  screenManager.screens[ScreenType.Tooltip].enableTooltip("Travel");
+  this.settingUpOrder = true;
+  screenManager.screens[ScreenType.Tooltip].enableTooltip("");
 };
 
 OrderManager.prototype.endOrderSetup = function()
 {
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
+  this.settingUpOrder = false;
+  this.settingUpTravelOrder = false;
+  this.settingUpBuildRoadOrder = false;
+  this.settingUpMineOrder = false;
+  this.settingUpLogOrder = false;
+  this.raidFeatureId = null;
   screenManager.screens[ScreenType.Tooltip].disableTooltip();
-  this.settingUpOrderType = null;
 };
 
 OrderManager.prototype.processOrder = function(order)
@@ -82,10 +88,9 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
 {
   var order = new Order(
     this.getUnusedId(),
-    OrderType.Travel,
+    OrderType.Explore,
     groupId,
     {
-      travelType: TravelType.Explore,
       tileI: tileI,
       tileJ: tileJ,
       isComplete: function()
@@ -103,10 +108,9 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
 {
   var order = new Order(
     this.getUnusedId(),
-    OrderType.Travel,
+    OrderType.Raid,
     groupId,
     {
-      travelType: TravelType.Raid,
       featureId: featureId,
       isComplete: function()
       {
@@ -122,86 +126,60 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
 
 OrderManager.prototype.handleTravelOrderSetup = function()
 {
-  // Handle tile context
-  if (this.hasMouseChangedTiles)
+  var raidContext = false;
+  var exploreContext = false;
+  var feature = null;
+  var currentTile = null;
+  var mouseI = this.worldMap.tileGridI;
+  var mouseJ = this.worldMap.tileGridJ;
+  var createOrder = inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled;
+  
+  // Determine tile context
+  currentTile = worldManager.doesTileExist(mouseI, mouseJ) ? worldManager.getTile(mouseI, mouseJ) : null;
+  if (currentTile == null || !currentTile.discovered)
   {
-    if (this.settingUpOrderType == OrderType.Travel)
+    this.tooltip.setText("Out of bounds");
+  }
+  else if (currentTile.featureId != null)
+  {
+    feature = worldManager.world.features[currentTile.featureId];
+    
+    if (feature.type == FeatureType.Dungeon)
     {
-      // Travel order
-      if (worldManager.doesTileExist(this.worldMap.tileGridI, this.worldMap.tileGridJ))
-      {
-        var tile = worldManager.getTile(this.worldMap.tileGridI, this.worldMap.tileGridJ);
-
-        if (!tile.discovered)
-        {
-          // Treat undiscovered tiles as out of bounds
-          this.tooltip.setText("Out of bounds");
-          this.settingUpTravelOrderType = null;
-        }
-        else if (tile.featureId != null)
-        {
-          // Change context based on feature type
-          var feature = worldManager.world.features[tile.featureId];
-          
-          this.travelToFeatureId = feature.id;
-          if (feature.type == FeatureType.Castle)
-          {
-            this.tooltip.setText("Return to castle");
-            this.settingUpTravelOrderType = TravelType.Explore;
-          }
-          else if (feature.type == FeatureType.Dungeon)
-          {
-            this.tooltip.setText("Raid dungeon");
-            this.settingUpTravelOrderType = TravelType.Raid;
-          }
-          else if (feature.type == FeatureType.Dwelling)
-          {
-            this.tooltip.setText("Visit dwelling");
-            this.settingUpTravelOrderType = TravelType.Explore;
-          }
-          else if (feature.type == FeatureType.Gathering)
-          {
-            this.tooltip.setText("Visit gathering");
-            this.settingUpTravelOrderType = TravelType.Explore;
-          }
-        }
-        else
-        {
-          this.tooltip.setText("Explore");
-          this.settingUpTravelOrderType = TravelType.Explore;
-        }
-      }
-      else
-      {
-        // Treat non-existent tiles as out of bounds
-        this.tooltip.setText("Out of bounds");
-        this.settingUpTravelOrderType = null;
-      }
+      raidContext = true;
+      this.tooltip.setText("Raid dungeon");
+    }
+    else if (feature.type == FeatureType.Dwelling)
+    {
+      exploreContext = true;
+      this.tooltip.setText("Visit dwelling");
+    }
+    else if (feature.type == FeatureType.Gathering)
+    {
+      exploreContext = true;
+      this.tooltip.setText("Visit gathering");
     }
   }
-  
-  // Check for mouse down
-  if ((inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled) &&
-      this.settingUpTravelOrderType != null)
+  else
   {
-    var path;
-    var startTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
-
-    inputManager.leftButtonHandled = true;
-    path = PathfinderHelper.findPath(startTile.i, startTile.j, this.worldMap.tileGridI, this.worldMap.tileGridJ);
-
-    if (path != null)
+    exploreContext = true;
+    this.tooltip.setText("Explore area");
+  }
+  
+  // Create order
+  if (createOrder)
+  {
+    if (raidContext)
     {
-      if (this.settingUpTravelOrderType == TravelType.Explore)
-      {
-        this.createExploreOrder(adventurerManager.selectedGroupId, this.worldMap.tileGridI, this.worldMap.tileGridJ);
-      }
-      else if (this.settingUpTravelOrderType == TravelType.Raid)
-      {
-        this.createRaidOrder(adventurerManager.selectedGroupId, this.travelToFeatureId);
-      }
+      inputManager.leftButtonHandled = true;
+      this.createRaidOrder(adventurerManager.selectedGroupId, feature.id);
       this.endOrderSetup();
-      this.worldMap.drawPath(path);
+    }
+    else if (exploreContext)
+    {
+      inputManager.leftButtonHandled = true;
+      this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+      this.endOrderSetup();
     }
   }
 };
@@ -211,7 +189,7 @@ OrderManager.prototype.update = function()
   this.hasMouseChangedTiles = this.worldMap.tileGridI != this.lastTileGridI || this.worldMap.tileGridJ != this.lastTileGridJ;
   
   // Handle order setup
-  if (this.settingUpOrderType != null)
+  if (this.settingUpOrder)
   {
     // Check for escape
     if (inputManager.keysPressed[27] && !inputManager.keysPressedLastFrame[27])
@@ -220,7 +198,8 @@ OrderManager.prototype.update = function()
       this.endOrderSetup();
     }
     
-    if (this.settingUpOrderType == OrderType.Travel)
+    // Handle setup of all travel-type orders (explore, raid, fight)
+    if (this.settingUpTravelOrder)
     {
       this.handleTravelOrderSetup();
     }
