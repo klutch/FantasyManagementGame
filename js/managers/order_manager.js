@@ -6,6 +6,7 @@ var OrderManager = function()
   this.hasMouseChangedTiles = false;
   this.worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
   this.tooltip = screenManager.screens[ScreenType.Tooltip].tooltip;
+  this.pathPreview = screenManager.screens[ScreenType.WorldMap].pathPreview;
   this.settingUpOrder = false;
   this.settingUpTravelOrder = false;
   this.settingUpBuildRoadOrder = false;
@@ -54,6 +55,7 @@ OrderManager.prototype.cancelGroupOrder = function(groupId)
 {
   var order = this.getGroupOrder(groupId);
   
+  this.pathPreview.clearPath(order.path);
   delete this.queuedOrders[order.id];
 };
 
@@ -108,7 +110,7 @@ OrderManager.onTurnEnd = function()
   }
 };
 
-OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
+OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ, path)
 {
   var order = new Order(
     this.getUnusedId(),
@@ -117,6 +119,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
     {
       tileI: tileI,
       tileJ: tileJ,
+      path: path,
       isComplete: function()
       {
         var group = adventurerManager.groups[groupId];
@@ -128,7 +131,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
   this.addOrder(order);
 };
 
-OrderManager.prototype.createRaidOrder = function(groupId, featureId)
+OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
 {
   var order = new Order(
     this.getUnusedId(),
@@ -136,6 +139,7 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
     groupId,
     {
       featureId: featureId,
+      path: path,
       isComplete: function()
       {
         var group = adventurerManager.groups[groupId];
@@ -201,13 +205,15 @@ OrderManager.prototype.handleTravelOrderSetup = function()
       if (raidContext)
       {
         inputManager.leftButtonHandled = true;
-        this.createRaidOrder(adventurerManager.selectedGroupId, feature.id);
+        this.pathPreview.drawPath(path);
+        this.createRaidOrder(adventurerManager.selectedGroupId, feature.id, path);
         this.endOrderSetup();
       }
       else if (exploreContext)
       {
         inputManager.leftButtonHandled = true;
-        this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+        this.pathPreview.drawPath(path);
+        this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ, path);
         this.endOrderSetup();
       }
     }

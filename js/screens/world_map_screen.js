@@ -17,6 +17,9 @@ var WorldMapScreen = function(world)
   // Create world map component
   this.worldMap = new WorldMapComponent();
   
+  // Create path preview component
+  this.pathPreview = new PathPreviewComponent({z: this.z + 1});
+  
   // Create resource bar
   this.resourceBar = new PanelComponent({
     x: -8,
@@ -65,6 +68,7 @@ var WorldMapScreen = function(world)
 WorldMapScreen.prototype.onAddScreen = function()
 {
   game.stage.addChild(this.worldMap);
+  this.worldMap.addChild(this.pathPreview);
   game.stage.addChild(this.resourceBar);
   game.stage.addChild(this.homeButton);
   game.stage.addChild(this.mainButtonsContainer);
@@ -74,6 +78,7 @@ WorldMapScreen.prototype.onAddScreen = function()
 WorldMapScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.worldMap);
+  this.worldMap.removeChild(this.pathPreview);
   game.stage.removeChild(this.resourceBar);
   game.stage.removeChild(this.homeButton);
   game.stage.removeChild(this.mainButtonsContainer);
