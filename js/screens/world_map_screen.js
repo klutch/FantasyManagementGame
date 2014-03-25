@@ -31,11 +31,9 @@ var WorldMapScreen = function(world)
   
   // Create home button
   this.homeButton = new ButtonComponent({
-    x: game.containerWidth - 28,
-    y: -4,
+    x: game.containerWidth - 80,
+    y: game.containerHeight - 80,
     z: this.z + 2,
-    centerX: true,
-    centerY: false,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
     onClick: function(e) { root.worldMap.moveCameraToHome(); },
     tooltipText: "Center on home castle"
@@ -51,6 +49,17 @@ var WorldMapScreen = function(world)
     tooltipText: "Group menu"
   });
   this.mainButtonsContainer.addChild(this.groupButton);
+  
+  // Create end turn button
+  this.endTurnButton = new ButtonComponent({
+    x: 80,
+    y: 16,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[0]),
+    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[1]),
+    onClick: function(e) { alert("end turn"); },
+    tooltipText: "End turn"
+  });
+  this.mainButtonsContainer.addChild(this.endTurnButton);
   
   // Create group panel
   this.groupPanel = new GroupPanelComponent({
