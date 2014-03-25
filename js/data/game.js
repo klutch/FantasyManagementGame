@@ -50,7 +50,7 @@ Game.prototype.startNewGame = function()
   
   // Setup adventurer manager and initial groups
   adventurerManager = new AdventurerManager();
-  startingGroup = adventurerManager.createGroup({name: "Starting Group", featureId: 0});
+  startingGroup = adventurerManager.createGroup({name: "Starting Group", featureId: worldManager.world.playerCastleFeatureId});
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
   adventurerManager.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
@@ -60,7 +60,7 @@ Game.prototype.startNewGame = function()
   
   for (var i = 0; i < 7; i++)
   {
-    var group = adventurerManager.createGroup({featureId: 0});
+    var group = adventurerManager.createGroup({featureId: worldManager.world.playerCastleFeatureId});
     
     adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
     adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
