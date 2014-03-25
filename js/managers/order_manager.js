@@ -81,7 +81,6 @@ OrderManager.prototype.processOrderMovement = function(order)
 {
   var nextNode = order.path.next;
   var nextTile = worldManager.getTile(nextNode.i, nextNode.j);
-  var lastNode = order.path.end;
   var group = adventurerManager.groups[order.groupId];
   var groupMovementAbility = adventurerManager.getGroupMovementAbility(order.groupId);
   var remainingMovement = groupMovementAbility - group.movementUsed;
@@ -89,9 +88,7 @@ OrderManager.prototype.processOrderMovement = function(order)
   if (nextTile.movementCost <= remainingMovement)
   {
     adventurerManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
-    this.pathPreview.clearPath(order.path);
-    order.path = PathfinderHelper.findPath(nextTile.i, nextTile.j, lastNode.i, lastNode.j);
-    this.pathPreview.drawPath(order.path);
+    order.path = nextNode;
   }
   else
   {
