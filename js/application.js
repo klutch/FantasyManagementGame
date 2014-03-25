@@ -20,6 +20,7 @@ var adventurerManager;
 var assetPathManager = new AssetPathManager();
 var resourceManager;
 var orderManager;
+var turnManager;
 
 // Initialize
 function initialize()

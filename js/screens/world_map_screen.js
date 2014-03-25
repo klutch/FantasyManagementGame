@@ -20,6 +20,9 @@ var WorldMapScreen = function(world)
   // Create path preview component
   this.pathPreview = new PathPreviewComponent({z: this.z + 1});
   
+  // Create adventurer groups component
+  this.adventurerGroups = new AdventurerGroupsComponent({z: this.z + 2});
+  
   // Create resource bar
   this.resourceBar = new PanelComponent({
     x: -8,
@@ -56,7 +59,7 @@ var WorldMapScreen = function(world)
     y: 16,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[1]),
-    onClick: function(e) { alert("end turn"); },
+    onClick: function(e) { turnManager.startProcessing(); },
     tooltipText: "End turn"
   });
   this.mainButtonsContainer.addChild(this.endTurnButton);
@@ -78,6 +81,7 @@ WorldMapScreen.prototype.onAddScreen = function()
 {
   game.stage.addChild(this.worldMap);
   this.worldMap.addChild(this.pathPreview);
+  this.worldMap.addChild(this.adventurerGroups);
   game.stage.addChild(this.resourceBar);
   game.stage.addChild(this.homeButton);
   game.stage.addChild(this.mainButtonsContainer);
@@ -88,6 +92,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.worldMap);
   this.worldMap.removeChild(this.pathPreview);
+  this.worldMap.removeChild(this.adventurerGroups);
   game.stage.removeChild(this.resourceBar);
   game.stage.removeChild(this.homeButton);
   game.stage.removeChild(this.mainButtonsContainer);
@@ -180,6 +185,9 @@ WorldMapScreen.prototype.update = function()
   
   // Update selected group panel
   if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }
+  
+  // Update adventurer groups
+  this.adventurerGroups.update();
   
   // Handle input
   this.handleInput();

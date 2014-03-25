@@ -140,6 +140,7 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
     {
       var currentTile = targetTile;
       var currentNode = new PathNode(currentTile.i, currentTile.j);
+      var tailNode = currentNode;
       
       // Build linked list of path nodes, and return the head (starts at tail and works backwards)
       while (currentTile.tempParent != null)
@@ -152,8 +153,8 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         
         currentTile = currentTile.tempParent;
       }
-      
-      return newNode;
+      currentNode.end = tailNode;
+      return currentNode;
     }
   }
 };

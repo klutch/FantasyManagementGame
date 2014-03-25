@@ -92,6 +92,18 @@ var Feature = function(id, type, tileI, tileJ, width, height)
   this.width = width;
   this.height = height;
 };
+Feature.prototype.containsTileI = function(i)
+{
+  var diff = i - this.tileI;
+  
+  return diff >= 0 && diff <= this.width;
+}
+Feature.prototype.containsTileJ = function(j)
+{
+  var diff = j - this.tileJ;
+  
+  return diff >= 0 && diff <= this.height;
+}
 
 // World class
 var World = function(seed)

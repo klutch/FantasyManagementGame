@@ -14,6 +14,7 @@ var Group = function(id, options)
   this.tileJ = options.tileJ;
   this.featureId = options.featureId;
   this.name = options.name;
+  this.movementUsed = 0;
 };
 
 Group.prototype.isInFeature = function() { return this.featureId != -1; };

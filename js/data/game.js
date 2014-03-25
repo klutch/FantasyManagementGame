@@ -63,13 +63,16 @@ Game.prototype.startNewGame = function()
     var group = adventurerManager.createGroup({featureId: worldManager.world.playerCastleFeatureId});
     
     adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
-    adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
-    adventurerManager.addAdventurer(group.id, AdventurerFactory.createArcher(50));
+    adventurerManager.addAdventurer(group.id, AdventurerFactory.createKnight(50));
+    adventurerManager.addAdventurer(group.id, AdventurerFactory.createHealer(50));
     worldMapScreen.groupPanel.addGroup(group.id);
   }
   
   // Setup order manager
   orderManager = new OrderManager();
+  
+  // Setup turn manager
+  turnManager = new TurnManager();
 };
 
 Game.prototype.update = function()
@@ -78,6 +81,10 @@ Game.prototype.update = function()
   if (orderManager != null)
   {
     orderManager.update();
+  }
+  if (turnManager != null)
+  {
+    turnManager.update();
   }
   screenManager.update();
   inputManager.postUpdate();

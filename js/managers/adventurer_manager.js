@@ -161,3 +161,45 @@ AdventurerManager.prototype.getGroupTile = function(groupId)
     return worldManager.getTile(group.tileI, group.tileJ);
   }
 };
+
+AdventurerManager.prototype.getGroupMovementAbility = function(groupId)
+{
+  var group = this.groups[groupId];
+  var lowestMovementAbility = 999;
+  
+  for (var i = 0; i < group.adventurerIds.length; i++)
+  {
+    var adventurer = this.adventurers[group.adventurerIds[i]];
+    
+    if (adventurer.movementAbility < lowestMovementAbility)
+    {
+      lowestMovementAbility = adventurer.movementAbility;
+    }
+  }
+  return lowestMovementAbility;
+};
+
+AdventurerManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
+{
+  var tile = worldManager.getTile(tileI, tileJ);
+  var group = this.groups[groupId];
+  
+  // Add group to world map if currently in a feature
+  if (group.isInFeature())
+  {
+    screenManager.screens[ScreenType.WorldMap].adventurerGroups.showGroup(groupId);
+  }
+  
+  group.featureId = -1;
+  group.tileI = tileI;
+  group.tileJ = tileJ;
+  group.movementUsed += tile.movementCost;
+};
+
+AdventurerManager.prototype.resetGroupMovement = function()
+{
+  _.each(this.groups, function(group)
+    {
+      group.movementUsed = 0;
+    });
+};

@@ -12,6 +12,7 @@ var Order = function(id, type, groupId, options)
   this.id = id;
   this.type = type;
   this.groupId = groupId;
+  this.isDoneForThisTurn = false;
   
   for (var key in options)
   {

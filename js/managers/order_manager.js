@@ -12,7 +12,7 @@ var OrderManager = function()
   this.settingUpBuildRoadOrder = false;
   this.settingUpMineOrder = false;
   this.settingUpLogOrder = false;
-  this.raidFeatureId = null;
+  this.doneProcessingOrdersForTurn = true;
 };
 
 OrderManager.prototype.getUnusedId = function()
@@ -74,25 +74,52 @@ OrderManager.prototype.endOrderSetup = function()
   this.settingUpBuildRoadOrder = false;
   this.settingUpMineOrder = false;
   this.settingUpLogOrder = false;
-  this.raidFeatureId = null;
   screenManager.screens[ScreenType.Tooltip].disableTooltip();
 };
 
-OrderManager.prototype.processOrder = function(order)
+OrderManager.prototype.processOrderMovement = function(order)
 {
+  var nextNode = order.path.next;
+  var nextTile = worldManager.getTile(nextNode.i, nextNode.j);
+  var lastNode = order.path.end;
+  var group = adventurerManager.groups[order.groupId];
+  var groupMovementAbility = adventurerManager.getGroupMovementAbility(order.groupId);
+  var remainingMovement = groupMovementAbility - group.movementUsed;
+  
+  if (nextTile.movementCost <= remainingMovement)
+  {
+    adventurerManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
+    this.pathPreview.clearPath(order.path);
+    order.path = PathfinderHelper.findPath(nextTile.i, nextTile.j, lastNode.i, lastNode.j);
+    this.pathPreview.drawPath(order.path);
+  }
+  else
+  {
+    order.isDoneForThisTurn = true;
+  }
 };
 
-OrderManager.onTurnEnd = function()
+OrderManager.prototype.processQueuedOrders = function()
 {
   var completedOrders = [];
   
-  // Process orders
+  this.doneProcessingOrdersForTurn = true;
+  
   _.each(this.queuedOrders, function(order)
     {
-      this.processOrder(order);
+      // Process movement aspects of orders
+      if (order.type == OrderType.Explore || order.type == OrderType.Raid)
+      {
+        this.processOrderMovement(order);
+      }
+      
       if (order.isComplete())
       {
         completedOrders.push(order);
+      }
+      else if (!order.isDoneForThisTurn)
+      {
+        this.doneProcessingOrdersForTurn = false;
       }
     },
     this);
@@ -108,6 +135,22 @@ OrderManager.onTurnEnd = function()
     }
     delete this.queuedOrders[order.id];
   }
+  
+  // Check for end of turn
+  if (this.doneProcessingOrdersForTurn)
+  {
+    turnManager.endProcessing();
+    adventurerManager.resetGroupMovement();
+    this.resetOrderProcessingStatus();
+  }
+};
+
+OrderManager.prototype.resetOrderProcessingStatus = function()
+{
+  _.each(this.queuedOrders, function(order)
+    {
+      order.isDoneForThisTurn = false;
+    });
 };
 
 OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ, path)
@@ -223,7 +266,7 @@ OrderManager.prototype.handleTravelOrderSetup = function()
 OrderManager.prototype.update = function()
 {
   this.hasMouseChangedTiles = this.worldMap.tileGridI != this.lastTileGridI || this.worldMap.tileGridJ != this.lastTileGridJ;
-  
+
   // Handle order setup
   if (this.settingUpOrder)
   {
@@ -233,13 +276,13 @@ OrderManager.prototype.update = function()
       inputManager.escapeHandled = true;
       this.endOrderSetup();
     }
-    
+
     // Handle setup of all travel-type orders (explore, raid, fight)
     if (this.settingUpTravelOrder)
     {
       this.handleTravelOrderSetup();
     }
-    
+
     // Cache mouse tile position
     this.lastTileGridI = this.worldMap.tileGridI;
     this.lastTileGridJ = this.worldMap.tileGridJ;
