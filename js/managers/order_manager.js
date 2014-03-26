@@ -105,7 +105,11 @@ OrderManager.prototype.processQueuedOrders = function()
   _.each(this.queuedOrders, function(order)
     {
       // Process movement aspects of orders
-      if (order.type == OrderType.Return || order.type == OrderType.Explore || order.type == OrderType.Raid)
+      if (order.type == OrderType.Return || 
+          order.type == OrderType.Explore || 
+          order.type == OrderType.Raid || 
+          order.type == OrderType.VisitDwelling ||
+          order.type == OrderType.VisitGathering)
       {
         this.processOrderMovement(order);
       }
@@ -201,7 +205,7 @@ OrderManager.prototype.createReturnOrder = function(groupId, path)
         var group = adventurerManager.groups[groupId];
         var feature = worldManager.world.features[this.featureId];
         
-        return feature.containsTileI(group.tileI) && feature.containsTileJ(group.tileJ);
+        return feature.containsTile(group.tileI, group.tileJ);
       },
       onComplete: function()
       {
@@ -227,7 +231,7 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
         var group = adventurerManager.groups[groupId];
         var feature = worldManager.world.features[featureId];
         
-        return feature.containsTileI(group.tileI) && feature.containsTileJ(group.tileJ);
+        return feature.containsTile(group.tileI, group.tileJ);
       },
       onComplete: function() 
       {
@@ -239,11 +243,83 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
   this.addOrder(order);
 };
 
+OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId, path)
+{
+  var root = this;
+  var order = new Order(
+    this.getUnusedId(),
+    OrderType.VisitDwelling,
+    groupId,
+    {
+      featureId: featureId,
+      path: path,
+      isComplete: function()
+      {
+        var group = adventurerManager.groups[groupId];
+        var feature = worldManager.world.features[featureId];
+        
+        return feature.containsTile(group.tileI, group.tileJ);
+      },
+      onComplete: function()
+      {
+        var returnPath;
+        var group = adventurerManager.groups[groupId];
+        
+        root.pathPreview.clearPath(this.path.getHead());
+        returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+        root.pathPreview.drawPath(returnPath);
+        
+        if (returnPath != null)
+        {
+          root.createReturnOrder(groupId, returnPath);
+        }
+      }
+    });
+  this.addOrder(order);
+};
+
+OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId, path)
+{
+  var root = this;
+  var order = new Order(
+    this.getUnusedId(),
+    OrderType.VisitGathering,
+    groupId,
+    {
+      featureId: featureId,
+      path: path,
+      isComplete: function()
+      {
+        var group = adventurerManager.groups[groupId];
+        var feature = worldManager.world.features[featureId];
+        
+        return feature.containsTile(group.tileI, group.tileJ);
+      },
+      onComplete: function()
+      {
+        var returnPath;
+        var group = adventurerManager.groups[groupId];
+        
+        root.pathPreview.clearPath(this.path.getHead());
+        returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+        root.pathPreview.drawPath(returnPath);
+        
+        if (returnPath != null)
+        {
+          root.createReturnOrder(groupId, returnPath);
+        }
+      }
+    });
+  this.addOrder(order);
+};
+
 OrderManager.prototype.handleTravelOrderSetup = function()
 {
   var raidContext = false;
   var exploreContext = false;
   var returnContext = false;
+  var visitDwellingContext = false;
+  var visitGatheringContext = false;
   var feature = null;
   var mouseTile = null;
   var mouseI = this.worldMap.tileGridI;
@@ -273,12 +349,12 @@ OrderManager.prototype.handleTravelOrderSetup = function()
     }
     else if (feature.type == FeatureType.Dwelling)
     {
-      exploreContext = true;
+      visitDwellingContext = true;
       this.tooltip.setText("Visit dwelling");
     }
     else if (feature.type == FeatureType.Gathering)
     {
-      exploreContext = true;
+      visitGatheringContext = true;
       this.tooltip.setText("Visit gathering");
     }
   }
@@ -314,6 +390,20 @@ OrderManager.prototype.handleTravelOrderSetup = function()
         inputManager.leftButtonHandled = true;
         this.pathPreview.drawPath(path);
         this.createReturnOrder(adventurerManager.selectedGroupId, path);
+        this.endOrderSetup();
+      }
+      else if (visitDwellingContext)
+      {
+        inputManager.leftButtonHandled = true;
+        this.pathPreview.drawPath(path);
+        this.createVisitDwellingOrder(adventurerManager.selectedGroupId, feature.id, path);
+        this.endOrderSetup();
+      }
+      else if (visitGatheringContext)
+      {
+        inputManager.leftButtonHandled = true;
+        this.pathPreview.drawPath(path);
+        this.createVisitGatheringOrder(adventurerManager.selectedGroupId, feature.id, path);
         this.endOrderSetup();
       }
     }

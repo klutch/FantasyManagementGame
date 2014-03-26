@@ -1,11 +1,13 @@
 var OrderType = Object.freeze({
   Explore: 0,
-  BuildRoad: 1,
-  Log: 2,
-  Mine: 3,
-  Raid: 4,
-  Fight: 5,
-  Return: 6
+  VisitDwelling: 1,
+  VisitGathering: 2,
+  BuildRoad: 3,
+  Log: 4,
+  Mine: 5,
+  Raid: 6,
+  Fight: 7,
+  Return: 8
 });
 
 var Order = function(id, type, groupId, options)
