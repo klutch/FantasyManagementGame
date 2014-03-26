@@ -18,5 +18,6 @@ TurnManager.prototype.update = function()
   if (this.state == TurnState.Processing)
   {
     orderManager.processQueuedOrders();
+    raidManager.processRaids();
   }
 };

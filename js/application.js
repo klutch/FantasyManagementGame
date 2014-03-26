@@ -21,6 +21,7 @@ var assetPathManager = new AssetPathManager();
 var resourceManager;
 var orderManager;
 var turnManager;
+var raidManager;
 
 // Initialize
 function initialize()

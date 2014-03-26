@@ -232,6 +232,8 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
       onComplete: function() 
       {
         root.pathPreview.clearPath(this.path.getHead());
+        adventurerManager.moveGroupIntoFeature(groupId);
+        raidManager.createRaid(featureId, groupId);
       }
     });
   this.addOrder(order);

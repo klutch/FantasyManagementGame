@@ -68,11 +68,10 @@ Game.prototype.startNewGame = function()
     worldMapScreen.groupPanel.addGroup(group.id);
   }
   
-  // Setup order manager
+  // Setup other managers
   orderManager = new OrderManager();
-  
-  // Setup turn manager
   turnManager = new TurnManager();
+  raidManager = new RaidManager();
 };
 
 Game.prototype.update = function()
@@ -85,6 +84,10 @@ Game.prototype.update = function()
   if (turnManager != null)
   {
     turnManager.update();
+  }
+  if (raidManager != null)
+  {
+    raidManager.update();
   }
   screenManager.update();
   inputManager.postUpdate();
