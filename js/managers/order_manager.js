@@ -55,7 +55,7 @@ OrderManager.prototype.cancelGroupOrder = function(groupId)
 {
   var order = this.getGroupOrder(groupId);
   
-  this.pathPreview.clearPath(order.path);
+  this.pathPreview.clearPath(order.path.getHead());
   delete this.queuedOrders[order.id];
 };
 
