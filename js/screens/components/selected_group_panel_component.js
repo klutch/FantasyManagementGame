@@ -115,4 +115,10 @@ SelectedGroupPanelComponent.prototype.update = function()
     this.enableButtons();
     this.cancelButton.setEnabled(false);
   }
+  
+  // Escape key -- Deselect group
+  if (inputManager.simpleKey(KeyCode.Escape))
+  {
+    adventurerManager.deselectGroup();
+  }
 };

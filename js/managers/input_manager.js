@@ -10,7 +10,6 @@ var InputManager = function()
   this.leftButton = false;
   this.leftButtonLastFrame = false;
   this.leftButtonHandled = false;
-  this.escapeHandled = false;
   this.mouseWheelDelta = 0;
   this.mousePosition;
   
@@ -30,6 +29,17 @@ InputManager.prototype.onKeyUp = function(keyCode)
   this.keysPressed[keyCode] = false;
 };
 
+// This is a helper method to check for a single key stroke, and mark it as being handled.
+InputManager.prototype.simpleKey = function(keyCode)
+{
+  if (this.keysPressed[keyCode] && !this.keysPressedLastFrame[keyCode] && !this.keysHandled[keyCode])
+  {
+    this.keysHandled[keyCode] = true;
+    return true;
+  }
+  return false;
+};
+
 InputManager.prototype.update = function()
 {
   this.mousePosition = game.stage.getMousePosition();
@@ -42,6 +52,5 @@ InputManager.prototype.postUpdate = function()
   this.leftButtonLastFrame = this.leftButton;
   this.leftButton = false;
   this.leftButtonHandled = false;
-  this.escapeHandled = false;
   this.mouseWheelDelta = 0;
 };

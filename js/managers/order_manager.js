@@ -325,10 +325,9 @@ OrderManager.prototype.update = function()
   // Handle order setup
   if (this.settingUpOrder)
   {
-    // Check for escape
-    if (inputManager.keysPressed[27] && !inputManager.keysPressedLastFrame[27])
+    // Escape key -- cancel order setup
+    if (inputManager.simpleKey(KeyCode.Escape))
     {
-      inputManager.escapeHandled = true;
       this.endOrderSetup();
     }
 

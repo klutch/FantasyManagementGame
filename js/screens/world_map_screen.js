@@ -141,24 +141,25 @@ WorldMapScreen.prototype.openSelectedGroupPanel = function(groupId)
 WorldMapScreen.prototype.closeSelectedGroupPanel = function()
 {
   game.stage.removeChild(this.selectedGroupPanel);
+  this.selectedGroupPanel = null;
 };
 
 WorldMapScreen.prototype.handleInput = function()
 {
   // Handle input
-  if (inputManager.keysPressed[65])
+  if (inputManager.keysPressed[KeyCode.A])
   {
     this.worldMap.moveCamera(-5, 0);
   }
-  if (inputManager.keysPressed[68])
+  if (inputManager.keysPressed[KeyCode.D])
   {
     this.worldMap.moveCamera(5, 0);
   }
-  if (inputManager.keysPressed[83])
+  if (inputManager.keysPressed[KeyCode.S])
   {
     this.worldMap.moveCamera(0, 5);
   }
-  if (inputManager.keysPressed[87])
+  if (inputManager.keysPressed[KeyCode.W])
   {
     this.worldMap.moveCamera(0, -5);
   }
@@ -172,13 +173,13 @@ WorldMapScreen.prototype.handleInput = function()
   }
   
   // E key -- End turn
-  if (inputManager.keysPressed[KeyCode.E] && !inputManager.keysPressedLastFrame[KeyCode.E] && !inputManager.keysHandled[KeyCode.E])
+  if (inputManager.simpleKey(KeyCode.E))
   {
     this.endTurnButton.onClick();
   }
   
   // G key -- Toggle group panel
-  if (inputManager.keysPressed[KeyCode.G] && !inputManager.keysPressedLastFrame[KeyCode.G] && !inputManager.keysHandled[KeyCode.G])
+  if (inputManager.simpleKey(KeyCode.G))
   {
     this.groupButton.onClick();
   }

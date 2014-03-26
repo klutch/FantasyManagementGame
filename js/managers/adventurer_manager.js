@@ -146,6 +146,17 @@ AdventurerManager.prototype.selectGroup = function(groupId)
   worldMapScreen.openSelectedGroupPanel(groupId);
 };
 
+AdventurerManager.prototype.deselectGroup = function()
+{
+  if (this.selectedGroupId != -1)
+  {
+    var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+    
+    worldMapScreen.closeSelectedGroupPanel();
+    this.selectedGroupId = -1;
+  }
+}
+
 AdventurerManager.prototype.getGroupTile = function(groupId)
 {
   var group = this.groups[groupId];
