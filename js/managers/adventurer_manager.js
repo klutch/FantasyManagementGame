@@ -179,6 +179,23 @@ AdventurerManager.prototype.getGroupMovementAbility = function(groupId)
   return lowestMovementAbility;
 };
 
+AdventurerManager.prototype.getGroupDiscoveryRadius = function(groupId)
+{
+  var group = this.groups[groupId];
+  var highestDiscoveryRadius = 0;
+  
+  for (var i = 0; i < group.adventurerIds.length; i++)
+  {
+    var adventurer = this.adventurers[group.adventurerIds[i]];
+    
+    if (adventurer.discoveryRadius > highestDiscoveryRadius)
+    {
+      highestDiscoveryRadius = adventurer.discoveryRadius;
+    }
+  }
+  return highestDiscoveryRadius;
+};
+
 AdventurerManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
 {
   var tile = worldManager.getTile(tileI, tileJ);

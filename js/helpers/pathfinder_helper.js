@@ -10,6 +10,17 @@ var PathNode = function(i, j)
   this.next = null;
 };
 
+PathNode.prototype.getHead = function()
+{
+  var head = this;
+  
+  while (head.previous != null)
+  {
+    head = head.previous;
+  }
+  return head;
+};
+
 var PathfinderHelper = {};
 
 PathfinderHelper.findPath = function(startI, startJ, endI, endJ)

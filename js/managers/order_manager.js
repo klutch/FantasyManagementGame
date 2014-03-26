@@ -152,6 +152,7 @@ OrderManager.prototype.resetOrderProcessingStatus = function()
 
 OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ, path)
 {
+  var root = this;
   var order = new Order(
     this.getUnusedId(),
     OrderType.Explore,
@@ -166,13 +167,19 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ, path
         
         return group.tileI == tileI && group.tileJ == tileJ;
       },
-      onComplete: function() { alert("Group at destination"); }
+      onComplete: function() 
+      {
+        root.pathPreview.clearPath(this.path.getHead());
+        // TODO: Create return order
+        worldManager.discoverRadius(tileI, tileJ, adventurerManager.getGroupDiscoveryRadius(groupId));
+      }
     });
   this.addOrder(order);
 };
 
 OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
 {
+  var root = this;
   var order = new Order(
     this.getUnusedId(),
     OrderType.Raid,
@@ -187,7 +194,10 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
         
         return feature.containsTileI(group.tileI) && feature.containsTileJ(group.tileJ);
       },
-      onComplete: function() { alert("Group at destination"); }
+      onComplete: function() 
+      {
+        root.pathPreview.clearPath(this.path.getHead());
+      }
     });
   this.addOrder(order);
 };

@@ -14,6 +14,7 @@ var Adventurer = function(id, type, options)
   options.movementAbility = options.movementAbility || 50;
   options.isWorker = options.isWorker || false;
   options.description = options.description || "TODO: This adventurer needs a description.";
+  options.discoveryRadius = options.discoveryRadius || 8;
   
   this.id = id;
   this.type = type;
@@ -22,4 +23,5 @@ var Adventurer = function(id, type, options)
   this.baseSupport = options.baseSupport;
   this.movementAbility = options.movementAbility;
   this.isWorker = options.isWorker;
+  this.discoveryRadius = options.discoveryRadius;
 };
