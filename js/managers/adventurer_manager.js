@@ -213,6 +213,17 @@ AdventurerManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
   group.movementUsed += tile.movementCost;
 };
 
+AdventurerManager.prototype.moveGroupIntoFeature = function(groupId)
+{
+  var group = this.groups[groupId];
+  var tile = worldManager.getTile(group.tileI, group.tileJ);
+  
+  group.featureId = tile.featureId;
+  
+  // Remove group from world map
+  screenManager.screens[ScreenType.WorldMap].adventurerGroups.hideGroup(groupId);
+};
+
 AdventurerManager.prototype.resetGroupMovement = function()
 {
   _.each(this.groups, function(group)

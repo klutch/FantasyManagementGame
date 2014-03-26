@@ -206,6 +206,7 @@ OrderManager.prototype.createReturnOrder = function(groupId, path)
       onComplete: function()
       {
         root.pathPreview.clearPath(this.path.getHead());
+        adventurerManager.moveGroupIntoFeature(adventurerManager.selectedGroupId);
       }
     });
   this.addOrder(order);
