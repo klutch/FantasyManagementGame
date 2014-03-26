@@ -4,7 +4,8 @@ var OrderType = Object.freeze({
   Log: 2,
   Mine: 3,
   Raid: 4,
-  Fight: 5
+  Fight: 5,
+  Return: 6
 });
 
 var Order = function(id, type, groupId, options)

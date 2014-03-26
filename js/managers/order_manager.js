@@ -105,7 +105,7 @@ OrderManager.prototype.processQueuedOrders = function()
   _.each(this.queuedOrders, function(order)
     {
       // Process movement aspects of orders
-      if (order.type == OrderType.Explore || order.type == OrderType.Raid)
+      if (order.type == OrderType.Return || order.type == OrderType.Explore || order.type == OrderType.Raid)
       {
         this.processOrderMovement(order);
       }
@@ -169,9 +169,43 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ, path
       },
       onComplete: function() 
       {
+        var returnPath;
+        var group = adventurerManager.groups[groupId];
+        
         root.pathPreview.clearPath(this.path.getHead());
-        // TODO: Create return order
+        returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+        root.pathPreview.drawPath(returnPath);
         worldManager.discoverRadius(tileI, tileJ, adventurerManager.getGroupDiscoveryRadius(groupId));
+        
+        if (returnPath != null)
+        {
+          root.createReturnOrder(groupId, returnPath);
+        }
+      }
+    });
+  this.addOrder(order);
+};
+
+OrderManager.prototype.createReturnOrder = function(groupId, path)
+{
+  var root = this;
+  var order = new Order(
+    this.getUnusedId(),
+    OrderType.Return,
+    groupId,
+    {
+      featureId: worldManager.world.playerCastleFeatureId,
+      path: path,
+      isComplete: function()
+      {
+        var group = adventurerManager.groups[groupId];
+        var feature = worldManager.world.features[this.featureId];
+        
+        return feature.containsTileI(group.tileI) && feature.containsTileJ(group.tileJ);
+      },
+      onComplete: function()
+      {
+        root.pathPreview.clearPath(this.path.getHead());
       }
     });
   this.addOrder(order);
@@ -206,23 +240,30 @@ OrderManager.prototype.handleTravelOrderSetup = function()
 {
   var raidContext = false;
   var exploreContext = false;
+  var returnContext = false;
   var feature = null;
-  var currentTile = null;
+  var mouseTile = null;
   var mouseI = this.worldMap.tileGridI;
   var mouseJ = this.worldMap.tileGridJ;
+  var currentTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
   var createOrder = inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled;
   
   // Determine tile context
-  currentTile = worldManager.doesTileExist(mouseI, mouseJ) ? worldManager.getTile(mouseI, mouseJ) : null;
-  if (currentTile == null || !currentTile.discovered)
+  mouseTile = worldManager.doesTileExist(mouseI, mouseJ) ? worldManager.getTile(mouseI, mouseJ) : null;
+  if (mouseTile == null || !mouseTile.discovered)
   {
     this.tooltip.setText("Out of bounds");
   }
-  else if (currentTile.featureId != null)
+  else if (mouseTile.featureId != null)
   {
-    feature = worldManager.world.features[currentTile.featureId];
+    feature = worldManager.world.features[mouseTile.featureId];
     
-    if (feature.type == FeatureType.Dungeon)
+    if (feature.type == FeatureType.Castle && currentTile.featureId != worldManager.world.playerCastleFeatureId)
+    {
+      returnContext = true;
+      this.tooltip.setText("Return to castle");
+    }
+    else if (feature.type == FeatureType.Dungeon)
     {
       raidContext = true;
       this.tooltip.setText("Raid dungeon");
@@ -247,8 +288,7 @@ OrderManager.prototype.handleTravelOrderSetup = function()
   // Create order
   if (createOrder)
   {
-    var startTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
-    var path = PathfinderHelper.findPath(startTile.i, startTile.j, mouseI, mouseJ);
+    var path = PathfinderHelper.findPath(currentTile.i, currentTile.j, mouseI, mouseJ);
     
     if (path != null)
     {
@@ -264,6 +304,13 @@ OrderManager.prototype.handleTravelOrderSetup = function()
         inputManager.leftButtonHandled = true;
         this.pathPreview.drawPath(path);
         this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ, path);
+        this.endOrderSetup();
+      }
+      else if (returnContext)
+      {
+        inputManager.leftButtonHandled = true;
+        this.pathPreview.drawPath(path);
+        this.createReturnOrder(adventurerManager.selectedGroupId, path);
         this.endOrderSetup();
       }
     }
