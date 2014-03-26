@@ -170,6 +170,18 @@ WorldMapScreen.prototype.handleInput = function()
   {
     alert("world map clicked: [" + this.worldMap.tileGridI + ", " + this.worldMap.tileGridJ + "]");
   }
+  
+  // E key -- End turn
+  if (inputManager.keysPressed[KeyCode.E] && !inputManager.keysPressedLastFrame[KeyCode.E] && !inputManager.keysHandled[KeyCode.E])
+  {
+    this.endTurnButton.onClick();
+  }
+  
+  // G key -- Toggle group panel
+  if (inputManager.keysPressed[KeyCode.G] && !inputManager.keysPressedLastFrame[KeyCode.G] && !inputManager.keysHandled[KeyCode.G])
+  {
+    this.groupButton.onClick();
+  }
 };
 
 WorldMapScreen.prototype.update = function()

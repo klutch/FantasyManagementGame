@@ -6,6 +6,7 @@ var InputManager = function()
   
   this.keysPressed = [];
   this.keysPressedLastFrame = [];
+  this.keysHandled = [];
   this.leftButton = false;
   this.leftButtonLastFrame = false;
   this.leftButtonHandled = false;
@@ -37,6 +38,7 @@ InputManager.prototype.update = function()
 InputManager.prototype.postUpdate = function()
 {
   this.keysPressedLastFrame = this.keysPressed.slice(0);
+  this.keysHandled.length = 0;
   this.leftButtonLastFrame = this.leftButton;
   this.leftButton = false;
   this.leftButtonHandled = false;
