@@ -8,6 +8,11 @@ var PathNode = function(i, j)
   this.j = j;
   this.previous = null;
   this.next = null;
+  
+  // Temporary pathfinding values
+  this.f = 0;
+  this.g = 0;
+  this.h = 0;
 };
 
 PathNode.prototype.getHead = function()
@@ -21,13 +26,21 @@ PathNode.prototype.getHead = function()
   return head;
 };
 
-var PathfinderHelper = {};
+var PathfinderHelper = {
+  grid: {}
+};
+
+PathNode.prototype.toString = function()
+{
+  return this.i + ", " + this.j;
+};
 
 PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
 {
   var finished = false;
-  var targetTile = worldManager.getOrCreateTile(endI, endJ);
-  var targetKey = targetTile.toString();
+  
+  // TODO: This is hacky, and should be handled better when pathfinding supports heuristic-only paths
+  var targetKey = endI + ", " + endJ;
   
   // Find range
   var diffI = endI - startI;
@@ -43,32 +56,32 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
   // Initial setup
   var openList = {};
   var closedList = {};
-  var initialTile = worldManager.getTile(startI, startJ);
+  var initialNode = new PathNode(startI, startJ);
   
-  openList[initialTile.toString()] = initialTile;
-  initialTile.tempParent = null;
+  openList[initialNode.toString()] = initialNode;
   
   // Find path
   while (!finished)
   {
-    var selectedTile = this.findLowestF(openList);
-    var selectedKey = selectedTile.toString();
+    var selectedNode = this.findLowestF(openList);
+    var selectedKey = selectedNode.toString();
     
-    // Move selected tile to the closed list
-    closedList[selectedKey] = selectedTile;
+    // Move selected node to the closed list
+    closedList[selectedKey] = selectedNode;
     delete openList[selectedKey];
     
     // Process neighbors
-    for (var i = selectedTile.i - 1; i < selectedTile.i + 2; i++)
+    for (var i = selectedNode.i - 1; i < selectedNode.i + 2; i++)
     {
-      for (var j = selectedTile.j - 1; j < selectedTile.j + 2; j++)
+      for (var j = selectedNode.j - 1; j < selectedNode.j + 2; j++)
       {
         var neighborTile;
+        var neighborNode;
         var neighborKey;
         var isDiagonal;
         
         // Skip selected tile
-        if (i == selectedTile.i && j == selectedTile.j)
+        if (i == selectedNode.i && j == selectedNode.j)
         {
           continue;
         }
@@ -79,15 +92,12 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
           continue;
         }
         
-        // Get neighbor tile (create if necessary)
-        //neighborTile = worldManager.getOrCreateTile(i, j);
-        //neighborKey = neighborTile.toString();
-        
-        // Check if neighbor tile exists
+        // Check if neighbor tile exists (create/store node if it does)
         if (worldManager.doesTileExist(i, j))
         {
           neighborTile = worldManager.getTile(i, j);
-          neighborKey = neighborTile.toString();
+          neighborNode = new PathNode(i, j);
+          neighborKey = neighborNode.toString();
         }
         else
         {
@@ -113,28 +123,28 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
         }
         
         // Determine whether neighbor is diagonally adjacent
-        isDiagonal = (selectedTile.i - i != 0 && selectedTile.j - j != 0);
+        isDiagonal = (selectedNode.i - i != 0 && selectedNode.j - j != 0);
         
-        // Check if neighbor tile is in the open list
+        // Check if neighbor node is in the open list
         if (openList[neighborKey] == null)
         {
           // Calculate F, G, H, and parent values and add to open list
-          openList[neighborKey] = neighborTile;
-          neighborTile.tempParent = selectedTile;
-          neighborTile.tempG = selectedTile.tempG + (isDiagonal ? 14 : 10);
-          neighborTile.tempH = Math.abs(i - endI) + Math.abs(j - endJ);
-          neighborTile.tempF = neighborTile.tempG + neighborTile.tempH;
+          openList[neighborKey] = neighborNode;
+          neighborNode.previous = selectedNode;
+          neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10);
+          neighborNode.h = Math.abs(i - endI) + Math.abs(j - endJ);
+          neighborNode.f = neighborNode.g + neighborNode.h;
         }
         else
         {
           // See if G value to neighbor tile from the selected tile is shorter than its current path
-          var newG = selectedTile.tempG + (isDiagonal ? 14 : 10);
+          var newG = selectedNode.g + (isDiagonal ? 14 : 10);
           
-          if (newG < neighborTile.tempG)
+          if (newG < neighborNode.g)
           {
-            neighborTile.tempParent = selectedTile;
-            neighborTile.tempG = newG;
-            neighborTile.tempF = neighborTile.tempG + neighborTile.tempH;
+            neighborNode.previous = selectedNode;
+            neighborNode.g = newG;
+            neighborNode.g = neighborNode.g + neighborNode.h;
           }
         }
       }
@@ -149,22 +159,15 @@ PathfinderHelper.findPath = function(startI, startJ, endI, endJ)
     // Check if target is in closed list (success)
     if (closedList[targetKey] != null)
     {
-      var currentTile = targetTile;
-      var currentNode = new PathNode(currentTile.i, currentTile.j);
-      var tailNode = currentNode;
+      var currentNode = closedList[targetKey];
       
-      // Build linked list of path nodes, and return the head (starts at tail and works backwards)
-      while (currentTile.tempParent != null)
+      // Build doubly-linked list
+      while (currentNode.previous != null)
       {
-        var newNode = new PathNode(currentTile.tempParent.i, currentTile.tempParent.j);
-        
-        newNode.next = currentNode;
-        currentNode.previous = newNode;
-        currentNode = newNode;
-        
-        currentTile = currentTile.tempParent;
+        currentNode.previous.next = currentNode;
+        currentNode = currentNode.previous;
       }
-      currentNode.end = tailNode;
+      
       return currentNode;
     }
   }
@@ -185,11 +188,11 @@ PathfinderHelper.findLowestF = function(list)
   }
   
   // Compare f scores
-  _.each(list, function(tile)
+  _.each(list, function(node)
     {
-      if (tile.tempF < result.tempF)
+      if (node.f < result.f)
       {
-        result = tile;
+        result = node;
       }
     },
     this);

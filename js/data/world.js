@@ -32,17 +32,6 @@ var Tile = function(type, biomeType, i, j, walkable, movementCost, elevation, di
   this.movementCost = movementCost;
   this.elevation = elevation;
   this.discovered = discovered;
-  
-  // Temporary pathfinding values (actual paths will use PathNodes defined in pathfinder_helper.js)
-  this.tempF = 0;
-  this.tempG = 0;
-  this.tempH = 0;
-  this.tempParent = null;
-};
-
-Tile.prototype.toString = function()
-{
-  return this.i + ", " + this.j;
 };
 
 // Feature types
