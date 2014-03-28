@@ -3,7 +3,7 @@ var OrderType = Object.freeze({
   VisitDwelling: 1,
   VisitGathering: 2,
   BuildRoad: 3,
-  Log: 4,
+  CutLogs: 4,
   Mine: 5,
   Raid: 6,
   Fight: 7,

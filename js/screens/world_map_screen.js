@@ -144,6 +144,28 @@ WorldMapScreen.prototype.closeSelectedGroupPanel = function()
   this.selectedGroupPanel = null;
 };
 
+WorldMapScreen.prototype.openOrderSubmenu = function(contexts, groupId, tileI, tileJ)
+{
+  this.orderSubmenu = new OrderSubMenuComponent(
+    contexts,
+    groupId,
+    tileI,
+    tileJ,
+    {
+      x: inputManager.mousePosition.x,
+      y: inputManager.mousePosition.y,
+      z: this.z + 0.9
+    });
+  game.stage.addChild(this.orderSubmenu);
+  console.log("opened submenu");
+};
+
+WorldMapScreen.prototype.closeOrderSubmenu = function()
+{
+  game.stage.removeChild(this.orderSubmenu);
+  this.orderSubmenu = null;
+};
+
 WorldMapScreen.prototype.handleInput = function()
 {
   // Handle input
@@ -195,6 +217,9 @@ WorldMapScreen.prototype.update = function()
   
   // Update resource indicators
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });
+  
+  // Update order sub menu
+  if (this.orderSubmenu != null) { this.orderSubmenu.update(); }
   
   // Update selected group panel
   if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }

@@ -45,47 +45,28 @@ var SelectedGroupPanelComponent = function(groupId, options)
   }
   
   // Order buttons
-  this.travelButton = new ButtonComponent({
+  this.moveButton = new ButtonComponent({
     x: 0,
     y: this.panel.height + 8,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
     disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[2]),
-    tooltipText: "Travel",
+    tooltipText: "Move",
     onClick: function(e)
       {
         if (this.enabled)
         {
           inputManager.leftButtonHandled = true;
           orderManager.startOrderSetup();
-          orderManager.settingUpTravelOrder = true;
         }
       }
   });
-  this.panel.addChild(this.travelButton);
-  this.orderButtons.push(this.travelButton);
-  
-  // Cancel order button
-  this.cancelButton = new ButtonComponent({
-    x: this.orderButtons.length * 32,
-    y: this.panel.height + 8,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.cancelOrderButtons[0]),
-    disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.cancelOrderButtons[2]),
-    tooltipText: "Cancel order",
-    onClick: function(e)
-      {
-        if (this.enabled)
-        {
-          orderManager.cancelGroupOrder(groupId);
-        }
-      }
-  });
-  this.panel.addChild(this.cancelButton);
-  this.cancelButton.setEnabled(false);
+  this.panel.addChild(this.moveButton);
+  this.orderButtons.push(this.moveButton);
 };
 
 SelectedGroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
-SelectedGroupPanelComponent.prototype.enableButtons = function()
+/*SelectedGroupPanelComponent.prototype.enableButtons = function()
 {
   for (var i = 0; i < this.orderButtons.length; i++)
   {
@@ -99,11 +80,11 @@ SelectedGroupPanelComponent.prototype.disableButtons = function()
   {
     this.orderButtons[i].setEnabled(false);
   }
-};
+};*/
 
 SelectedGroupPanelComponent.prototype.update = function()
 {
-  var groupHasOrders = orderManager.doesGroupHaveOrders(this.groupId);
+  /*var groupHasOrders = orderManager.doesGroupHaveOrders(this.groupId);
   
   if (!this.cancelButton.enabled && groupHasOrders)
   {
@@ -114,7 +95,7 @@ SelectedGroupPanelComponent.prototype.update = function()
   {
     this.enableButtons();
     this.cancelButton.setEnabled(false);
-  }
+  }*/
   
   // Escape key -- Deselect group
   if (inputManager.simpleKey(KeyCode.Escape))

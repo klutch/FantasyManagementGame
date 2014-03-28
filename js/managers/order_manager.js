@@ -4,7 +4,8 @@ var OrderManager = function()
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
   this.hasMouseChangedTiles = false;
-  this.worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
+  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.worldMap = this.worldMapScreen.worldMap;
   this.tooltip = screenManager.screens[ScreenType.Tooltip].tooltip;
   this.pathPreview = screenManager.screens[ScreenType.WorldMap].pathPreview;
   this.settingUpOrder = false;
@@ -410,9 +411,88 @@ OrderManager.prototype.handleTravelOrderSetup = function()
   }
 };
 
+OrderManager.prototype.getOrderContexts = function(i, j)
+{
+  var contexts = {};
+  var exploreContext = false;
+  var visitDwellingContext = false;
+  var visitGatheringContext = false;
+  var cutLogsContext = false;
+  var mineContext = false;
+  var raidContext = false;
+  var fightContext = false;
+  var returnContext = false;
+  var tile;
+  
+  // Check for undiscovered/non-existant tile
+  if (!worldManager.doesTileExist(i, j) || !(tile = worldManager.getTile(i, j)).discovered)
+  {
+    contexts[OrderType.Explore] = true;
+    return contexts;
+  }
+  
+  // Check for mining context
+  if (tile.type == TileType.Mountain)
+  {
+    contexts[OrderType.Mine] = true;
+    return contexts;
+  }
+  
+  // Check for cut-logs context
+  if (tile.type == TileType.Forest)
+  {
+    contexts[OrderType.CutLogs] = true;
+  }
+  
+  if (tile.featureId != undefined)
+  {
+    var feature = worldManager.world.features[tile.featureId];
+    
+    // Check for castle
+    if (feature.type == FeatureType.Castle)
+    {
+      var obj = {};
+      
+      obj[OrderType.Return] = true;
+      return obj;
+    }
+    
+    // Check for dwelling context
+    if (feature.type == FeatureType.Dwelling)
+    {
+      contexts[OrderType.VisitDwelling] = true;
+    }
+    
+    // Check for gathering context
+    if (feature.type == FeatureType.Gathering)
+    {
+      contexts[OrderType.VisitGathering] = true;
+    }
+    
+    // Check for raid context
+    if (feature.type == FeatureType.Dungeon)
+    {
+      contexts[OrderType.Raid] = true;
+    }
+    
+    // TODO: Check for fight context
+  }
+  
+  // Check for explorable tiles
+  if (tile.type != TileType.Water && tile.type != TileType.Mountain)
+  {
+    contexts[OrderType.Explore] = true;
+  }
+  
+  return contexts;
+};
+
 OrderManager.prototype.update = function()
 {
-  this.hasMouseChangedTiles = this.worldMap.tileGridI != this.lastTileGridI || this.worldMap.tileGridJ != this.lastTileGridJ;
+  var mouseI = this.worldMap.tileGridI;
+  var mouseJ = this.worldMap.tileGridJ;
+  
+  this.hasMouseChangedTiles = mouseI != this.lastTileGridI || mouseJ != this.lastTileGridJ;
 
   // Handle order setup
   if (this.settingUpOrder)
@@ -422,15 +502,52 @@ OrderManager.prototype.update = function()
     {
       this.endOrderSetup();
     }
-
-    // Handle setup of all travel-type orders (explore, raid, fight)
-    if (this.settingUpTravelOrder)
+    
+    // Check for mouse
+    if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
     {
-      this.handleTravelOrderSetup();
+      var contexts = this.getOrderContexts(mouseI, mouseJ);
+      var numContexts = _.size(contexts);
+      
+      inputManager.leftButtonHandled = true;
+      
+      if (numContexts > 1)
+      {
+        // Show sub menu
+        if (this.worldMapScreen.orderSubmenu == null)
+        {
+          this.worldMapScreen.openOrderSubmenu(contexts, adventurerManager.selectedGroupId, mouseI, mouseJ);
+        }
+      }
+      else if (numContexts == 1)
+      {
+        var contextKey;
+        
+        for (var key in contexts)
+        {
+          if (contexts.hasOwnProperty(key))
+          {
+            contextKey = key;
+          }
+        }
+        
+        // Create order
+        console.log("create order: " + contextKey);
+      }
+      else
+      {
+        console.log("no contexts");
+      }
     }
 
+    // Handle setup of all travel-type orders (explore, raid, fight)
+    /*if (this.settingUpTravelOrder)
+    {
+      this.handleTravelOrderSetup();
+    }*/
+
     // Cache mouse tile position
-    this.lastTileGridI = this.worldMap.tileGridI;
-    this.lastTileGridJ = this.worldMap.tileGridJ;
+    this.lastTileGridI = mouseI;
+    this.lastTileGridJ = mouseJ;
   }
 };

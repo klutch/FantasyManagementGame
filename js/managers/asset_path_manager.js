@@ -247,6 +247,23 @@ var AssetPathManager = function()
   ];
   this.assetPaths.ui.partyIcons = ["img/ui/party_icon.png"];
   this.assetPaths.ui.pathOverlay = ["img/ui/path_overlay.png"];
+  this.assetPaths.ui.exploreOrderButtons = [
+    "img/ui/explore_order_button.png",
+    "img/ui/explore_order_button.png"
+  ];
+  this.assetPaths.ui.cutLogsOrderButtons = [
+    "img/ui/cut_logs_order_button.png",
+    "img/ui/cut_logs_order_button.png"
+  ];
+  this.assetPaths.ui.visitOrderButtons = [
+    "img/ui/visit_order_button.png",
+    "img/ui/visit_order_button.png"
+  ];
+  this.assetPaths.ui.combatOrderButtons = [
+    "img/ui/combat_order_button.png",
+    "img/ui/combat_order_button.png"
+  ];
+  this.assetPaths.ui.submenuIcon = ["img/ui/submenu_icon.png"];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};
   this.assetPaths.ui.resources[ResourceType.Gold] = ["img/ui/resource_gold.png"];
