@@ -16,9 +16,84 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
   this.addChild(this.mainIcon);
   
   // Build buttons
+  this.buttons = [];
   for (var key in contexts)
   {
+    var button;
     
+    if (key == OrderType.Explore)
+    {
+      button = new ButtonComponent(
+        {
+          x: 0,
+          y: 0,
+          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.exploreOrderButtons[0]),
+          tooltipText: "Explore",
+          onClick: function(e) { alert("explore button clicked"); }
+        });
+    }
+    else if (key == OrderType.VisitDwelling)
+    {
+      button = new ButtonComponent(
+        {
+          x: 0,
+          y: 0,
+          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.visitOrderButtons[0]),
+          tooltipText: "Visit Dwelling",
+          onClick: function(e) { alert("visit dwelling button clicked"); }
+        });
+    }
+    else if (key == OrderType.VisitGathering)
+    {
+      button = new ButtonComponent(
+        {
+          x: 0,
+          y: 0,
+          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.visitOrderButtons[0]),
+          tooltipText: "Visit Gathering",
+          onClick: function(e) { alert("visit gathering button clicked"); }
+        });
+    }
+    else if (key == OrderType.CutLogs)
+    {
+      button = new ButtonComponent(
+        {
+          x: 0,
+          y: 0,
+          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.cutLogsOrderButtons[0]),
+          tooltipText: "Cut Logs",
+          onClick: function(e) { alert("cut logs button clicked"); }
+        });
+    }
+    else if (key == OrderType.Mine)
+    {
+      button = new ButtonComponent(
+        {
+          x: 0,
+          y: 0,
+          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mineOrderButtons[0]),
+          tooltipText: "Mine",
+          onClick: function(e) { alert("mine button clicked"); }
+        });
+    }
+    else if (key == OrderType.Raid)
+    {
+      button = new ButtonComponent(
+        {
+          x: 0,
+          y: 0,
+          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.combatOrderButtons[0]),
+          tooltipText: "Raid",
+          onClick: function(e) { alert("raid button clicked"); }
+        });
+    }
+    
+    if (button == undefined) { console.error("Button not created"); }
+    
+    button.position.x = Math.cos(this.buttons.length) * 28;
+    button.position.y = Math.sin(this.buttons.length) * 28;
+    this.buttons.push(button);
+    this.addChild(button);
   }
 };
 

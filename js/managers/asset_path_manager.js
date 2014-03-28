@@ -263,6 +263,10 @@ var AssetPathManager = function()
     "img/ui/combat_order_button.png",
     "img/ui/combat_order_button.png"
   ];
+  this.assetPaths.ui.mineOrderButtons = [
+    "img/ui/mine_order_button.png",
+    "img/ui/mine_order_button.png"
+  ];
   this.assetPaths.ui.submenuIcon = ["img/ui/submenu_icon.png"];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};
