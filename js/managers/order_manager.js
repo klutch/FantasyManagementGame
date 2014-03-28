@@ -63,7 +63,6 @@ OrderManager.prototype.cancelGroupOrder = function(groupId)
 OrderManager.prototype.startOrderSetup = function()
 {
   this.settingUpOrder = true;
-  screenManager.screens[ScreenType.Tooltip].enableTooltip("");
 };
 
 OrderManager.prototype.endOrderSetup = function()
@@ -75,7 +74,6 @@ OrderManager.prototype.endOrderSetup = function()
   this.settingUpBuildRoadOrder = false;
   this.settingUpMineOrder = false;
   this.settingUpLogOrder = false;
-  screenManager.screens[ScreenType.Tooltip].disableTooltip();
 };
 
 OrderManager.prototype.processOrderMovement = function(order)
