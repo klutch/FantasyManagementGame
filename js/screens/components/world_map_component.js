@@ -240,6 +240,10 @@ WorldMapComponent.prototype.getCornerTransition = function(baseTileType, tileTyp
 WorldMapComponent.prototype.convertScreenToWorldX = function(x) { return (x - this.position.x) / this.camera.scale.x; };
 WorldMapComponent.prototype.convertScreenToWorldY = function(y) { return (y - this.position.y) / this.camera.scale.y; };
 
+// Convert world tile to screen cordinates
+WorldMapComponent.prototype.convertWorldToScreenX = function(i) { return i * TILE_SIZE * this.camera.scale.x + this.position.x; };
+WorldMapComponent.prototype.convertWorldToScreenY = function(j) { return j * TILE_SIZE * this.camera.scale.y + this.position.y; };
+
 // Add tiles to draw
 WorldMapComponent.prototype.addTileToDraw = function(i, j)
 {

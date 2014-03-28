@@ -2,13 +2,12 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
-  this.position.x = options.x;
-  this.position.y = options.y;
   this.z = options.z;
   this.tileI = tileI;
   this.tileJ = tileJ;
   this.groupId = groupId;
   this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.worldMap = this.worldMapScreen.worldMap;
   
   // Main icon
   this.mainIcon = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.submenuIcon);
@@ -27,9 +26,17 @@ OrderSubMenuComponent.prototype = new PIXI.DisplayObjectContainer;
 
 OrderSubMenuComponent.prototype.update = function()
 {
-  var diffX = inputManager.mousePosition.x - this.position.x;
-  var diffY = inputManager.mousePosition.y - this.position.y;
+  var diffX;
+  var diffY;
   
+  // Adjust position
+  this.position.x = Math.floor(this.worldMap.convertWorldToScreenX(this.tileI + 0.5));
+  this.position.y = Math.floor(this.worldMap.convertWorldToScreenY(this.tileJ + 0.5));
+  
+  diffX = inputManager.mousePosition.x - this.position.x;
+  diffY = inputManager.mousePosition.y - this.position.y;
+  
+  // Close when mouse is out of range
   if (diffX * diffX + diffY * diffY > 4000)
   {
     this.worldMapScreen.closeOrderSubmenu();

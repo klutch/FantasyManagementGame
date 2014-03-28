@@ -146,16 +146,7 @@ WorldMapScreen.prototype.closeSelectedGroupPanel = function()
 
 WorldMapScreen.prototype.openOrderSubmenu = function(contexts, groupId, tileI, tileJ)
 {
-  this.orderSubmenu = new OrderSubMenuComponent(
-    contexts,
-    groupId,
-    tileI,
-    tileJ,
-    {
-      x: inputManager.mousePosition.x,
-      y: inputManager.mousePosition.y,
-      z: this.z + 0.9
-    });
+  this.orderSubmenu = new OrderSubMenuComponent(contexts, groupId, tileI, tileJ, {z: this.z + 0.9 });
   game.stage.addChild(this.orderSubmenu);
   console.log("opened submenu");
 };
