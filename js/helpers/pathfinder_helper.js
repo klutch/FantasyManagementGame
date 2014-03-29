@@ -26,9 +26,7 @@ PathNode.prototype.getHead = function()
   return head;
 };
 
-var PathfinderHelper = {
-  grid: {}
-};
+var PathfinderHelper = {};
 
 PathNode.prototype.toString = function()
 {

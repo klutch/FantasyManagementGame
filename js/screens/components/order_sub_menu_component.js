@@ -6,8 +6,10 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
   this.tileI = tileI;
   this.tileJ = tileJ;
   this.groupId = groupId;
+  this.group = adventurerManager.groups[groupId];
   this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   this.worldMap = this.worldMapScreen.worldMap;
+  this.buttons = [];
   
   // Main icon
   this.mainIcon = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.submenuIcon);
@@ -15,8 +17,10 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
   this.mainIcon.anchor.y = 0.5;
   this.addChild(this.mainIcon);
   
+  var root = this;
+  var tile = worldManager.getTile(tileI, tileJ);
+  
   // Build buttons
-  this.buttons = [];
   for (var key in contexts)
   {
     var button;
@@ -29,7 +33,13 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.exploreOrderButtons[0]),
           tooltipText: "Explore",
-          onClick: function(e) { alert("explore button clicked"); }
+          onClick: function(e) 
+          {
+            if (orderManager.createExploreOrder(groupId, tileI, tileJ))
+            {
+              orderManager.endOrderSetup();
+            }
+          }
         });
     }
     else if (key == OrderType.VisitDwelling)
@@ -40,7 +50,13 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.visitOrderButtons[0]),
           tooltipText: "Visit Dwelling",
-          onClick: function(e) { alert("visit dwelling button clicked"); }
+          onClick: function(e) 
+          {
+            if (orderManager.createVisitDwellingOrder(groupId, tile.featureId))
+            {
+              orderManager.endOrderSetup();
+            }
+          }
         });
     }
     else if (key == OrderType.VisitGathering)
@@ -51,7 +67,13 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.visitOrderButtons[0]),
           tooltipText: "Visit Gathering",
-          onClick: function(e) { alert("visit gathering button clicked"); }
+          onClick: function(e) 
+          {
+            if(orderManager.createVisitGatheringOrder(groupId, tile.featureId))
+            {
+              orderManager.endOrderSetup();
+            }
+          }
         });
     }
     else if (key == OrderType.CutLogs)

@@ -153,259 +153,191 @@ OrderManager.prototype.resetOrderProcessingStatus = function()
     });
 };
 
-OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ, path)
+OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
 {
   var root = this;
-  var order = new Order(
-    this.getUnusedId(),
-    OrderType.Explore,
-    groupId,
-    {
-      tileI: tileI,
-      tileJ: tileJ,
-      path: path,
-      isComplete: function()
-      {
-        var group = adventurerManager.groups[groupId];
-        
-        return group.tileI == tileI && group.tileJ == tileJ;
-      },
-      onComplete: function() 
-      {
-        var returnPath;
-        var group = adventurerManager.groups[groupId];
-        
-        root.pathPreview.clearPath(this.path.getHead());
-        returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
-        root.pathPreview.drawPath(returnPath);
-        worldManager.discoverRadius(tileI, tileJ, adventurerManager.getGroupDiscoveryRadius(groupId));
-        
-        if (returnPath != null)
-        {
-          root.createReturnOrder(groupId, returnPath);
-        }
-      }
-    });
-  this.addOrder(order);
-};
-
-OrderManager.prototype.createReturnOrder = function(groupId, path)
-{
-  var root = this;
-  var order = new Order(
-    this.getUnusedId(),
-    OrderType.Return,
-    groupId,
-    {
-      featureId: worldManager.world.playerCastleFeatureId,
-      path: path,
-      isComplete: function()
-      {
-        var group = adventurerManager.groups[groupId];
-        var feature = worldManager.world.features[this.featureId];
-        
-        return feature.containsTile(group.tileI, group.tileJ);
-      },
-      onComplete: function()
-      {
-        root.pathPreview.clearPath(this.path.getHead());
-        adventurerManager.moveGroupIntoFeature(groupId);
-      }
-    });
-  this.addOrder(order);
-};
-
-OrderManager.prototype.createRaidOrder = function(groupId, featureId, path)
-{
-  var root = this;
-  var order = new Order(
-    this.getUnusedId(),
-    OrderType.Raid,
-    groupId,
-    {
-      featureId: featureId,
-      path: path,
-      isComplete: function()
-      {
-        var group = adventurerManager.groups[groupId];
-        var feature = worldManager.world.features[featureId];
-        
-        return feature.containsTile(group.tileI, group.tileJ);
-      },
-      onComplete: function() 
-      {
-        root.pathPreview.clearPath(this.path.getHead());
-        adventurerManager.moveGroupIntoFeature(groupId);
-        raidManager.createRaid(featureId, groupId);
-      }
-    });
-  this.addOrder(order);
-};
-
-OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId, path)
-{
-  var root = this;
-  var order = new Order(
-    this.getUnusedId(),
-    OrderType.VisitDwelling,
-    groupId,
-    {
-      featureId: featureId,
-      path: path,
-      isComplete: function()
-      {
-        var group = adventurerManager.groups[groupId];
-        var feature = worldManager.world.features[featureId];
-        
-        return feature.containsTile(group.tileI, group.tileJ);
-      },
-      onComplete: function()
-      {
-        var returnPath;
-        var group = adventurerManager.groups[groupId];
-        
-        root.pathPreview.clearPath(this.path.getHead());
-        returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
-        root.pathPreview.drawPath(returnPath);
-        
-        if (returnPath != null)
-        {
-          root.createReturnOrder(groupId, returnPath);
-        }
-      }
-    });
-  this.addOrder(order);
-};
-
-OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId, path)
-{
-  var root = this;
-  var order = new Order(
-    this.getUnusedId(),
-    OrderType.VisitGathering,
-    groupId,
-    {
-      featureId: featureId,
-      path: path,
-      isComplete: function()
-      {
-        var group = adventurerManager.groups[groupId];
-        var feature = worldManager.world.features[featureId];
-        
-        return feature.containsTile(group.tileI, group.tileJ);
-      },
-      onComplete: function()
-      {
-        var returnPath;
-        var group = adventurerManager.groups[groupId];
-        
-        root.pathPreview.clearPath(this.path.getHead());
-        returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
-        root.pathPreview.drawPath(returnPath);
-        
-        if (returnPath != null)
-        {
-          root.createReturnOrder(groupId, returnPath);
-        }
-      }
-    });
-  this.addOrder(order);
-};
-
-OrderManager.prototype.handleTravelOrderSetup = function()
-{
-  var raidContext = false;
-  var exploreContext = false;
-  var returnContext = false;
-  var visitDwellingContext = false;
-  var visitGatheringContext = false;
-  var feature = null;
-  var mouseTile = null;
-  var mouseI = this.worldMap.tileGridI;
-  var mouseJ = this.worldMap.tileGridJ;
-  var currentTile = adventurerManager.getGroupTile(adventurerManager.selectedGroupId);
-  var createOrder = inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled;
+  var group = adventurerManager.groups[groupId];
+  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, tileI, tileJ);
+  var order;
   
-  // Determine tile context
-  mouseTile = worldManager.doesTileExist(mouseI, mouseJ) ? worldManager.getTile(mouseI, mouseJ) : null;
-  if (mouseTile == null || !mouseTile.discovered)
+  if (path != null)
   {
-    this.tooltip.setText("Out of bounds");
-  }
-  else if (mouseTile.featureId != null)
-  {
-    feature = worldManager.world.features[mouseTile.featureId];
-    
-    if (feature.type == FeatureType.Castle && currentTile.featureId != worldManager.world.playerCastleFeatureId)
-    {
-      returnContext = true;
-      this.tooltip.setText("Return to castle");
-    }
-    else if (feature.type == FeatureType.Dungeon)
-    {
-      raidContext = true;
-      this.tooltip.setText("Raid dungeon");
-    }
-    else if (feature.type == FeatureType.Dwelling)
-    {
-      visitDwellingContext = true;
-      this.tooltip.setText("Visit dwelling");
-    }
-    else if (feature.type == FeatureType.Gathering)
-    {
-      visitGatheringContext = true;
-      this.tooltip.setText("Visit gathering");
-    }
+    order = new Order(
+      this.getUnusedId(),
+      OrderType.Explore,
+      groupId,
+      {
+        tileI: tileI,
+        tileJ: tileJ,
+        path: path,
+        isComplete: function()
+        {
+          return group.tileI == tileI && group.tileJ == tileJ;
+        },
+        onComplete: function() 
+        {
+          root.pathPreview.clearPath(this.path.getHead());
+          worldManager.discoverRadius(tileI, tileJ, adventurerManager.getGroupDiscoveryRadius(groupId));
+          root.createReturnOrder(groupId);
+        }
+      });
+    this.addOrder(order);
+    this.pathPreview.drawPath(path);
+    return true;
   }
   else
   {
-    exploreContext = true;
-    this.tooltip.setText("Explore area");
+    return false;
   }
+};
+
+OrderManager.prototype.createReturnOrder = function(groupId)
+{
+  var root = this;
+  var group = adventurerManager.groups[groupId];
+  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+  var order;
   
-  // Create order
-  if (createOrder)
+  if (path != null)
   {
-    var path = PathfinderHelper.findPath(currentTile.i, currentTile.j, mouseI, mouseJ);
-    
-    if (path != null)
-    {
-      if (raidContext)
+    order = new Order(
+      this.getUnusedId(),
+      OrderType.Return,
+      groupId,
       {
-        inputManager.leftButtonHandled = true;
-        this.pathPreview.drawPath(path);
-        this.createRaidOrder(adventurerManager.selectedGroupId, feature.id, path);
-        this.endOrderSetup();
-      }
-      else if (exploreContext)
+        featureId: worldManager.world.playerCastleFeatureId,
+        path: path,
+        isComplete: function()
+        {
+          var feature = worldManager.world.features[this.featureId];
+
+          return feature.containsTile(group.tileI, group.tileJ);
+        },
+        onComplete: function()
+        {
+          root.pathPreview.clearPath(this.path.getHead());
+          adventurerManager.moveGroupIntoFeature(groupId);
+        }
+      });
+    this.addOrder(order);
+    this.pathPreview.drawPath(path);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+};
+
+OrderManager.prototype.createRaidOrder = function(groupId, featureId)
+{
+  var root = this;
+  var group = adventurerManager.groups[groupId];
+  var feature = worldManager.world.features[featureId];
+  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, feature.tileI, feature.tileJ);
+  var order;
+  
+  if (path != null)
+  {
+    order = new Order(
+      this.getUnusedId(),
+      OrderType.Raid,
+      groupId,
       {
-        inputManager.leftButtonHandled = true;
-        this.pathPreview.drawPath(path);
-        this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ, path);
-        this.endOrderSetup();
-      }
-      else if (returnContext)
+        featureId: featureId,
+        path: path,
+        isComplete: function()
+        {
+          return feature.containsTile(group.tileI, group.tileJ);
+        },
+        onComplete: function() 
+        {
+          root.pathPreview.clearPath(this.path.getHead());
+          adventurerManager.moveGroupIntoFeature(groupId);
+          raidManager.createRaid(featureId, groupId);
+        }
+      });
+    this.addOrder(order);
+    this.pathPreview.drawPath(path);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+};
+
+OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
+{
+  var root = this;
+  var group = adventurerManager.groups[groupId];
+  var feature = worldManager.world.features[featureId];
+  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, feature.tileI, feature.tileJ);
+  var order;
+  
+  if (path != null)
+  {
+    order = new Order(
+      this.getUnusedId(),
+      OrderType.VisitDwelling,
+      groupId,
       {
-        inputManager.leftButtonHandled = true;
-        this.pathPreview.drawPath(path);
-        this.createReturnOrder(adventurerManager.selectedGroupId, path);
-        this.endOrderSetup();
-      }
-      else if (visitDwellingContext)
+        featureId: featureId,
+        path: path,
+        isComplete: function()
+        {
+          return feature.containsTile(group.tileI, group.tileJ);
+        },
+        onComplete: function()
+        {
+          root.pathPreview.clearPath(this.path.getHead());
+          root.createReturnOrder(groupId);
+        }
+      });
+    this.addOrder(order);
+    this.pathPreview.drawPath(path);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+};
+
+OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
+{
+  var root = this;
+  var group = adventurerManager.groups[groupId];
+  var feature = worldManager.world.features[featureId];
+  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, feature.tileI, feature.tileJ);
+  var order;
+  
+  if (path != null)
+  {
+    order = new Order(
+      this.getUnusedId(),
+      OrderType.VisitGathering,
+      groupId,
       {
-        inputManager.leftButtonHandled = true;
-        this.pathPreview.drawPath(path);
-        this.createVisitDwellingOrder(adventurerManager.selectedGroupId, feature.id, path);
-        this.endOrderSetup();
-      }
-      else if (visitGatheringContext)
-      {
-        inputManager.leftButtonHandled = true;
-        this.pathPreview.drawPath(path);
-        this.createVisitGatheringOrder(adventurerManager.selectedGroupId, feature.id, path);
-        this.endOrderSetup();
-      }
-    }
+        featureId: featureId,
+        path: path,
+        isComplete: function()
+        {
+          return feature.containsTile(group.tileI, group.tileJ);
+        },
+        onComplete: function()
+        {
+          root.pathPreview.clearPath(this.path.getHead());
+          root.createReturnOrder(groupId);
+        }
+      });
+    this.addOrder(order);
+    this.pathPreview.drawPath(path);
+    return true;
+  }
+  else
+  {
+    return false;
   }
 };
 
@@ -530,19 +462,21 @@ OrderManager.prototype.update = function()
         }
         
         // Create order
-        console.log("create order: " + contextKey);
+        if (contextKey == OrderType.Explore)
+        {
+          this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+        }
+        else if (contextKey == OrderType.Mine)
+        {
+          this.createMineOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+        }
+        this.endOrderSetup();
       }
       else
       {
         console.log("no contexts");
       }
     }
-
-    // Handle setup of all travel-type orders (explore, raid, fight)
-    /*if (this.settingUpTravelOrder)
-    {
-      this.handleTravelOrderSetup();
-    }*/
 
     // Cache mouse tile position
     this.lastTileGridI = mouseI;

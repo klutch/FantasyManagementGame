@@ -294,41 +294,6 @@ WorldMapComponent.prototype.drawTile = function(i, j)
   }
 };
 
-// Clear a path
-WorldMapComponent.prototype.clearPath = function(path)
-{
-  var currentNode = path;
-  
-  while (currentNode != null)
-  {
-    this.addTileToDraw(currentNode.i, currentNode.j);
-    currentNode = currentNode.next;
-  }
-};
-
-// Draw a path
-WorldMapComponent.prototype.drawPath = function(path, tint)
-{
-  var currentNode = path;
-  var tilePosition = new PIXI.Point(0, 0);
-  
-  this.pathOverlaySprite.tint = tint == null ? 0xFFFF00 : tint;
-  
-  while (currentNode != null)
-  {
-    var i = currentNode.i;
-    var j = currentNode.j;
-    var chunkI = this.getChunkI(i);
-    var chunkJ = this.getChunkJ(j);
-    var chunkSprite = this.chunkSprites[chunkI][chunkJ];
-    
-    tilePosition.x = (i - chunkI * CHUNK_SIZE) * TILE_SIZE;
-    tilePosition.y = (j - chunkJ * CHUNK_SIZE) * TILE_SIZE;
-    chunkSprite.texture.render(this.pathOverlaySprite, tilePosition);
-    currentNode = currentNode.next;
-  }
-};
-
 // Move the camera to a new position
 WorldMapComponent.prototype.moveCamera = function(deltaX, deltaY)
 {

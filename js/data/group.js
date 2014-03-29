@@ -15,6 +15,14 @@ var Group = function(id, options)
   this.featureId = options.featureId;
   this.name = options.name;
   this.movementUsed = 0;
+  
+  if (this.featureId != -1)
+  {
+    var feature = worldManager.world.features[this.featureId];
+    
+    this.tileI = feature.tileI;
+    this.tileJ = feature.tileJ;
+  }
 };
 
 Group.prototype.isInFeature = function() { return this.featureId != -1; };
