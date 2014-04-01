@@ -212,7 +212,7 @@ PathfinderManager.prototype.step = function()
         this.openList[neighborKey] = neighborNode;
         neighborNode.previous = selectedNode;
         neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10);
-        neighborNode.h = Math.abs(i - this.endI) + Math.abs(j - this.endJ);
+        neighborNode.h = 10 * (Math.abs(i - this.endI) + Math.abs(j - this.endJ));
         neighborNode.f = neighborNode.g + neighborNode.h;
         
         if (DEBUG_PATHFINDER)
