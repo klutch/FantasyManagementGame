@@ -123,8 +123,8 @@ OrderManager.prototype.processQueuedOrders = function()
       
       if (currentOrder.isComplete())
       {
-        currentOrder.onComplete();
         this.removeOrder(currentOrder.id);
+        currentOrder.onComplete();
       }
       else if (!currentOrder.isDoneForThisTurn)
       {
@@ -153,11 +153,34 @@ OrderManager.prototype.resetOrderProcessingStatus = function()
     });
 };
 
+OrderManager.prototype.doesGroupHaveOrders = function(groupId)
+{
+  return this.groupOrders[groupId] != null;
+};
+
+OrderManager.prototype.getStartingPoint = function(groupId)
+{
+  if (this.groupOrders[groupId] != null)
+  {
+    var length = this.groupOrders[groupId].length;
+    var tail = this.groupOrders[groupId][length - 1].path.getTail();
+    
+    return [tail.i, tail.j];
+  }
+  else
+  {
+    var group = adventurerManager.groups[groupId];
+    
+    return [group.tileI, group.tileJ];
+  }
+};
+
 OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
 {
   var root = this;
   var group = adventurerManager.groups[groupId];
-  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, tileI, tileJ);
+  var startingPoint = this.getStartingPoint(groupId);
+  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], tileI, tileJ);
   var order;
   
   if (path != null)
@@ -182,7 +205,11 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         {
           root.pathPreview.clearPath(this.path.getHead());
           worldManager.discoverRadius(tileI, tileJ, adventurerManager.getGroupDiscoveryRadius(groupId));
-          root.createReturnOrder(groupId);
+          
+          if (!root.doesGroupHaveOrders(groupId))
+          {
+            root.createReturnOrder(groupId);
+          }
         }
       });
     this.addOrder(order);
@@ -199,7 +226,8 @@ OrderManager.prototype.createReturnOrder = function(groupId)
 {
   var root = this;
   var group = adventurerManager.groups[groupId];
-  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+  var startingPoint = this.getStartingPoint(groupId);
+  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
   var order;
   
   if (path != null)
@@ -241,8 +269,9 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
 {
   var root = this;
   var group = adventurerManager.groups[groupId];
+  var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
-  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, feature.tileI, feature.tileJ);
+  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
   var order;
   
   if (path != null)
@@ -283,8 +312,9 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
 {
   var root = this;
   var group = adventurerManager.groups[groupId];
+  var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
-  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, feature.tileI, feature.tileJ);
+  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
   var order;
   
   if (path != null)
@@ -307,7 +337,11 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
-          root.createReturnOrder(groupId);
+          
+          if (!root.doesGroupHaveOrders(groupId))
+          {
+            root.createReturnOrder(groupId);
+          }
         }
       });
     this.addOrder(order);
@@ -324,8 +358,9 @@ OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
 {
   var root = this;
   var group = adventurerManager.groups[groupId];
+  var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
-  var path = PathfinderHelper.findPath(group.tileI, group.tileJ, feature.tileI, feature.tileJ);
+  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
   var order;
   
   if (path != null)
@@ -348,7 +383,11 @@ OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
-          root.createReturnOrder(groupId);
+          
+          if (!root.doesGroupHaveOrders(groupId))
+          {
+            root.createReturnOrder(groupId);
+          }
         }
       });
     this.addOrder(order);
@@ -490,7 +529,7 @@ OrderManager.prototype.update = function()
         {
           this.createMineOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
         }
-        this.endOrderSetup();
+        //this.endOrderSetup();
       }
       else
       {

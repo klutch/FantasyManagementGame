@@ -40,7 +40,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           {
             if (orderManager.createExploreOrder(groupId, tileI, tileJ))
             {
-              orderManager.endOrderSetup();
+              //orderManager.endOrderSetup();
             }
           }
         });
@@ -59,7 +59,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           {
             if (orderManager.createVisitDwellingOrder(groupId, tile.featureId))
             {
-              orderManager.endOrderSetup();
+              //orderManager.endOrderSetup();
             }
           }
         });
@@ -78,7 +78,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           {
             if(orderManager.createVisitGatheringOrder(groupId, tile.featureId))
             {
-              orderManager.endOrderSetup();
+              //orderManager.endOrderSetup();
             }
           }
         });

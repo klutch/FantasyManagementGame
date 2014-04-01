@@ -26,6 +26,17 @@ PathNode.prototype.getHead = function()
   return head;
 };
 
+PathNode.prototype.getTail = function()
+{
+  var tail = this;
+  
+  while(tail.next != null)
+  {
+    tail = tail.next;
+  }
+  return tail;
+}
+
 var PathfinderHelper = {};
 
 PathNode.prototype.toString = function()
