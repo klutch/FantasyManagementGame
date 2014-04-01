@@ -1,6 +1,6 @@
 var OrderManager = function()
 {
-  this.queuedOrders = [];
+  this.groupOrders = {};
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
   this.hasMouseChangedTiles = false;
@@ -9,10 +9,6 @@ var OrderManager = function()
   this.tooltip = screenManager.screens[ScreenType.Tooltip].tooltip;
   this.pathPreview = screenManager.screens[ScreenType.WorldMap].pathPreview;
   this.settingUpOrder = false;
-  this.settingUpTravelOrder = false;
-  this.settingUpBuildRoadOrder = false;
-  this.settingUpMineOrder = false;
-  this.settingUpLogOrder = false;
   this.doneProcessingOrdersForTurn = true;
 };
 
@@ -20,44 +16,64 @@ OrderManager.prototype.getUnusedId = function()
 {
   var count = 0;
   
-  while (this.queuedOrders[count] != null) { count++; }
-  
-  return count;
+  while (true)
+  {
+    var matched = false;
+    
+    _.each(this.groupOrders, function(orders)
+      {
+        _.each(orders, function(order)
+          {
+            if (order.id == count)
+            {
+              matched = true;
+              count++;
+            }
+          });
+      });
+    
+    if (!matched)
+    {
+      return count;
+    }
+  }
 };
 
 OrderManager.prototype.addOrder = function(order)
 {
-  this.queuedOrders[order.id] = order;
+  if (this.groupOrders[order.groupId] == null)
+  {
+    this.groupOrders[order.groupId] = [];
+  }
+  this.groupOrders[order.groupId].push(order);
 };
 
-OrderManager.prototype.getGroupOrder = function(groupId)
+OrderManager.prototype.removeOrder = function(orderId)
 {
-  for (var key in this.queuedOrders)
+  for (var groupId in this.groupOrders)
   {
-    if (this.queuedOrders.hasOwnProperty(key))
+    if (this.groupOrders.hasOwnProperty(groupId))
     {
-      var order = this.queuedOrders[key];
-      
-      if (order.groupId == groupId)
+      for (var i = 0; i < this.groupOrders[groupId].length; i++)
       {
-        return order;
+        var order = this.groupOrders[groupId][i];
+        
+        if (order != null && order.id == orderId)
+        {
+          delete this.groupOrders[groupId][i];
+        }
+      }
+      
+      // Compact order array
+      this.groupOrders[groupId] = _.compact(this.groupOrders[groupId]);
+      
+      // Remove empty arrays
+      if (this.groupOrders[groupId].length == 0)
+      {
+        delete this.groupOrders[groupId];
       }
     }
   }
-  return null;
-}
-
-OrderManager.prototype.doesGroupHaveOrders = function(groupId)
-{
-  return this.getGroupOrder(groupId) != null;
-};
-
-OrderManager.prototype.cancelGroupOrder = function(groupId)
-{
-  var order = this.getGroupOrder(groupId);
-  
-  this.pathPreview.clearPath(order.path.getHead());
-  delete this.queuedOrders[order.id];
 };
 
 OrderManager.prototype.startOrderSetup = function()
@@ -70,10 +86,6 @@ OrderManager.prototype.endOrderSetup = function()
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
   this.settingUpOrder = false;
-  this.settingUpTravelOrder = false;
-  this.settingUpBuildRoadOrder = false;
-  this.settingUpMineOrder = false;
-  this.settingUpLogOrder = false;
 };
 
 OrderManager.prototype.processOrderMovement = function(order)
@@ -101,39 +113,24 @@ OrderManager.prototype.processQueuedOrders = function()
   
   this.doneProcessingOrdersForTurn = true;
   
-  _.each(this.queuedOrders, function(order)
+  for (var groupId in this.groupOrders)
+  {
+    if (this.groupOrders.hasOwnProperty(groupId))
     {
-      // Process movement aspects of orders
-      if (order.type == OrderType.Return || 
-          order.type == OrderType.Explore || 
-          order.type == OrderType.Raid || 
-          order.type == OrderType.VisitDwelling ||
-          order.type == OrderType.VisitGathering)
-      {
-        this.processOrderMovement(order);
-      }
+      var currentOrder = this.groupOrders[groupId][0];
       
-      if (order.isComplete())
+      currentOrder.doWork();
+      
+      if (currentOrder.isComplete())
       {
-        completedOrders.push(order);
+        currentOrder.onComplete();
+        this.removeOrder(currentOrder.id);
       }
-      else if (!order.isDoneForThisTurn)
+      else if (!currentOrder.isDoneForThisTurn)
       {
         this.doneProcessingOrdersForTurn = false;
       }
-    },
-    this);
-  
-  // Handle completed orders
-  for (var i = 0; i < completedOrders.length; i++)
-  {
-    var order = completedOrders[i];
-    
-    if (order.onComplete != null)
-    {
-      order.onComplete();
     }
-    delete this.queuedOrders[order.id];
   }
   
   // Check for end of turn
@@ -147,9 +144,12 @@ OrderManager.prototype.processQueuedOrders = function()
 
 OrderManager.prototype.resetOrderProcessingStatus = function()
 {
-  _.each(this.queuedOrders, function(order)
+  _.each(this.groupOrders, function(orders)
     {
-      order.isDoneForThisTurn = false;
+      _.each(orders, function(order)
+        {
+          order.isDoneForThisTurn = false;
+        });
     });
 };
 
@@ -170,6 +170,10 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         tileI: tileI,
         tileJ: tileJ,
         path: path,
+        doWork: function()
+        {
+          root.processOrderMovement(this);
+        },
         isComplete: function()
         {
           return group.tileI == tileI && group.tileJ == tileJ;
@@ -207,6 +211,10 @@ OrderManager.prototype.createReturnOrder = function(groupId)
       {
         featureId: worldManager.world.playerCastleFeatureId,
         path: path,
+        doWork: function()
+        {
+          root.processOrderMovement(this);
+        },
         isComplete: function()
         {
           var feature = worldManager.world.features[this.featureId];
@@ -246,6 +254,10 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
       {
         featureId: featureId,
         path: path,
+        doWork: function()
+        {
+          root.processOrderMovement(this);
+        },
         isComplete: function()
         {
           return feature.containsTile(group.tileI, group.tileJ);
@@ -284,6 +296,10 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
       {
         featureId: featureId,
         path: path,
+        doWork: function()
+        {
+          root.processOrderMovement(this);
+        },
         isComplete: function()
         {
           return feature.containsTile(group.tileI, group.tileJ);
@@ -321,6 +337,10 @@ OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
       {
         featureId: featureId,
         path: path,
+        doWork: function()
+        {
+          root.processOrderMovement(this);
+        },
         isComplete: function()
         {
           return feature.containsTile(group.tileI, group.tileJ);
