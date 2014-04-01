@@ -491,8 +491,8 @@ OrderManager.prototype.update = function()
       var startingGroup = adventurerManager.groups[0];
 
       pathfinderManager.findPath(startingGroup.tileI, startingGroup.tileJ, mouseI, mouseJ);
-      return;
     }
+    return;
   }
 
   // Handle order setup
