@@ -83,6 +83,7 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
   if (DEBUG_PATHFINDER)
   {
     this.debug = screenManager.screens[ScreenType.WorldMap].pathfinderDebug;
+    this.debug.clearNodes();
     this.debug.addOpenNode(initialNode);
     this.doingDebugFind = true;
     return;
@@ -264,8 +265,6 @@ PathfinderManager.prototype.update = function()
   if (this.doingDebugFind)
   {
     var status = this.step();
-    
-    console.log("did debug find. status: " + status);
     
     if (status == 1 || status == -1)
     {

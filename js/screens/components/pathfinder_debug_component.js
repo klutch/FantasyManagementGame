@@ -7,6 +7,17 @@ var PathfinderDebugComponent = function()
 
 PathfinderDebugComponent.prototype = new PIXI.DisplayObjectContainer;
 
+PathfinderDebugComponent.prototype.clearNodes = function()
+{
+  _.each(this.nodeSprites, function(sprite)
+    {
+      this.removeChild(sprite);
+    },
+    this);
+  
+  this.nodeSprites = {};
+};
+
 PathfinderDebugComponent.prototype.addOpenNode = function(node)
 {
   var sprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.pathfinderDebugTile);
