@@ -180,7 +180,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
   var root = this;
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
-  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], tileI, tileJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], tileI, tileJ);
   var order;
   
   if (path != null)
@@ -227,7 +227,7 @@ OrderManager.prototype.createReturnOrder = function(groupId)
   var root = this;
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
-  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
   var order;
   
   if (path != null)
@@ -271,7 +271,7 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
-  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
   var order;
   
   if (path != null)
@@ -314,7 +314,7 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
-  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
   var order;
   
   if (path != null)
@@ -360,7 +360,7 @@ OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
-  var path = PathfinderHelper.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
   var order;
   
   if (path != null)

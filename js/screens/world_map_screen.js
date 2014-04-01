@@ -17,6 +17,12 @@ var WorldMapScreen = function(world)
   // Create world map component
   this.worldMap = new WorldMapComponent();
   
+  // Add pathfinder debug component, if flag is set
+  if (DEBUG_PATHFINDER)
+  {
+    this.pathfinderDebug = new PathfinderDebugComponent();
+  }
+  
   // Create path preview component
   this.pathPreview = new PathPreviewComponent({z: this.z + 1});
   

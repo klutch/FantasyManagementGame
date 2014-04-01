@@ -72,6 +72,7 @@ Game.prototype.startNewGame = function()
   orderManager = new OrderManager();
   turnManager = new TurnManager();
   raidManager = new RaidManager();
+  pathfinderManager = new PathfinderManager();
 };
 
 Game.prototype.update = function()
@@ -88,6 +89,10 @@ Game.prototype.update = function()
   if (raidManager != null)
   {
     raidManager.update();
+  }
+  if (pathfinderManager != null)
+  {
+    pathfinderManager.update();
   }
   screenManager.update();
   inputManager.postUpdate();

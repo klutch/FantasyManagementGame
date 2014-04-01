@@ -268,6 +268,7 @@ var AssetPathManager = function()
     "img/ui/mine_order_button.png"
   ];
   this.assetPaths.ui.submenuIcon = ["img/ui/submenu_icon.png"];
+  this.assetPaths.ui.pathfinderDebugTile = ["img/ui/pathfinder_debug_tile.png"];
   this.assetPaths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
   this.assetPaths.ui.resources = {};
   this.assetPaths.ui.resources[ResourceType.Gold] = ["img/ui/resource_gold.png"];
