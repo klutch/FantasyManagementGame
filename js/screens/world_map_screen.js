@@ -21,6 +21,7 @@ var WorldMapScreen = function(world)
   if (DEBUG_PATHFINDER)
   {
     this.pathfinderDebug = new PathfinderDebugComponent();
+    this.worldMap.addChild(this.pathfinderDebug);
   }
   
   // Create path preview component

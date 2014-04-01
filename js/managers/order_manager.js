@@ -482,6 +482,18 @@ OrderManager.prototype.update = function()
   var mouseJ = this.worldMap.tileGridJ;
   
   this.hasMouseChangedTiles = mouseI != this.lastTileGridI || mouseJ != this.lastTileGridJ;
+  
+  // Pathfinding debug
+  if (DEBUG_PATHFINDER)
+  {
+    if (inputManager.simpleKey(KeyCode.Enter))
+    {
+      var startingGroup = adventurerManager.groups[0];
+
+      pathfinderManager.findPath(startingGroup.tileI, startingGroup.tileJ, mouseI, mouseJ);
+      return;
+    }
+  }
 
   // Handle order setup
   if (this.settingUpOrder)

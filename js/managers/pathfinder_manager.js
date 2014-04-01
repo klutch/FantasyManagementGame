@@ -54,6 +54,7 @@ var PathfinderManager = function()
   this.openList = {};
   this.closedList = {};
   this.result = null;
+  this.doingDebugFind = false;
 };
 
 PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
@@ -78,6 +79,14 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
   this.openList = {};
   this.closedList = {};
   this.openList[initialNode.toString()] = initialNode;
+  
+  if (DEBUG_PATHFINDER)
+  {
+    this.debug = screenManager.screens[ScreenType.WorldMap].pathfinderDebug;
+    this.debug.addOpenNode(initialNode);
+    this.doingDebugFind = true;
+    return;
+  }
   
   // Find path
   while (true)
@@ -133,6 +142,12 @@ PathfinderManager.prototype.step = function()
   // Move selected node to the closed list
   this.closedList[selectedKey] = selectedNode;
   delete this.openList[selectedKey];
+  
+  // Debug
+  if (DEBUG_PATHFINDER)
+  {
+    this.debug.addClosedNode(selectedNode);
+  }
 
   // Process neighbors
   for (var i = selectedNode.i - 1; i < selectedNode.i + 2; i++)
@@ -198,6 +213,11 @@ PathfinderManager.prototype.step = function()
         neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10);
         neighborNode.h = Math.abs(i - this.endI) + Math.abs(j - this.endJ);
         neighborNode.f = neighborNode.g + neighborNode.h;
+        
+        if (DEBUG_PATHFINDER)
+        {
+          this.debug.addOpenNode(neighborNode);
+        }
       }
       else
       {
@@ -241,4 +261,15 @@ PathfinderManager.prototype.step = function()
 
 PathfinderManager.prototype.update = function()
 {
+  if (this.doingDebugFind)
+  {
+    var status = this.step();
+    
+    console.log("did debug find. status: " + status);
+    
+    if (status == 1 || status == -1)
+    {
+      this.doingDebugFind = false;
+    }
+  }
 };
