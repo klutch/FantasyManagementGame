@@ -1,3 +1,47 @@
+/*
+ *  "A* Pathfinding for Beginners", Patrick Lester - http://www.policyalmanac.org/games/aStarTutorial.htm
+ */
+
+var PathNode = function(i, j)
+{
+  this.i = i;
+  this.j = j;
+  this.previous = null;
+  this.next = null;
+  
+  // Temporary pathfinding values
+  this.f = 0;
+  this.g = 0;
+  this.h = 0;
+};
+
+PathNode.prototype.getHead = function()
+{
+  var head = this;
+  
+  while (head.previous != null)
+  {
+    head = head.previous;
+  }
+  return head;
+};
+
+PathNode.prototype.getTail = function()
+{
+  var tail = this;
+  
+  while(tail.next != null)
+  {
+    tail = tail.next;
+  }
+  return tail;
+}
+
+PathNode.prototype.toString = function()
+{
+  return this.i + ", " + this.j;
+};
+
 var PathfinderManager = function()
 {
   this.endI = 0;
