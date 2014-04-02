@@ -124,6 +124,27 @@ OrderManager.prototype.processOrderMovement = function(order)
       order.isDoneForThisTurn = true;
     }
   }
+  
+  // Recalculate paths when hitting an unsure node
+  if (order.path.unsure)
+  {
+    var tailNode = order.path.getTail();
+    var newPath = pathfinderManager.findPath(group.tileI, group.tileJ, tailNode.i, tailNode.j, order.pathfindingOptions);
+    
+    if (newPath != null)
+    {
+      // Cut the current path, and splice it together with the new one
+      this.pathPreview.clearPath(order.path.getHead());
+      order.path = order.path.previous;
+      order.path.cut();
+      order.path.append(newPath);
+      this.pathPreview.drawPath(order.path.getHead());
+    }
+    else
+    {
+      console.error("Couldn't find a path");
+    }
+  }
 };
 
 OrderManager.prototype.processQueuedOrders = function()
@@ -199,7 +220,8 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
   var root = this;
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
-  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], tileI, tileJ, {preferDiscoveredTerrain: false});
+  var pathfindingOptions = {preferDiscoveredTerrain: false};
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], tileI, tileJ, pathfindingOptions);
   var order;
   
   if (path != null)
@@ -212,6 +234,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         tileI: tileI,
         tileJ: tileJ,
         path: path,
+        pathfindingOptions: pathfindingOptions,
         doWork: function()
         {
           root.processOrderMovement(this);
@@ -246,7 +269,8 @@ OrderManager.prototype.createReturnOrder = function(groupId)
   var root = this;
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
-  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ, {preferDiscoveredTerrain: true});
+  var pathfindingOptions = {preferDiscoveredTerrain: true};
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ, pathfindingOptions);
   var order;
   
   if (path != null)
@@ -258,6 +282,7 @@ OrderManager.prototype.createReturnOrder = function(groupId)
       {
         featureId: worldManager.world.playerCastleFeatureId,
         path: path,
+        pathfindingOptions: pathfindingOptions,
         doWork: function()
         {
           root.processOrderMovement(this);

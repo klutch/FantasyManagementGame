@@ -38,6 +38,18 @@ PathNode.prototype.getTail = function()
   return tail;
 }
 
+PathNode.prototype.cut = function()
+{
+  this.next.previous = null;
+  this.next = null;
+};
+
+PathNode.prototype.append = function(node)
+{
+  this.next = node;
+  this.next.previous = this;
+};
+
 var PathfinderManager = function()
 {
   this.endI = 0;
