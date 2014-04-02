@@ -13,6 +13,7 @@ var PathNode = function(i, j)
   this.f = 0;
   this.g = 0;
   this.h = 0;
+  this.unsure = false;
 };
 
 PathNode.prototype.getHead = function()
@@ -75,7 +76,7 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
   // Setup initial conditions
   this.endI = endI;
   this.endJ = endJ;
-  this.targetKey = endI + ", " + endJ;
+  this.targetKey = this.getKey(endI, endJ);
   this.openList = {};
   this.closedList = {};
   this.openList[this.getKey(initialNode.i, initialNode.j)] = initialNode;
@@ -159,6 +160,7 @@ PathfinderManager.prototype.step = function()
       var neighborNode;
       var neighborKey;
       var isDiagonal;
+      var doesTileExist;
 
       // Skip selected tile
       if (i == selectedNode.i && j == selectedNode.j)
@@ -173,25 +175,34 @@ PathfinderManager.prototype.step = function()
       }
 
       // Check if neighbor tile exists
-      if (worldManager.doesTileExist(i, j))
+      doesTileExist = worldManager.doesTileExist(i, j);
+      if (doesTileExist)
       {
         neighborTile = worldManager.getTile(i, j);
-        neighborKey = i + ", " + j;
+        neighborKey = this.getKey(i, j);
         neighborNode = this.openList[neighborKey] || this.closedList[neighborKey] || new PathNode(i, j);
       }
       else
       {
-        continue;
+        neighborKey = this.getKey(i, j);
+        neighborNode = this.openList[neighborKey] || this.closedList[neighborKey] || new PathNode(i, j);
+        neighborNode.unsure = true;
       }
-
-      // Check to make sure tile is discovered
-      if (!neighborTile.discovered)
+      /*
+      else
       {
         continue;
-      }
+      }*/
+      
+      /*
+      // Check to make sure tile is discovered (unless we're allowing ourselves to be unsure about the tile)
+      if (!this.allowUnsure && !neighborTile.discovered)
+      {
+        continue;
+      }*/
 
-      // Check if neighbor tile is walkable
-      if (!neighborTile.walkable)
+      // Check if neighbor tile is walkable (unless we're allowing ourselves to be unsure about the tile)
+      if (doesTileExist && !neighborTile.walkable)
       {
         continue;
       }
@@ -211,7 +222,7 @@ PathfinderManager.prototype.step = function()
         // Calculate F, G, H, and parent values and add to open list
         this.openList[neighborKey] = neighborNode;
         neighborNode.previous = selectedNode;
-        neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10);
+        neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10); // TODO: Factor in terrain movement costs
         neighborNode.h = 10 * (Math.abs(i - this.endI) + Math.abs(j - this.endJ));
         neighborNode.f = neighborNode.g + neighborNode.h;
         
