@@ -266,9 +266,13 @@ PathfinderManager.prototype.update = function()
   {
     var status = this.step();
     
-    if (status == 1 || status == -1)
+    if (status == 1)
     {
       this.debug.drawPath(this.result);
+      this.doingDebugFind = false;
+    }
+    else if (status == -1)
+    {
       this.doingDebugFind = false;
     }
   }
