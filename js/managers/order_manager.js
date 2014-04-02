@@ -196,6 +196,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         doWork: function()
         {
           root.processOrderMovement(this);
+          worldManager.discoverRadius(group.tileI, group.tileJ, 8);
         },
         isComplete: function()
         {
