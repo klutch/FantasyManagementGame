@@ -139,7 +139,7 @@ AdventurerManager.prototype.selectGroup = function(groupId)
   
   if (this.selectedGroupId != -1)
   {
-    worldMapScreen.closeSelectedGroupPanel();
+    worldMapScreen.closeSelectedGroupMenu();
   }
   
   this.selectedGroupId = groupId;

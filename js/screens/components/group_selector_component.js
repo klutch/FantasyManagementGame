@@ -1,13 +1,13 @@
-var GroupSelectorComponent = function(groupPanel, groupId)
+var GroupSelectorComponent = function(groupMenu, groupId)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
-  this.groupPanel = groupPanel;
+  this.groupMenu = groupMenu;
   this.groupId = groupId;
   this.group = adventurerManager.groups[groupId];
   this.buttonTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]);
   this.buttonOverTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]);
-  this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupPanel.selectors.length, this.buttonTexture.width - 8, this.buttonTexture.height);
+  this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupMenu.selectors.length, this.buttonTexture.width - 8, this.buttonTexture.height);
   this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 320, 76 + this.group.adventurerIds.length * 64);
   this.isPanelOpen = false;
   this.statTexts = [];

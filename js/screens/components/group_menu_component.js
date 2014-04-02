@@ -1,4 +1,4 @@
-var GroupPanelComponent = function(options)
+var GroupMenuComponent = function(options)
 {
   options = options || {};
   
@@ -59,9 +59,9 @@ var GroupPanelComponent = function(options)
   this.addChild(this.totalWorkersRight);
 };
 
-GroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
+GroupMenuComponent.prototype = new PIXI.DisplayObjectContainer;
 
-GroupPanelComponent.prototype.addGroup = function(groupId)
+GroupMenuComponent.prototype.addGroup = function(groupId)
 {
   var groupSelector = new GroupSelectorComponent(this, groupId);
   
@@ -69,13 +69,13 @@ GroupPanelComponent.prototype.addGroup = function(groupId)
   this.addChild(groupSelector);
 };
 
-GroupPanelComponent.prototype.removeGroup = function(groupId)
+GroupMenuComponent.prototype.removeGroup = function(groupId)
 {
   this.removeChild(this.selectors[groupId]);
   delete this.selectors[groupId];
 };
 
-GroupPanelComponent.prototype.update = function()
+GroupMenuComponent.prototype.update = function()
 {
   // Update text
   this.totalAdventurersRight.setText(adventurerManager.getNumAdventurers().toString());

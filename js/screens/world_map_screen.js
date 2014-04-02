@@ -5,8 +5,8 @@ var WorldMapScreen = function(world)
   this.type = ScreenType.WorldMap;
   this.z = 90;
   this.world = world;
-  this.isGroupPanelOpen = false;
-  this.selectedGroupPanel = null;
+  this.isGroupMenuOpen = false;
+  this.selectedGroupMenu = null;
   
   // Create button container
   this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
@@ -55,7 +55,7 @@ var WorldMapScreen = function(world)
     y: 16,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
     hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
-    onClick: function(e) { root.toggleGroupPanel(); },
+    onClick: function(e) { root.toggleGroupMenu(); },
     tooltipText: "Group menu"
   });
   this.mainButtonsContainer.addChild(this.groupButton);
@@ -71,8 +71,8 @@ var WorldMapScreen = function(world)
   });
   this.mainButtonsContainer.addChild(this.endTurnButton);
   
-  // Create group panel
-  this.groupPanel = new GroupPanelComponent({
+  // Create group menu
+  this.groupMenu = new GroupMenuComponent({
     x: -8,
     y: -8,
     z: this.z - 1,
@@ -121,34 +121,34 @@ WorldMapScreen.prototype.buildResourceIndicators = function()
     this);
 };
 
-WorldMapScreen.prototype.toggleGroupPanel = function()
+WorldMapScreen.prototype.toggleGroupMenu = function()
 {
-  this.isGroupPanelOpen = !this.isGroupPanelOpen;
+  this.isGroupMenuOpen = !this.isGroupMenuOpen;
   
-  if (this.isGroupPanelOpen)
+  if (this.isGroupMenuOpen)
   {
-    game.stage.addChild(this.groupPanel);
+    game.stage.addChild(this.groupMenu);
     game.stage.children.sort(depthCompare);
     this.mainButtonsContainer.position.x = 248;
   }
   else
   {
-    game.stage.removeChild(this.groupPanel);
+    game.stage.removeChild(this.groupMenu);
     this.mainButtonsContainer.position.x = 0;
   }
 };
 
 WorldMapScreen.prototype.openSelectedGroupPanel = function(groupId)
 {
-  this.selectedGroupPanel = new SelectedGroupPanelComponent(groupId, {z: this.z + 1});
-  game.stage.addChild(this.selectedGroupPanel);
+  this.selectedGroupMenu = new SelectedGroupPanelComponent(groupId, {z: this.z + 1});
+  game.stage.addChild(this.selectedGroupMenu);
   game.stage.children.sort(depthCompare);
 };
 
 WorldMapScreen.prototype.closeSelectedGroupPanel = function()
 {
-  game.stage.removeChild(this.selectedGroupPanel);
-  this.selectedGroupPanel = null;
+  game.stage.removeChild(this.selectedGroupMenu);
+  this.selectedGroupMenu = null;
 };
 
 WorldMapScreen.prototype.openOrderSubmenu = function(contexts, groupId, tileI, tileJ)
@@ -203,7 +203,7 @@ WorldMapScreen.prototype.handleInput = function()
     this.endTurnButton.onClick();
   }
   
-  // G key -- Toggle group panel
+  // G key -- Toggle group menu
   if (inputManager.simpleKey(KeyCode.G))
   {
     this.groupButton.onClick();
@@ -215,8 +215,8 @@ WorldMapScreen.prototype.update = function()
   // Update world map component
   this.worldMap.update();
   
-  // Update group panel component
-  if (this.isGroupPanelOpen) { this.groupPanel.update(); }
+  // Update group menu component
+  if (this.isGroupMenuOpen) { this.groupMenu.update(); }
   
   // Update resource indicators
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });
@@ -224,8 +224,8 @@ WorldMapScreen.prototype.update = function()
   // Update order sub menu
   if (this.orderSubmenu != null) { this.orderSubmenu.update(); }
   
-  // Update selected group panel
-  if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }
+  // Update selected group menu
+  if (this.selectedGroupMenu != null) { this.selectedGroupMenu.update(); }
   
   // Update adventurer groups
   this.adventurerGroups.update();
