@@ -6,7 +6,7 @@ var WorldMapScreen = function(world)
   this.z = 90;
   this.world = world;
   this.isGroupMenuOpen = false;
-  this.selectedGroupMenu = null;
+  this.selectedGroupPanel = null;
   
   // Create button container
   this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
@@ -140,15 +140,15 @@ WorldMapScreen.prototype.toggleGroupMenu = function()
 
 WorldMapScreen.prototype.openSelectedGroupPanel = function(groupId)
 {
-  this.selectedGroupMenu = new SelectedGroupPanelComponent(groupId, {z: this.z + 1});
-  game.stage.addChild(this.selectedGroupMenu);
+  this.selectedGroupPanel = new SelectedGroupPanelComponent(groupId, {z: this.z + 0.5});
+  game.stage.addChild(this.selectedGroupPanel);
   game.stage.children.sort(depthCompare);
 };
 
 WorldMapScreen.prototype.closeSelectedGroupPanel = function()
 {
-  game.stage.removeChild(this.selectedGroupMenu);
-  this.selectedGroupMenu = null;
+  game.stage.removeChild(this.selectedGroupPanel);
+  this.selectedGroupPanel = null;
 };
 
 WorldMapScreen.prototype.openOrderSubmenu = function(contexts, groupId, tileI, tileJ)
@@ -225,7 +225,7 @@ WorldMapScreen.prototype.update = function()
   if (this.orderSubmenu != null) { this.orderSubmenu.update(); }
   
   // Update selected group menu
-  if (this.selectedGroupMenu != null) { this.selectedGroupMenu.update(); }
+  if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }
   
   // Update adventurer groups
   this.adventurerGroups.update();
