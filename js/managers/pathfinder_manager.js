@@ -224,7 +224,7 @@ PathfinderManager.prototype.step = function()
       }
 
       // Check if neighbor tile is walkable (unless we're allowing ourselves to be unsure about the tile)
-      if (doesTileExist && !neighborTile.walkable)
+      if (!neighborNode.unsure && !neighborTile.walkable)
       {
         continue;
       }
@@ -250,7 +250,7 @@ PathfinderManager.prototype.step = function()
         // Determine additional movement costs due to preferences
         if (this.preferDiscoveredTerrain && neighborNode.unsure)
         {
-          neighborNode.h += 5000;
+          neighborNode.h += 500;
         }
         
         // Calculate F value
