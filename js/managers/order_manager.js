@@ -39,6 +39,25 @@ OrderManager.prototype.getUnusedId = function()
   }
 };
 
+OrderManager.prototype.getOrder = function(orderId)
+{
+  for (var groupId in this.groupOrders)
+  {
+    if (this.groupOrders.hasOwnProperty(groupId))
+    {
+      for (var i = 0; i < this.groupOrders[groupId].length; i++)
+      {
+        var order = this.groupOrders[groupId][i];
+        
+        if (order.id == orderId)
+        {
+          return order;
+        }
+      }
+    }
+  }
+};
+
 OrderManager.prototype.addOrder = function(order)
 {
   if (this.groupOrders[order.groupId] == null)
@@ -58,7 +77,7 @@ OrderManager.prototype.removeOrder = function(orderId)
       {
         var order = this.groupOrders[groupId][i];
         
-        if (order != null && order.id == orderId)
+        if (order.id == orderId)
         {
           delete this.groupOrders[groupId][i];
         }
@@ -75,6 +94,14 @@ OrderManager.prototype.removeOrder = function(orderId)
     }
   }
 };
+
+OrderManager.prototype.cancelOrder = function(orderId)
+{
+  var order = this.getOrder(orderId);
+  
+  this.removeOrder(orderId);
+  this.pathPreview.clearPath(order.path.getHead());
+}
 
 OrderManager.prototype.startOrderSetup = function()
 {
@@ -126,7 +153,7 @@ OrderManager.prototype.processOrderMovement = function(order)
   }
   
   // Recalculate paths when hitting an unsure node
-  if (order.path.unsure)
+  if (order.path.unsure && order.path.next != null)
   {
     var tailNode = order.path.getTail();
     var newPath = pathfinderManager.findPath(group.tileI, group.tileJ, tailNode.i, tailNode.j, order.pathfindingOptions);
@@ -135,14 +162,18 @@ OrderManager.prototype.processOrderMovement = function(order)
     {
       // Cut the current path, and splice it together with the new one
       this.pathPreview.clearPath(order.path.getHead());
-      order.path = order.path.previous;
       order.path.cut();
-      order.path.append(newPath);
+      order.path.append(newPath.next);
       this.pathPreview.drawPath(order.path.getHead());
     }
     else
     {
-      console.error("Couldn't find a path");
+      // Cancel order, because there is no path to the target
+      this.cancelOrder(order.id);
+      if (!this.doesGroupHaveOrders(group.id))
+      {
+        this.createReturnOrder(group.id);
+      }
     }
   }
 };
