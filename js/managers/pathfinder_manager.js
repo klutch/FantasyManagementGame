@@ -172,12 +172,12 @@ PathfinderManager.prototype.step = function()
         continue;
       }
 
-      // Check if neighbor tile exists (create/store node if it does)
+      // Check if neighbor tile exists
       if (worldManager.doesTileExist(i, j))
       {
         neighborTile = worldManager.getTile(i, j);
-        neighborNode = new PathNode(i, j);
-        neighborKey = neighborNode.toString();
+        neighborKey = i + ", " + j;
+        neighborNode = this.openList[neighborKey] || this.closedList[neighborKey] || new PathNode(i, j);
       }
       else
       {
@@ -224,7 +224,7 @@ PathfinderManager.prototype.step = function()
       {
         // See if G value to neighbor tile from the selected tile is shorter than its current path
         var newG = selectedNode.g + (isDiagonal ? 14 : 10);
-
+        
         if (newG < neighborNode.g)
         {
           neighborNode.previous = selectedNode;
