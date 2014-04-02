@@ -51,6 +51,7 @@ var PathfinderManager = function()
   this.closedList = {};
   this.result = null;
   this.doingDebugFind = false;
+  this.preferDiscoveredTerrain = true;
 };
 
 PathfinderManager.prototype.getKey = function(i, j)
@@ -58,7 +59,7 @@ PathfinderManager.prototype.getKey = function(i, j)
   return i + ", " + j;
 };
 
-PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
+PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ, options)
 {
   var diffI = endI - startI;
   var diffJ = endJ - startJ;
@@ -66,6 +67,10 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
   var middlePointI = Math.floor((startI + endI) * 0.5);
   var middlePointJ = Math.floor((startJ + endJ) * 0.5);
   var initialNode = new PathNode(startI, startJ);
+  
+  // Setup options
+  options = options || {};
+  this.preferDiscoveredTerrain = options.preferDiscoveredTerrain == undefined ? true : options.preferDiscoveredTerrain;
   
   // Setup bounds
   this.upperBoundI = middlePointI - sideHalfLength;
@@ -200,6 +205,11 @@ PathfinderManager.prototype.step = function()
       {
         continue;
       }*/
+      
+      if (doesTileExist && !neighborTile.discovered)
+      {
+        neighborNode.unsure = true;
+      }
 
       // Check if neighbor tile is walkable (unless we're allowing ourselves to be unsure about the tile)
       if (doesTileExist && !neighborTile.walkable)
@@ -219,11 +229,19 @@ PathfinderManager.prototype.step = function()
       // Check if neighbor node is in the open list
       if (this.openList[neighborKey] == null)
       {
-        // Calculate F, G, H, and parent values and add to open list
+        // Add to open list, and calculate G, H, and parent values
         this.openList[neighborKey] = neighborNode;
         neighborNode.previous = selectedNode;
         neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10); // TODO: Factor in terrain movement costs
         neighborNode.h = 10 * (Math.abs(i - this.endI) + Math.abs(j - this.endJ));
+        
+        // Determine additional movement costs due to preferences
+        if (this.preferDiscoveredTerrain && neighborNode.unsure)
+        {
+          neighborNode.h += 5000;
+        }
+        
+        // Calculate F value
         neighborNode.f = neighborNode.g + neighborNode.h;
         
         if (DEBUG_PATHFINDER)

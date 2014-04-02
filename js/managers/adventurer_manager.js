@@ -209,7 +209,6 @@ AdventurerManager.prototype.getGroupDiscoveryRadius = function(groupId)
 
 AdventurerManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
 {
-  var tile = worldManager.getTile(tileI, tileJ);
   var group = this.groups[groupId];
   
   // Add group to world map if currently in a feature
@@ -221,7 +220,6 @@ AdventurerManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
   group.featureId = -1;
   group.tileI = tileI;
   group.tileJ = tileJ;
-  group.movementUsed += tile.movementCost;
 };
 
 AdventurerManager.prototype.moveGroupIntoFeature = function(groupId)

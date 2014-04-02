@@ -91,19 +91,38 @@ OrderManager.prototype.endOrderSetup = function()
 OrderManager.prototype.processOrderMovement = function(order)
 {
   var nextNode = order.path.next;
-  var nextTile = worldManager.getTile(nextNode.i, nextNode.j);
+  var doesTileExist = worldManager.doesTileExist(nextNode.i, nextNode.j);
+  var nextTile = doesTileExist ? worldManager.getTile(nextNode.i, nextNode.j) : null;
   var group = adventurerManager.groups[order.groupId];
   var groupMovementAbility = adventurerManager.getGroupMovementAbility(order.groupId);
   var remainingMovement = groupMovementAbility - group.movementUsed;
   
-  if (nextTile.movementCost <= remainingMovement)
+  if (doesTileExist && nextTile.discovered)
   {
-    adventurerManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
-    order.path = nextNode;
+    // Movement
+    if (nextTile.movementCost <= remainingMovement)
+    {
+      adventurerManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
+      group.movementUsed += nextTile.movementCost;
+      order.path = nextNode;
+    }
+    else
+    {
+      order.isDoneForThisTurn = true;
+    }
   }
   else
   {
-    order.isDoneForThisTurn = true;
+    // Discover area
+    if (remainingMovement >= 20)
+    {
+      worldManager.discoverRadius(group.tileI, group.tileJ, 8);
+      group.movementUsed += 20;   // TODO: Come up with a discovery cost
+    }
+    else
+    {
+      order.isDoneForThisTurn = true;
+    }
   }
 };
 
@@ -180,7 +199,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
   var root = this;
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
-  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], tileI, tileJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], tileI, tileJ, {preferDiscoveredTerrain: false});
   var order;
   
   if (path != null)
@@ -196,7 +215,6 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         doWork: function()
         {
           root.processOrderMovement(this);
-          worldManager.discoverRadius(group.tileI, group.tileJ, 8);
         },
         isComplete: function()
         {
@@ -228,7 +246,7 @@ OrderManager.prototype.createReturnOrder = function(groupId)
   var root = this;
   var group = adventurerManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
-  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+  var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ, {preferDiscoveredTerrain: true});
   var order;
   
   if (path != null)
