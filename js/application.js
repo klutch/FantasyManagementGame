@@ -8,6 +8,7 @@ var NUM_TERRAIN_TYPES = 9;
 var OFFENSE_COLOR = 0xed2129;
 var DEFENSE_COLOR = 0x0072bc;
 var SUPPORT_COLOR = 0x8fd82c;
+var DEFAULT_TILE_SELECTOR_COLOR = 0xCCCCCC;
 var DEBUG_PATHFINDER = false;
 var fps;
 var fpsText;

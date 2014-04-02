@@ -13,6 +13,7 @@ var WorldMapComponent = function()
   this.tileGridI = 0;
   this.tileGridJ = 0;
   this.tileSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.tileSelection));
+  this.tileSelection.tint = DEFAULT_TILE_SELECTOR_COLOR;
   this.minScale = 0.05;
   this.maxScale = 1;
   this.detectionBuffer = 1;   // Number of chunks surrounding the current chunk to check

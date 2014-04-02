@@ -6,6 +6,12 @@ var TurnManager = function()
 TurnManager.prototype.startProcessing = function()
 {
   this.state = TurnState.Processing;
+  
+  // Stop order setup if necessary
+  if (orderManager.settingUpOrder)
+  {
+    orderManager.endOrderSetup();
+  }
 };
 
 TurnManager.prototype.endProcessing = function()

@@ -164,6 +164,11 @@ WorldMapScreen.prototype.closeOrderSubmenu = function()
   this.orderSubmenu = null;
 };
 
+WorldMapScreen.prototype.setTileSelectorColor = function(tint)
+{
+  this.worldMap.tileSelection.tint = tint;
+};
+
 WorldMapScreen.prototype.handleInput = function()
 {
   // Handle input

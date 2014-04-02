@@ -106,6 +106,8 @@ OrderManager.prototype.cancelOrder = function(orderId)
 OrderManager.prototype.startOrderSetup = function()
 {
   this.settingUpOrder = true;
+  document.body.style.cursor = "pointer";
+  this.worldMapScreen.setTileSelectorColor(0xFFFF00);
 };
 
 OrderManager.prototype.endOrderSetup = function()
@@ -113,6 +115,8 @@ OrderManager.prototype.endOrderSetup = function()
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
   this.settingUpOrder = false;
+  document.body.style.cursor = "auto";
+  this.worldMapScreen.setTileSelectorColor(DEFAULT_TILE_SELECTOR_COLOR);
 };
 
 OrderManager.prototype.processOrderMovement = function(order)
@@ -616,7 +620,10 @@ OrderManager.prototype.update = function()
         {
           this.createMineOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
         }
-        //this.endOrderSetup();
+        if (!inputManager.keysPressed[KeyCode.Shift])
+        {
+          this.endOrderSetup();
+        }
       }
       else
       {

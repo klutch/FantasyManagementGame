@@ -45,18 +45,24 @@ var SelectedGroupPanelComponent = function(groupId, options)
   }
   
   // Order buttons
+  var root = this;
   this.moveButton = new ButtonComponent({
     x: 0,
     y: this.panel.height + 8,
     normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
     disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[2]),
-    tooltipText: "Move",
+    tooltipText: "Move group",
     onClick: function(e)
       {
         if (this.enabled)
         {
           inputManager.leftButtonHandled = true;
           orderManager.startOrderSetup();
+        }
+        else
+        {
+          inputManager.leftButtonHandled = true;
+          orderManager.endOrderSetup();
         }
       }
   });
@@ -66,40 +72,33 @@ var SelectedGroupPanelComponent = function(groupId, options)
 
 SelectedGroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
-/*SelectedGroupPanelComponent.prototype.enableButtons = function()
+SelectedGroupPanelComponent.prototype.enableMoveButton = function()
 {
-  for (var i = 0; i < this.orderButtons.length; i++)
-  {
-    this.orderButtons[i].setEnabled(true);
-  }
+  this.moveButton.tooltipText = "Move group";
+  this.moveButton.setEnabled(true);
 };
 
-SelectedGroupPanelComponent.prototype.disableButtons = function()
+SelectedGroupPanelComponent.prototype.disableMoveButton = function()
 {
-  for (var i = 0; i < this.orderButtons.length; i++)
-  {
-    this.orderButtons[i].setEnabled(false);
-  }
-};*/
+  this.moveButton.tooltipText = "Stop giving orders";
+  this.moveButton.setEnabled(false);
+};
 
 SelectedGroupPanelComponent.prototype.update = function()
 {
-  /*var groupHasOrders = orderManager.doesGroupHaveOrders(this.groupId);
-  
-  if (!this.cancelButton.enabled && groupHasOrders)
-  {
-    this.disableButtons();
-    this.cancelButton.setEnabled(true);
-  }
-  else if (this.cancelButton.enabled && !groupHasOrders)
-  {
-    this.enableButtons();
-    this.cancelButton.setEnabled(false);
-  }*/
-  
   // Escape key -- Deselect group
   if (inputManager.simpleKey(KeyCode.Escape))
   {
     adventurerManager.deselectGroup();
+  }
+  
+  // Modify move button
+  if (orderManager.settingUpOrder && this.moveButton.enabled)
+  {
+    this.disableMoveButton();
+  }
+  else if (!orderManager.settingUpOrder && !this.moveButton.enabled)
+  {
+    this.enableMoveButton();
   }
 };
