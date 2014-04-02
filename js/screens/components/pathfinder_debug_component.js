@@ -45,3 +45,16 @@ PathfinderDebugComponent.prototype.addClosedNode = function(node)
 {
   this.nodeSprites[node.toString()].tint = 0xFF0000;
 };
+
+PathfinderDebugComponent.prototype.drawPath = function(node)
+{
+  var currentNode = node;
+  
+  while (currentNode != null)
+  {
+    var sprite = this.nodeSprites[currentNode.toString()];
+    
+    sprite.tint = 0xFFFF00;
+    currentNode = currentNode.next;
+  }
+};
