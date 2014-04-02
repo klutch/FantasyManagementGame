@@ -37,13 +37,13 @@ PathfinderDebugComponent.prototype.addOpenNode = function(node)
     {
       tooltipScreen.disableTooltip();
     };
-  this.nodeSprites[node.toString()] = sprite;
+  this.nodeSprites[pathfinderManager.getKey(node.i, node.j)] = sprite;
   this.addChild(sprite);
 };
 
 PathfinderDebugComponent.prototype.addClosedNode = function(node)
 {
-  this.nodeSprites[node.toString()].tint = 0xFF0000;
+  this.nodeSprites[pathfinderManager.getKey(node.i, node.j)].tint = 0xFF0000;
 };
 
 PathfinderDebugComponent.prototype.drawPath = function(node)
@@ -52,7 +52,7 @@ PathfinderDebugComponent.prototype.drawPath = function(node)
   
   while (currentNode != null)
   {
-    var sprite = this.nodeSprites[currentNode.toString()];
+    var sprite = this.nodeSprites[pathfinderManager.getKey(currentNode.i, currentNode.j)];
     
     sprite.tint = 0xFFFF00;
     currentNode = currentNode.next;

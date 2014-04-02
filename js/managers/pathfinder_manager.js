@@ -37,11 +37,6 @@ PathNode.prototype.getTail = function()
   return tail;
 }
 
-PathNode.prototype.toString = function()
-{
-  return this.i + ", " + this.j;
-};
-
 var PathfinderManager = function()
 {
   this.endI = 0;
@@ -55,6 +50,11 @@ var PathfinderManager = function()
   this.closedList = {};
   this.result = null;
   this.doingDebugFind = false;
+};
+
+PathfinderManager.prototype.getKey = function(i, j)
+{
+  return i + ", " + j;
 };
 
 PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
@@ -78,7 +78,7 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ)
   this.targetKey = endI + ", " + endJ;
   this.openList = {};
   this.closedList = {};
-  this.openList[initialNode.toString()] = initialNode;
+  this.openList[this.getKey(initialNode.i, initialNode.j)] = initialNode;
   
   if (DEBUG_PATHFINDER)
   {
@@ -138,7 +138,7 @@ PathfinderManager.prototype.findLowestF = function()
 PathfinderManager.prototype.step = function()
 {
   var selectedNode = this.findLowestF();
-  var selectedKey = selectedNode.toString();
+  var selectedKey = this.getKey(selectedNode.i, selectedNode.j);
 
   // Move selected node to the closed list
   this.closedList[selectedKey] = selectedNode;
