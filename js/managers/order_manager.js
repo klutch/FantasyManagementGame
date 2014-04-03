@@ -270,6 +270,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         tileJ: tileJ,
         path: path,
         pathfindingOptions: pathfindingOptions,
+        name: "Explore",
         doWork: function()
         {
           root.processOrderMovement(this);
@@ -318,6 +319,7 @@ OrderManager.prototype.createReturnOrder = function(groupId)
         featureId: worldManager.world.playerCastleFeatureId,
         path: path,
         pathfindingOptions: pathfindingOptions,
+        name: "Return to castle",
         doWork: function()
         {
           root.processOrderMovement(this);
@@ -362,6 +364,7 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
       {
         featureId: featureId,
         path: path,
+        name: "Raid",
         doWork: function()
         {
           root.processOrderMovement(this);
@@ -405,6 +408,7 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
       {
         featureId: featureId,
         path: path,
+        name: "Visit dwelling",
         doWork: function()
         {
           root.processOrderMovement(this);
@@ -451,6 +455,7 @@ OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
       {
         featureId: featureId,
         path: path,
+        name: "Visit gathering",
         doWork: function()
         {
           root.processOrderMovement(this);

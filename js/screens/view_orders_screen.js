@@ -1,9 +1,14 @@
-var ViewOrdersScreen = function()
+var ViewOrdersScreen = function(groupId)
 {
   this.type = ScreenType.ViewOrders;
   this.inputEnabled = true;
   this.z = 90;
+  this.groupId = groupId;
+  this.orders = orderManager.groupOrders[this.groupId];
+  this.orderLabels = [];
+  this.removeButtons = [];
   
+  // Background
   this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
   this.background.position.x = -16;
   this.background.position.y = -16;
@@ -12,6 +17,7 @@ var ViewOrdersScreen = function()
   this.background.height = game.containerHeight + 32;
   this.background.alpha = 0.5;
   
+  // Panel
   this.panel = new PanelComponent({
     x: Math.floor(game.containerWidth * 0.5),
     y: Math.floor(game.containerHeight * 0.5),
@@ -27,6 +33,7 @@ var ViewOrdersScreen = function()
   this.panelTitle.position.y = 16;
   this.panel.addChild(this.panelTitle);
   
+  // Done button
   this.doneButton = new ButtonComponent(
     this,
     {
@@ -44,6 +51,9 @@ var ViewOrdersScreen = function()
       }
     });
   this.panel.addChild(this.doneButton);
+  
+  // Orders
+  this.buildOrderLabels();
 };
 
 ViewOrdersScreen.prototype.onAddScreen = function()
@@ -57,6 +67,35 @@ ViewOrdersScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.background);
   game.stage.removeChild(this.panel);
+};
+
+ViewOrdersScreen.prototype.buildOrderLabels = function()
+{
+  for (var i = 0; i < this.orders.length; i++)
+  {
+    var y = 68 + i * 48;
+    var text = (i + 1) + ". " + this.orders[i].name;
+    var label = new PIXI.BitmapText(text, {font: "14px big_pixelmix", tint: 0xCCCCCC});
+    var removeButton = new ButtonComponent(
+      this,
+      {
+        x: 16,
+        y: y - 12,
+        normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.closeButtons[0]),
+        hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.closeButtons[1]),
+        onClick: function(e)
+        {
+          
+        }
+      });
+    
+    label.position.x = 64;
+    label.position.y = y;
+    this.orderLabels.push(label);
+    this.removeButtons.push(removeButton);
+    this.panel.addChild(label);
+    this.panel.addChild(removeButton);
+  }
 };
 
 ViewOrdersScreen.prototype.update = function()

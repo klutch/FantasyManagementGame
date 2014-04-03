@@ -87,7 +87,7 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
           if (this.enabled)
           {
             inputManager.leftButtonHandled = true;
-            screenManager.addScreen(new ViewOrdersScreen());
+            screenManager.addScreen(new ViewOrdersScreen(root.groupId));
             root.tooltipScreen.disableTooltip();
             root.screen.inputEnabled = false;
           }
