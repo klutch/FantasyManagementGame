@@ -13,8 +13,8 @@ var PanelComponent = function(options)
   
   this.width = options.width;
   this.height = options.height;
-  this.position.x = options.x;
-  this.position.y = options.y;
+  this.position.x = options.centerX ? options.x - Math.floor(this.width * 0.5) : options.x;
+  this.position.y = options.centerY ? options.y - Math.floor(this.height * 0.5) : options.y;
   this.z = options.z;
   
   this.buildPanel();
