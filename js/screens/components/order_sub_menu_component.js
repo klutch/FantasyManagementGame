@@ -1,7 +1,8 @@
-var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
+var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, options)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.z = options.z;
   this.tileI = tileI;
   this.tileJ = tileJ;
@@ -29,6 +30,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
     if (key == OrderType.Explore)
     {
       button = new ButtonComponent(
+        this.screen,
         {
           x: 0,
           y: 0,
@@ -40,7 +42,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           {
             if (orderManager.createExploreOrder(groupId, tileI, tileJ))
             {
-              //orderManager.endOrderSetup();
+              root.commonOnClick();
             }
           }
         });
@@ -48,6 +50,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
     else if (key == OrderType.VisitDwelling)
     {
       button = new ButtonComponent(
+        this.screen,
         {
           x: 0,
           y: 0,
@@ -59,7 +62,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           {
             if (orderManager.createVisitDwellingOrder(groupId, tile.featureId))
             {
-              //orderManager.endOrderSetup();
+              root.commonOnClick();
             }
           }
         });
@@ -67,6 +70,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
     else if (key == OrderType.VisitGathering)
     {
       button = new ButtonComponent(
+        this.screen,
         {
           x: 0,
           y: 0,
@@ -78,7 +82,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
           {
             if(orderManager.createVisitGatheringOrder(groupId, tile.featureId))
             {
-              //orderManager.endOrderSetup();
+              root.commonOnClick();
             }
           }
         });
@@ -86,6 +90,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
     else if (key == OrderType.CutLogs)
     {
       button = new ButtonComponent(
+        this.screen,
         {
           x: 0,
           y: 0,
@@ -99,6 +104,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
     else if (key == OrderType.Mine)
     {
       button = new ButtonComponent(
+        this.screen,
         {
           x: 0,
           y: 0,
@@ -112,6 +118,7 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
     else if (key == OrderType.Raid)
     {
       button = new ButtonComponent(
+        this.screen,
         {
           x: 0,
           y: 0,
@@ -134,6 +141,24 @@ var OrderSubMenuComponent = function(contexts, groupId, tileI, tileJ, options)
 
 OrderSubMenuComponent.prototype = new PIXI.DisplayObjectContainer;
 
+OrderSubMenuComponent.prototype.commonOnClick = function()
+{
+  if (!inputManager.keysPressed[KeyCode.Shift])
+  {
+    orderManager.endOrderSetup();
+    this.close();
+  }
+};
+
+OrderSubMenuComponent.prototype.close = function()
+{
+  if (this.hasTooltip)
+  {
+    screenManager.screens[ScreenType.Tooltip].disableTooltip();
+  }
+  this.worldMapScreen.closeOrderSubmenu();
+};
+
 OrderSubMenuComponent.prototype.update = function()
 {
   var diffX;
@@ -149,10 +174,6 @@ OrderSubMenuComponent.prototype.update = function()
   // Close when mouse is out of range
   if (diffX * diffX + diffY * diffY > 4000)
   {
-    if (this.hasTooltip)
-    {
-      screenManager.screens[ScreenType.Tooltip].disableTooltip();
-    }
-    this.worldMapScreen.closeOrderSubmenu();
+    this.close();
   }
 };

@@ -3,7 +3,8 @@ var WorldMapScreen = function(world)
   var root = this;
   
   this.type = ScreenType.WorldMap;
-  this.z = 90;
+  this.inputEnabled = true;
+  this.z = 80;
   this.world = world;
   this.isGroupMenuOpen = false;
   this.selectedGroupPanel = null;
@@ -40,45 +41,53 @@ var WorldMapScreen = function(world)
   });
   
   // Create home button
-  this.homeButton = new ButtonComponent({
-    x: game.containerWidth - 80,
-    y: game.containerHeight - 80,
-    z: this.z + 2,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
-    onClick: function(e) { root.worldMap.moveCameraToHome(); },
-    tooltipText: "Center on home castle"
-  });
+  this.homeButton = new ButtonComponent(
+    this,
+    {
+      x: game.containerWidth - 80,
+      y: game.containerHeight - 80,
+      z: this.z + 2,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
+      onClick: function(e) { root.worldMap.moveCameraToHome(); },
+      tooltipText: "Center on home castle"
+    });
   
   // Create group button
-  this.groupButton = new ButtonComponent({
-    x: 16,
-    y: 16,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
-    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
-    onClick: function(e) { root.toggleGroupMenu(); },
-    tooltipText: "Group menu"
-  });
+  this.groupButton = new ButtonComponent(
+    this,
+    {
+      x: 16,
+      y: 16,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
+      onClick: function(e) { root.toggleGroupMenu(); },
+      tooltipText: "Group menu"
+    });
   this.mainButtonsContainer.addChild(this.groupButton);
   
   // Create end turn button
-  this.endTurnButton = new ButtonComponent({
-    x: 80,
-    y: 16,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[0]),
-    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[1]),
-    onClick: function(e) { turnManager.startProcessing(); },
-    tooltipText: "End turn"
-  });
+  this.endTurnButton = new ButtonComponent(
+    this,
+    {
+      x: 80,
+      y: 16,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[1]),
+      onClick: function(e) { turnManager.startProcessing(); },
+      tooltipText: "End turn"
+    });
   this.mainButtonsContainer.addChild(this.endTurnButton);
   
   // Create group menu
-  this.groupMenu = new GroupMenuComponent({
-    x: -8,
-    y: -8,
-    z: this.z - 1,
-    width: 256,
-    height: game.containerHeight + 16
-  });
+  this.groupMenu = new GroupMenuComponent(
+    this,
+    {
+      x: -8,
+      y: -8,
+      z: this.z - 1,
+      width: 256,
+      height: game.containerHeight + 16
+    });
   
   // Create resource indicators
   this.buildResourceIndicators();
@@ -114,7 +123,7 @@ WorldMapScreen.prototype.buildResourceIndicators = function()
   this.resourceIndicators = {};
   _.each(ResourceType, function(resourceType)
     {
-      this.resourceIndicators[resourceType] = new ResourceIndicatorComponent(resourceType, offset * counter, 2);
+      this.resourceIndicators[resourceType] = new ResourceIndicatorComponent(this, resourceType, offset * counter, 2);
       this.resourceIndicators[resourceType].z = this.resourceBar.z + (counter + 1) * 0.01;
       counter++;
     },
@@ -140,7 +149,7 @@ WorldMapScreen.prototype.toggleGroupMenu = function()
 
 WorldMapScreen.prototype.openSelectedGroupPanel = function(groupId)
 {
-  this.selectedGroupPanel = new SelectedGroupPanelComponent(groupId, {z: this.z + 0.5});
+  this.selectedGroupPanel = new SelectedGroupPanelComponent(this, groupId, {z: this.z + 0.5});
   game.stage.addChild(this.selectedGroupPanel);
   game.stage.children.sort(depthCompare);
 };
@@ -153,9 +162,8 @@ WorldMapScreen.prototype.closeSelectedGroupPanel = function()
 
 WorldMapScreen.prototype.openOrderSubmenu = function(contexts, groupId, tileI, tileJ)
 {
-  this.orderSubmenu = new OrderSubMenuComponent(contexts, groupId, tileI, tileJ, {z: this.z + 0.9 });
+  this.orderSubmenu = new OrderSubMenuComponent(this, contexts, groupId, tileI, tileJ, {z: this.z + 0.9 });
   game.stage.addChild(this.orderSubmenu);
-  console.log("opened submenu");
 };
 
 WorldMapScreen.prototype.closeOrderSubmenu = function()
@@ -231,5 +239,5 @@ WorldMapScreen.prototype.update = function()
   this.adventurerGroups.update();
   
   // Handle input
-  this.handleInput();
+  if (this.inputEnabled) { this.handleInput(); }
 };

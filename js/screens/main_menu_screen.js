@@ -1,6 +1,7 @@
 var MainMenuScreen = function()
 {
   this.type = ScreenType.MainMenu;
+  this.inputEnabled = true;
   
   // Background
   this.backgroundSprite = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.black));
@@ -18,20 +19,22 @@ var MainMenuScreen = function()
   this.logoSprite.position.y = -100;
   
   // Buttons
-  this.newGameButton = new ButtonComponent({
-    x: 0,
-    y: 0,
-    text: "Start new game",
-    centerX: true,
-    centerY: true,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[0]),
-    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1]),
-    onClick: function (e)
-      {
-        game.closeMainMenu();
-        game.startNewGame();
-      }
-  });
+  this.newGameButton = new ButtonComponent(
+    this,
+    {
+      x: 0,
+      y: 0,
+      text: "Start new game",
+      centerX: true,
+      centerY: true,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1]),
+      onClick: function (e)
+        {
+          game.closeMainMenu();
+          game.startNewGame();
+        }
+    });
   
   this.container.addChild(this.logoSprite);
   this.container.addChild(this.newGameButton);

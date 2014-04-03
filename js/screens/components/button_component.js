@@ -1,4 +1,4 @@
-var ButtonComponent = function(options)
+var ButtonComponent = function(screen, options)
 {
   options.x = options.x || 0;
   options.y = options.y || 0;
@@ -7,6 +7,7 @@ var ButtonComponent = function(options)
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.position.x = options.x;
   this.position.y = options.y;
   this.z = options.z;
@@ -64,6 +65,11 @@ ButtonComponent.prototype = new PIXI.DisplayObjectContainer;
 
 ButtonComponent.prototype.click = function(interactionData)
 {
+  if (!this.screen.inputEnabled)
+  {
+    return;
+  }
+  
   inputManager.leftButtonHandled = true;
   
   if (this.onClick != null)
@@ -74,6 +80,11 @@ ButtonComponent.prototype.click = function(interactionData)
 
 ButtonComponent.prototype.mouseover = function(interactionData)
 {
+  if (!this.screen.inputEnabled)
+  {
+    return;
+  }
+  
   // Hover effects
   if (this.bitmapText != null)
   {
@@ -103,6 +114,11 @@ ButtonComponent.prototype.mouseover = function(interactionData)
 
 ButtonComponent.prototype.mouseout = function(interactionData)
 {
+  if (!this.screen.inputEnabled)
+  {
+    return;
+  }
+  
   // Hover effects
   if (this.bitmapText != null)
   {

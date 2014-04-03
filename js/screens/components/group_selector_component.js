@@ -1,7 +1,8 @@
-var GroupSelectorComponent = function(groupMenu, groupId)
+var GroupSelectorComponent = function(screen, groupMenu, groupId)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.groupMenu = groupMenu;
   this.groupId = groupId;
   this.group = adventurerManager.groups[groupId];
@@ -71,16 +72,18 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
   }
   
   // Create an edit button
-  editButton = new ButtonComponent({
-    x: 96,
-    y: this.group.adventurerIds.length * 64 + 40,
-    centerX: true,
-    centerY: true,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
-    text: "Edit Group",
-    onClick: function(e) { }
-  });
+  editButton = new ButtonComponent(
+    this.screen,
+    {
+      x: 96,
+      y: this.group.adventurerIds.length * 64 + 40,
+      centerX: true,
+      centerY: true,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      text: "Edit Group",
+      onClick: function(e) { }
+    });
   this.previewPanel.addChild(editButton);
   
   // Group stats
@@ -95,7 +98,7 @@ GroupSelectorComponent.prototype.select = function()
   adventurerManager.selectGroup(this.groupId);
 };
 
-GroupSelectorComponent.prototype.update = function()
+GroupSelectorComponent.prototype.handleInput = function()
 {
   var isOverButtonRect = this.buttonRect.contains(inputManager.mousePosition.x, inputManager.mousePosition.y);
   var isOverPanelRect = this.previewRect.contains(inputManager.mousePosition.x, inputManager.mousePosition.y);
@@ -124,7 +127,10 @@ GroupSelectorComponent.prototype.update = function()
     inputManager.leftButtonHandled = true;
     this.select();
   }
-  
+}
+
+GroupSelectorComponent.prototype.update = function()
+{
   // Update stat text
   for (var i = 0; i < this.statTexts.length; i++)
   {
@@ -141,4 +147,10 @@ GroupSelectorComponent.prototype.update = function()
       adventurerManager.getGroupOffense(this.groupId).toString() + " / " +
       adventurerManager.getGroupDefense(this.groupId).toString() + " / " +
       adventurerManager.getGroupSupport(this.groupId).toString());
+  
+  // Handle input
+  if (this.screen.inputEnabled)
+  {
+    this.handleInput();
+  }
 };

@@ -1,6 +1,7 @@
 var LoadingScreen = function()
 {
   this.type = ScreenType.Loading;
+  this.inputEnabled = true;
   
   // Background
   this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);

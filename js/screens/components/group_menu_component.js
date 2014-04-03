@@ -1,4 +1,4 @@
-var GroupMenuComponent = function(options)
+var GroupMenuComponent = function(screen, options)
 {
   options = options || {};
   
@@ -6,6 +6,7 @@ var GroupMenuComponent = function(options)
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.width = options.width;
   this.selectors = [];
   this.z = options.z;
@@ -16,15 +17,17 @@ var GroupMenuComponent = function(options)
   this.addChild(this.panel);
   
   // Create manage groups button
-  this.manageGroupsButton = new ButtonComponent({
-    x: middleX,
-    y: 132,
-    centerX: true,
-    centerY: true,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-    hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
-    text: "Manage Groups"
-  });
+  this.manageGroupsButton = new ButtonComponent(
+    screen,
+    {
+      x: middleX,
+      y: 132,
+      centerX: true,
+      centerY: true,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      text: "Manage Groups"
+    });
   this.addChild(this.manageGroupsButton);
   
   // Create dividers
@@ -63,7 +66,7 @@ GroupMenuComponent.prototype = new PIXI.DisplayObjectContainer;
 
 GroupMenuComponent.prototype.addGroup = function(groupId)
 {
-  var groupSelector = new GroupSelectorComponent(this, groupId);
+  var groupSelector = new GroupSelectorComponent(this.screen, this, groupId);
   
   this.selectors[groupId] = groupSelector;
   this.addChild(groupSelector);

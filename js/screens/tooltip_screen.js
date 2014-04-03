@@ -1,6 +1,7 @@
 var TooltipScreen = function()
 {
   this.type = ScreenType.Tooltip;
+  this.inputEnabled = true;
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = 100;
   this.tooltip = new TooltipComponent();

@@ -2,7 +2,8 @@ var ScreenType = Object.freeze({
   MainMenu: 0,
   WorldMap: 1,
   Loading: 2,
-  Tooltip: 3
+  Tooltip: 3,
+  ViewOrders: 4
 });
 
 var ScreenManager = function()

@@ -1,4 +1,4 @@
-var SelectedGroupPanelComponent = function(groupId, options)
+var SelectedGroupPanelComponent = function(screen, groupId, options)
 {
   var root = this;
   
@@ -6,12 +6,14 @@ var SelectedGroupPanelComponent = function(groupId, options)
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.groupId = groupId;
   this.group = adventurerManager.groups[groupId];
   this.position.x = game.containerWidth - 416;
   this.position.y = 50;
   this.z = options.z;
   this.orderButtons = [];
+  this.tooltipScreen = screenManager.screens[ScreenType.Tooltip];
   
   // Panel
   this.panel = new PanelComponent({
@@ -47,47 +49,56 @@ var SelectedGroupPanelComponent = function(groupId, options)
   }
   
   // Order buttons
-  this.moveButton = new ButtonComponent({
-    x: 0,
-    y: this.panel.height + 8,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
-    disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[2]),
-    tooltipText: "Move group",
-    onClick: function(e)
-      {
-        if (this.enabled)
+  this.moveButton = new ButtonComponent(
+    this.screen,
+    {
+      x: 0,
+      y: this.panel.height + 8,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
+      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[2]),
+      tooltipText: "Move group",
+      onClick: function(e)
         {
-          inputManager.leftButtonHandled = true;
-          orderManager.startOrderSetup();
+          if (this.enabled)
+          {
+            inputManager.leftButtonHandled = true;
+            orderManager.startOrderSetup();
+          }
+          else
+          {
+            inputManager.leftButtonHandled = true;
+            orderManager.endOrderSetup();
+          }
         }
-        else
-        {
-          inputManager.leftButtonHandled = true;
-          orderManager.endOrderSetup();
-        }
-      }
-  });
+    });
   this.panel.addChild(this.moveButton);
   this.orderButtons.push(this.moveButton);
   
-  this.ordersMenuButton = new ButtonComponent({
-    x: 32,
-    y: this.panel.height + 8,
-    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[0]),
-    disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[2]),
-    tooltipText: "View orders",
-    onClick: function(e)
-      {
-        if (this.enabled)
+  this.ordersMenuButton = new ButtonComponent(
+    this.screen,
+    {
+      x: 32,
+      y: this.panel.height + 8,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[0]),
+      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[2]),
+      tooltipText: "View orders",
+      onClick: function(e)
         {
-          inputManager.leftButtonHandled = true;
+          if (this.enabled)
+          {
+            inputManager.leftButtonHandled = true;
+            screenManager.addScreen(new ViewOrdersScreen());
+            root.tooltipScreen.disableTooltip();
+            root.screen.inputEnabled = false;
+          }
+          else
+          {
+            inputManager.leftButtonHandled = true;
+            screenManager.removeScreen(ScreenType.ViewOrders);
+            root.screen.inputEnabled = true;
+          }
         }
-        else
-        {
-          inputManager.leftButtonHandled = true;
-        }
-      }
-  });
+    });
   this.orderButtons.push(this.ordersMenuButton);
   this.panel.addChild(this.ordersMenuButton);
 };

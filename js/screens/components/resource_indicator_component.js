@@ -1,7 +1,8 @@
-var ResourceIndicatorComponent = function(resourceType, x, y)
+var ResourceIndicatorComponent = function(screen, resourceType, x, y)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.resourceType = resourceType;
   this.position.x = x;
   this.position.y = y;
@@ -32,10 +33,16 @@ ResourceIndicatorComponent.prototype.update = function()
 
 ResourceIndicatorComponent.prototype.onMouseOver = function(e)
 {
-  screenManager.screens[ScreenType.Tooltip].enableTooltip(this.resourceType);
+  if (this.screen.inputEnabled)
+  {
+    screenManager.screens[ScreenType.Tooltip].enableTooltip(this.resourceType);
+  }
 };
 
 ResourceIndicatorComponent.prototype.onMouseOut = function(e)
 {
-  screenManager.screens[ScreenType.Tooltip].disableTooltip();
+  if (this.screen.inputEnabled)
+  {
+    screenManager.screens[ScreenType.Tooltip].disableTooltip();
+  }
 };
