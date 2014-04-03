@@ -53,7 +53,7 @@ var ViewOrdersScreen = function(groupId)
   this.panel.addChild(this.doneButton);
   
   // Orders
-  this.buildOrderLabels();
+  this.buildOrders();
 };
 
 ViewOrdersScreen.prototype.onAddScreen = function()
@@ -69,12 +69,15 @@ ViewOrdersScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.panel);
 };
 
-ViewOrdersScreen.prototype.buildOrderLabels = function()
+ViewOrdersScreen.prototype.buildOrders = function()
 {
+  var root = this;
+  
   for (var i = 0; i < this.orders.length; i++)
   {
     var y = 68 + i * 48;
-    var text = (i + 1) + ". " + this.orders[i].name;
+    var order = this.orders[i];
+    var text = (i + 1) + ". " + order.name;
     var label = new PIXI.BitmapText(text, {font: "14px big_pixelmix", tint: 0xCCCCCC});
     var removeButton = new ButtonComponent(
       this,
@@ -85,17 +88,32 @@ ViewOrdersScreen.prototype.buildOrderLabels = function()
         hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.closeButtons[1]),
         onClick: function(e)
         {
-          
+          orderManager.cancelOrder(this.orderId); // I hate javascript's scoping
+          root.orders = orderManager.groupOrders[root.groupId] || [];
+          root.clearOrders();
+          root.buildOrders();
         }
       });
     
     label.position.x = 64;
     label.position.y = y;
+    removeButton.orderId = order.id;
     this.orderLabels.push(label);
     this.removeButtons.push(removeButton);
     this.panel.addChild(label);
     this.panel.addChild(removeButton);
   }
+};
+
+ViewOrdersScreen.prototype.clearOrders = function()
+{
+  for (var i = 0; i < this.orderLabels.length; i++)
+  {
+    this.panel.removeChild(this.orderLabels[i]);
+    this.panel.removeChild(this.removeButtons[i]);
+  }
+  this.orderLabels.length = 0;
+  this.removeButtons.length = 0;
 };
 
 ViewOrdersScreen.prototype.update = function()
