@@ -245,6 +245,11 @@ var AssetPathManager = function()
     "img/ui/cancel_order_button.png",
     "img/ui/cancel_order_button_disabled.png"
   ];
+  this.assetPaths.ui.ordersMenuButtons = [
+    "img/ui/orders_menu_button.png",
+    "img/ui/orders_menu_button.png",
+    "img/ui/orders_menu_button_disabled.png"
+  ];
   this.assetPaths.ui.partyIcons = ["img/ui/party_icon.png"];
   this.assetPaths.ui.pathOverlay = ["img/ui/path_overlay.png"];
   this.assetPaths.ui.exploreOrderButtons = [

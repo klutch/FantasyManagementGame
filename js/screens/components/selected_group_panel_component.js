@@ -1,5 +1,7 @@
 var SelectedGroupPanelComponent = function(groupId, options)
 {
+  var root = this;
+  
   options = options || {};
   
   this.base = PIXI.DisplayObjectContainer;
@@ -45,7 +47,6 @@ var SelectedGroupPanelComponent = function(groupId, options)
   }
   
   // Order buttons
-  var root = this;
   this.moveButton = new ButtonComponent({
     x: 0,
     y: this.panel.height + 8,
@@ -68,6 +69,27 @@ var SelectedGroupPanelComponent = function(groupId, options)
   });
   this.panel.addChild(this.moveButton);
   this.orderButtons.push(this.moveButton);
+  
+  this.ordersMenuButton = new ButtonComponent({
+    x: 32,
+    y: this.panel.height + 8,
+    normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[0]),
+    disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[2]),
+    tooltipText: "View orders",
+    onClick: function(e)
+      {
+        if (this.enabled)
+        {
+          inputManager.leftButtonHandled = true;
+        }
+        else
+        {
+          inputManager.leftButtonHandled = true;
+        }
+      }
+  });
+  this.orderButtons.push(this.ordersMenuButton);
+  this.panel.addChild(this.ordersMenuButton);
 };
 
 SelectedGroupPanelComponent.prototype = new PIXI.DisplayObjectContainer;
@@ -86,6 +108,8 @@ SelectedGroupPanelComponent.prototype.disableMoveButton = function()
 
 SelectedGroupPanelComponent.prototype.update = function()
 {
+  var groupHasOrders = orderManager.doesGroupHaveOrders(this.groupId);
+  
   // Escape key -- Deselect group
   if (inputManager.simpleKey(KeyCode.Escape))
   {
@@ -100,5 +124,15 @@ SelectedGroupPanelComponent.prototype.update = function()
   else if (!orderManager.settingUpOrder && !this.moveButton.enabled)
   {
     this.enableMoveButton();
+  }
+  
+  // Modify orders menu button
+  if (groupHasOrders && !this.ordersMenuButton.enabled)
+  {
+    this.ordersMenuButton.setEnabled(true);
+  }
+  else if (!groupHasOrders && this.ordersMenuButton.enabled)
+  {
+    this.ordersMenuButton.setEnabled(false);
   }
 };
