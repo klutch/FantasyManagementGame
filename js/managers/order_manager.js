@@ -560,6 +560,52 @@ OrderManager.prototype.getOrderContexts = function(i, j)
   return contexts;
 };
 
+OrderManager.prototype.rebuildPaths = function(groupId)
+{
+  var orders = this.groupOrders[groupId];
+  var startingI;
+  var startingJ;
+  
+  // Early exit
+  if (orders == null || orders.length == 0)
+  {
+    return;
+  }
+  
+  // Clear all paths
+  for (var i = 0; i < orders.length; i++)
+  {
+    this.pathPreview.clearPath(orders[i].path.getHead());
+  }
+  
+  // Rebuild paths
+  startingI = orders[0].path.getTail().i;
+  startingJ = orders[0].path.getTail().j;
+  for (var i = 1; i < orders.length; i++)
+  {
+    var order = orders[i];
+    var tail = order.path.getTail();
+    var newPath = pathfinderManager.findPath(startingI, startingJ, tail.i, tail.j, order.pathfindingOptions);
+    
+    if (newPath != null)
+    {
+      order.path = newPath;
+      startingI = order.path.getTail().i;
+      startingJ = order.path.getTail().j;
+    }
+    else
+    {
+      console.error("Couldn't find new path when rebuilding them.");
+    }
+  }
+  
+  // Redraw all paths
+  for (var i = 0; i < orders.length; i++)
+  {
+    this.pathPreview.drawPath(orders[i].path.getHead());
+  }
+}
+
 OrderManager.prototype.update = function()
 {
   var mouseI = this.worldMap.tileGridI;

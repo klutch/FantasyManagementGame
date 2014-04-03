@@ -1,5 +1,7 @@
 var ViewOrdersScreen = function(groupId)
 {
+  var root = this;
+  
   this.type = ScreenType.ViewOrders;
   this.inputEnabled = true;
   this.z = 90;
@@ -7,6 +9,7 @@ var ViewOrdersScreen = function(groupId)
   this.orders = orderManager.groupOrders[this.groupId];
   this.orderLabels = [];
   this.removeButtons = [];
+  this.rebuildPathsOnClose = false;
   
   // Background
   this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
@@ -46,6 +49,10 @@ var ViewOrdersScreen = function(groupId)
       centerY: true,
       onClick: function(e)
       {
+        if (root.rebuildPathsOnClose)
+        {
+          orderManager.rebuildPaths(root.groupId);
+        }
         screenManager.removeScreen(ScreenType.ViewOrders);
         screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
       }
@@ -92,6 +99,7 @@ ViewOrdersScreen.prototype.buildOrders = function()
           root.orders = orderManager.groupOrders[root.groupId] || [];
           root.clearOrders();
           root.buildOrders();
+          root.rebuildPathsOnClose = true;
         }
       });
     
