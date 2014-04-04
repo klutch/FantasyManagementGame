@@ -19,7 +19,6 @@ var ButtonComponent = function(screen, options)
   this.onMouseOver = options.onMouseOver;
   this.onMouseOut = options.onMouseOut;
   this.onClick = options.onClick;
-  this.tooltipText = options.tooltipText;
   this.enabled = true;
   
   // Textures
@@ -58,6 +57,24 @@ var ButtonComponent = function(screen, options)
     {
       this.textureSprite.position.y -= Math.floor(this.textureSprite.height * 0.5);
     }
+  }
+  
+  // Tooltip
+  if (options.tooltipText != null)
+  {
+    this.tooltipText = options.tooltipText;
+    
+    if (options.tooltipCategory == null)
+    {
+      console.error("Tooltip category is null");
+    }
+    if (options.tooltipTag == null)
+    {
+      console.error("Tooltip tag is null");
+    }
+    
+    this.tooltipCategory = options.tooltipCategory;
+    this.tooltipTag = options.tooltipTag;
   }
 };
 
@@ -102,7 +119,7 @@ ButtonComponent.prototype.mouseover = function(interactionData)
   // Tooltips
   if (this.tooltipText != null)
   {
-    screenManager.screens[ScreenType.Tooltip].enableTooltip(this.tooltipText);
+    screenManager.screens[ScreenType.Tooltip].addTooltip(this.tooltipCategory, this.tooltipTag, this.tooltipText);
   }
   
   // Callback
@@ -133,7 +150,7 @@ ButtonComponent.prototype.mouseout = function(interactionData)
   // Tooltips
   if (this.tooltipText != null)
   {
-    screenManager.screens[ScreenType.Tooltip].disableTooltip();
+    screenManager.screens[ScreenType.Tooltip].removeTooltip(this.tooltipCategory, this.tooltipTag);
   }
   
   // Callback

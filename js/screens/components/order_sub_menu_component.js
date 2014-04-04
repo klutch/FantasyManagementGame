@@ -10,7 +10,6 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
   this.group = adventurerManager.groups[groupId];
   this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   this.worldMap = this.worldMapScreen.worldMap;
-  this.hasTooltip = false;
   this.buttons = [];
   
   // Main icon
@@ -35,9 +34,9 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           x: 0,
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.exploreOrderButtons[0]),
+          tooltipCategory: "orderSubMenu",
+          tooltipTag: "exploreButton",
           tooltipText: "Explore",
-          onMouseOver: function(e) { root.hasTooltip = true; },
-          onMouseOut: function(e) { root.hasTooltip = false; },
           onClick: function(e) 
           {
             if (orderManager.createExploreOrder(groupId, tileI, tileJ))
@@ -55,9 +54,9 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           x: 0,
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.visitOrderButtons[0]),
+          tooltipCategory: "orderSubMenu",
+          tooltipTag: "visitDwellingButton",
           tooltipText: "Visit Dwelling",
-          onMouseOver: function(e) { root.hasTooltip = true; },
-          onMouseOut: function(e) { root.hasTooltip = false; },
           onClick: function(e) 
           {
             if (orderManager.createVisitDwellingOrder(groupId, tile.featureId))
@@ -75,9 +74,9 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           x: 0,
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.visitOrderButtons[0]),
+          tooltipCategory: "orderSubMenu",
+          tooltipTag: "visitGatheringButton",
           tooltipText: "Visit Gathering",
-          onMouseOver: function(e) { root.hasTooltip = true; },
-          onMouseOut: function(e) { root.hasTooltip = false; },
           onClick: function(e) 
           {
             if(orderManager.createVisitGatheringOrder(groupId, tile.featureId))
@@ -95,9 +94,9 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           x: 0,
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.cutLogsOrderButtons[0]),
+          tooltipCategory: "orderSubMenu",
+          tooltipTag: "cutLogsButton",
           tooltipText: "Cut Logs",
-          onMouseOver: function(e) { root.hasTooltip = true; },
-          onMouseOut: function(e) { root.hasTooltip = false; },
           onClick: function(e) { alert("cut logs button clicked"); }
         });
     }
@@ -109,9 +108,9 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           x: 0,
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mineOrderButtons[0]),
+          tooltipCategory: "orderSubMenu",
+          tooltipTag: "mineButton",
           tooltipText: "Mine",
-          onMouseOver: function(e) { root.hasTooltip = true; },
-          onMouseOut: function(e) { root.hasTooltip = false; },
           onClick: function(e) { alert("mine button clicked"); }
         });
     }
@@ -123,9 +122,9 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           x: 0,
           y: 0,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.combatOrderButtons[0]),
+          tooltipCategory: "orderSubMenu",
+          tooltipTag: "raidButton",
           tooltipText: "Raid",
-          onMouseOver: function(e) { root.hasTooltip = true; },
-          onMouseOut: function(e) { root.hasTooltip = false; },
           onClick: function(e) { alert("raid button clicked"); }
         });
     }
@@ -152,10 +151,7 @@ OrderSubMenuComponent.prototype.commonOnClick = function()
 
 OrderSubMenuComponent.prototype.close = function()
 {
-  if (this.hasTooltip)
-  {
-    screenManager.screens[ScreenType.Tooltip].disableTooltip();
-  }
+  screenManager.screens[ScreenType.Tooltip].removeCategory("orderSubMenu");
   this.worldMapScreen.closeOrderSubmenu();
 };
 

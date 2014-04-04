@@ -31,11 +31,11 @@ PathfinderDebugComponent.prototype.addOpenNode = function(node)
   sprite.buttonMode = true;
   sprite.mouseover = function()
     {
-      tooltipScreen.enableTooltip("G: " + node.g + ", H: " + node.h + ", F: " + node.f);
+      tooltipScreen.addTooltip("pathfinderDebug", "debugValues", "G: " + node.g + ", H: " + node.h + ", F: " + node.f);
     };
   sprite.mouseout = function()
     {
-      tooltipScreen.disableTooltip();
+      tooltipScreen.removeTooltip("pathfinderDebug", "debugValues");
     };
   this.nodeSprites[pathfinderManager.getKey(node.i, node.j)] = sprite;
   this.addChild(sprite);

@@ -56,6 +56,8 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
       y: this.panel.height + 8,
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
       disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[2]),
+      tooltipCategory: "selectedGroupPanel",
+      tooltipTag: "moveGroupButton",
       tooltipText: "Move group",
       onClick: function(e)
         {
@@ -81,14 +83,17 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
       y: this.panel.height + 8,
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[0]),
       disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[2]),
+      tooltipCategory: "selectedGroupPanel",
+      tooltipTag: "viewOrdersButton",
       tooltipText: "View orders",
       onClick: function(e)
         {
           if (this.enabled)
           {
             inputManager.leftButtonHandled = true;
+            root.tooltipScreen.removeCategory("selectedGroupPanel");
+            //root.tooltipScreen.removeCategory("worldMapScreen");
             screenManager.addScreen(new ViewOrdersScreen(root.groupId));
-            root.tooltipScreen.disableTooltip();
             root.screen.inputEnabled = false;
           }
           else

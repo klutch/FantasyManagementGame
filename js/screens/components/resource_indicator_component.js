@@ -35,7 +35,7 @@ ResourceIndicatorComponent.prototype.onMouseOver = function(e)
 {
   if (this.screen.inputEnabled)
   {
-    screenManager.screens[ScreenType.Tooltip].enableTooltip(this.resourceType);
+    screenManager.screens[ScreenType.Tooltip].addTooltip("resourceBar", this.resourceType, this.resourceType);
   }
 };
 
@@ -43,6 +43,6 @@ ResourceIndicatorComponent.prototype.onMouseOut = function(e)
 {
   if (this.screen.inputEnabled)
   {
-    screenManager.screens[ScreenType.Tooltip].disableTooltip();
+    screenManager.screens[ScreenType.Tooltip].removeTooltip("resourceBar", this.resourceType);
   }
 };

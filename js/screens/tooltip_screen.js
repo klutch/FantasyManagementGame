@@ -5,11 +5,11 @@ var TooltipScreen = function()
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = 100;
   this.tooltip = new TooltipComponent();
-  this.tooltipUses = 0; // Number of elements trying to use the tooltip
   this.boundaryMargin = 16;
   this.tooltipOffsetX = 16;
   this.upperLeftBounds = new PIXI.Point(this.boundaryMargin, this.boundaryMargin);
   this.lowerRightBounds = new PIXI.Point(game.containerWidth - this.boundaryMargin, game.containerHeight - this.boundaryMargin);
+  this.tips = {};
 };
 
 TooltipScreen.prototype.onAddScreen = function()
@@ -22,26 +22,20 @@ TooltipScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.container);
 };
 
-TooltipScreen.prototype.enableTooltip = function(text)
+TooltipScreen.prototype.getNextTooltip = function()
 {
-  this.tooltip.setText(text);
-  this.tooltip.position.x = -1000;
-  this.tooltip.position.y = -1000;
-  this.tooltip.text.updateText();
-  if (this.tooltipUses == 0)
+  for (var categoryKey in this.tips)
   {
-    this.container.addChild(this.tooltip);
-  }
-  this.tooltip.updateTransform();
-  this.tooltipUses++;
-};
-
-TooltipScreen.prototype.disableTooltip = function()
-{
-  this.tooltipUses--;
-  if (this.tooltipUses == 0)
-  {
-    this.container.removeChild(this.tooltip);
+    if (this.tips.hasOwnProperty(categoryKey))
+    {
+      for (var tagKey in this.tips[categoryKey])
+      {
+        if (this.tips[categoryKey].hasOwnProperty(tagKey))
+        {
+          return this.tips[categoryKey][tagKey];
+        }
+      }
+    }
   }
 };
 
@@ -59,11 +53,69 @@ TooltipScreen.prototype.setTooltipPosition = function(mouse)
   this.tooltip.position.y = Math.min(this.lowerRightBounds.y - this.tooltip.text.textHeight, this.tooltip.position.y);
 };
 
-TooltipScreen.prototype.update = function()
+TooltipScreen.prototype.setText = function(text)
 {
-  if (this.tooltipUses > 0)
+  this.tooltip.setText(text);
+  this.tooltip.text.updateTransform();
+};
+
+TooltipScreen.prototype.addTooltip = function(category, tag, text)
+{
+  var wasEmpty = _.size(this.tips) == 0;
+  
+  if (this.tips[category] == null)
   {
-    this.setTooltipPosition(inputManager.mousePosition);
+    this.tips[category] = {};
+  }
+  this.tips[category][tag] = text;
+  
+  if (wasEmpty)
+  {
+    this.setText(text);
+    this.container.addChild(this.tooltip);
   }
 };
 
+TooltipScreen.prototype.removeTooltip = function(category, tag)
+{
+  delete this.tips[category][tag];
+  
+  if (_.size(this.tips[category]) == 0)
+  {
+    delete this.tips[category];
+  }
+  
+  if (_.size(this.tips) == 0)
+  {
+    this.container.removeChild(this.tooltip);
+  }
+  else
+  {
+    this.setText(this.getNextTooltip());
+  }
+};
+
+TooltipScreen.prototype.removeCategory = function(category)
+{
+  // Early exit
+  if (this.tips[category] == null)
+  {
+    return;
+  }
+  
+  delete this.tips[category];
+  
+  if (_.size(this.tips) == 0)
+  {
+    this.container.removeChild(this.tooltip);
+  }
+  else
+  {
+    this.setText(this.getNextTooltip());
+  }
+};
+
+TooltipScreen.prototype.update = function()
+{
+  this.setTooltipPosition(inputManager.mousePosition);
+};

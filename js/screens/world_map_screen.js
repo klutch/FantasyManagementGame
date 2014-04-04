@@ -49,6 +49,8 @@ var WorldMapScreen = function(world)
       z: this.z + 2,
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
       onClick: function(e) { root.worldMap.moveCameraToHome(); },
+      tooltipCategory: "worldMapScreen",
+      tooltipTag: "homeCastleButton",
       tooltipText: "Center on home castle"
     });
   
@@ -61,6 +63,8 @@ var WorldMapScreen = function(world)
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
       hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
       onClick: function(e) { root.toggleGroupMenu(); },
+      tooltipCategory: "worldMapScreen",
+      tooltipTag: "groupMenuButton",
       tooltipText: "Group menu"
     });
   this.mainButtonsContainer.addChild(this.groupButton);
@@ -74,6 +78,8 @@ var WorldMapScreen = function(world)
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[0]),
       hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[1]),
       onClick: function(e) { turnManager.startProcessing(); },
+      tooltipCategory: "worldMapScreen",
+      tooltipTag: "endTurnButton",
       tooltipText: "End turn"
     });
   this.mainButtonsContainer.addChild(this.endTurnButton);
