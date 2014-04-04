@@ -48,7 +48,7 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
     this.panel.addChild(portrait);
   }
   
-  // Order buttons
+  // Move button
   this.moveButton = new ButtonComponent(
     this.screen,
     {
@@ -76,6 +76,7 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   this.panel.addChild(this.moveButton);
   this.orderButtons.push(this.moveButton);
   
+  // View orders button
   this.ordersMenuButton = new ButtonComponent(
     this.screen,
     {
@@ -92,15 +93,9 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
           {
             inputManager.leftButtonHandled = true;
             root.tooltipScreen.removeCategory("selectedGroupPanel");
-            //root.tooltipScreen.removeCategory("worldMapScreen");
+            root.tooltipScreen.removeCategory("worldMapScreen");
             screenManager.addScreen(new ViewOrdersScreen(root.groupId));
             root.screen.inputEnabled = false;
-          }
-          else
-          {
-            inputManager.leftButtonHandled = true;
-            screenManager.removeScreen(ScreenType.ViewOrders);
-            root.screen.inputEnabled = true;
           }
         }
     });
