@@ -72,29 +72,6 @@ WorldManager.prototype.addFeature = function(feature)
   }
 };
 
-/*
-WorldManager.prototype.createFeature = function(featureType, x, y, width, height)
-{
-  var id = this.world.features.length;
-  var feature = new Feature(id, featureType, x, y, width, height);
-  
-  this.world.features[id] = feature;
-  
-  for (var i = 0; i < width; i++)
-  {
-    for (var j = 0; j < height; j++)
-    {
-      var tile = this.getTile(x + i, y + j);
-      
-      tile.featureId = id;
-      tile.featureTextureI = i;
-      tile.featureTextureJ = j;
-    }
-  }
-  
-  return feature;
-};*/
-
 // Discover tiles in a radius around a given tile
 WorldManager.prototype.discoverRadius = function(tileI, tileJ, radius)
 {
