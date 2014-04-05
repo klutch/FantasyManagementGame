@@ -9,6 +9,12 @@ var WorldManager = function(seed)
 WorldManager.prototype.getGridI = function(x) { return Math.floor(x / TILE_SIZE); };
 WorldManager.prototype.getGridJ = function(y) { return Math.floor(y / TILE_SIZE); };
 
+// Get unused feature id
+WorldManager.prototype.getUnusedFeatureId = function()
+{
+  return this.world.features.length;
+};
+
 // Does tile exist
 WorldManager.prototype.doesTileExist = function(i, j)
 {
@@ -48,7 +54,25 @@ WorldManager.prototype.generateTile = function(i, j)
   return this.world.tiles[i][j];
 };
 
-// Create feature
+// Add feature
+WorldManager.prototype.addFeature = function(feature)
+{
+  this.world.features[feature.id] = feature;
+  
+  for (var i = 0; i < feature.width; i++)
+  {
+    for (var j = 0; j < feature.height; j++)
+    {
+      var tile = this.getTile(feature.tileI + i, feature.tileJ + j);
+      
+      tile.featureId = feature.id;
+      tile.featureTextureI = i;
+      tile.featureTextureJ = j;
+    }
+  }
+};
+
+/*
 WorldManager.prototype.createFeature = function(featureType, x, y, width, height)
 {
   var id = this.world.features.length;
@@ -69,7 +93,7 @@ WorldManager.prototype.createFeature = function(featureType, x, y, width, height
   }
   
   return feature;
-};
+};*/
 
 // Discover tiles in a radius around a given tile
 WorldManager.prototype.discoverRadius = function(tileI, tileJ, radius)

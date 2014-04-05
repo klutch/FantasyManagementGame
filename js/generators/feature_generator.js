@@ -53,6 +53,8 @@ var FeatureGenerator = function(seed)
 FeatureGenerator.prototype.generatePlayerCastle = function()
 {
   var found = false;
+  var castleI;
+  var castleJ;
   
   for (var i = -1000; i < 1000; i++)
   {
@@ -61,8 +63,8 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
       if (this.checkTerrainType(TileType.Grassland, i, j, 4, 4))
       {
         found = true;
-        worldManager.world.playerCastleI = i;
-        worldManager.world.playerCastleJ = j;
+        castleI = i;
+        castleJ = j;
         break;
       }
     }
@@ -77,8 +79,9 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   }
   
   // Create feature
-  feature = worldManager.createFeature(FeatureType.Castle, worldManager.world.playerCastleI, worldManager.world.playerCastleJ, 4, 4);
-  feature.castleType = CastleType.Player;
+  feature = FeatureFactory.createPlayerCastle(castleI, castleJ);
+  worldManager.world.playerCastleI = castleI;
+  worldManager.world.playerCastleJ = castleJ;
   worldManager.world.playerCastleFeatureId = feature.id;
 };
 
@@ -94,14 +97,12 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
-        if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
+        if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)   // try to build close to roads
         {
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
             // Create town
-            var feature = worldManager.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
-
-            feature.dwellingType = DwellingType.Town;
+            FeatureFactory.createTownDwelling(tileI, tileJ);
           }
         }
       }
@@ -111,9 +112,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create grove
-        var feature = worldManager.createFeature(FeatureType.Dwelling, tileI, tileJ, 2, 2);
-        
-        feature.dwellingType = DwellingType.Grove;
+        FeatureFactory.createGroveDwelling(tileI, tileJ);
       }
     }
   }
@@ -125,9 +124,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create cave dungeon
-        var feature = worldManager.createFeature(FeatureType.Dungeon, tileI, tileJ, 2, 2);
-        
-        feature.dungeonType = DungeonType.Cave;
+        FeatureFactory.createCaveDungeon(tileI, tilej);
       }
     }
   }
@@ -143,9 +140,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
             // Create tavern
-            var feature = worldManager.createFeature(FeatureType.Gathering, tileI, tileJ, 2, 1);
-
-            feature.gatheringType = GatheringType.Tavern;
+            FeatureFactory.createTavernGathering(tileI, tileJ);
           }
         }
       }
