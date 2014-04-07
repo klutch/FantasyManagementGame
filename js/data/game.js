@@ -73,27 +73,17 @@ Game.prototype.startNewGame = function()
   turnManager = new TurnManager();
   raidManager = new RaidManager();
   pathfinderManager = new PathfinderManager();
+  notificationManager = new NotificationManager();
 };
 
 Game.prototype.update = function()
 {
   inputManager.update();
-  if (orderManager != null)
-  {
-    orderManager.update();
-  }
-  if (turnManager != null)
-  {
-    turnManager.update();
-  }
-  if (raidManager != null)
-  {
-    raidManager.update();
-  }
-  if (pathfinderManager != null)
-  {
-    pathfinderManager.update();
-  }
+  if (orderManager != null) { orderManager.update(); }
+  if (turnManager != null) { turnManager.update(); }
+  if (raidManager != null) { raidManager.update(); }
+  if (pathfinderManager != null) { pathfinderManager.update(); }
+  if (notificationManager != null) { notificationManager.update(); }
   screenManager.update();
   inputManager.postUpdate();
 };

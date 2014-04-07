@@ -85,6 +85,15 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   worldManager.world.playerCastleFeatureId = feature.id;
 };
 
+// Get a coin flip based on 
+FeatureGenerator.prototype.getCoinFlip = function(tileI, tileJ, iMultiplier, jMultiplier)
+{
+  iMultiplier = iMultiplier == undefined ? 1 : iMultiplier;
+  jMultiplier = jMultiplier == undefined ? 1 : jMultiplier;
+  
+  return this.coinFlips[(tileI * iMultiplier + tileJ * jMultiplier) & (this.numCoinFlips - 1)];
+};
+
 // Try to generate a feature at a given tile
 FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
 {
@@ -99,10 +108,26 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       {
         if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)   // try to build close to roads
         {
-          if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
+          if (this.getCoinFlip(tileI, tileJ, 7, 133))
           {
             // Create town
-            FeatureFactory.createTownDwelling(tileI, tileJ);
+            var options = {};
+            
+            // TODO: These are mostly temporary values
+            options.isLoyaltyFree = this.getCoinFlip(tileI, tileJ, 13, 29);
+            options.requiresGift = options.isLoyaltyFree ? false : this.getCoinFlip(tileI, tileJ, 19, 23);
+            options.isLoyal = false;
+            options.numWorkersAvailable = 2;
+            options.workerCost = 50;
+            
+            if (options.requiresGift)
+            {
+              options.giftResourceType = ResourceType.Gold;
+              options.giftAmountRequired = 10;
+              options.giftAmountGiven = 0;
+            }
+            
+            FeatureFactory.createTownDwelling(tileI, tileJ, options);
           }
         }
       }
@@ -112,7 +137,23 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create grove
-        FeatureFactory.createGroveDwelling(tileI, tileJ);
+        var options = {};
+            
+        // TODO: These are mostly temporary values
+        options.isLoyaltyFree = this.getCoinFlip(tileI, tileJ, 17, 29);
+        options.requiresGift = options.isLoyaltyFree ? false : this.getCoinFlip(tileI, tileJ, 17, 23);
+        options.isLoyal = false;
+        options.numWorkersAvailable = 2;
+        options.workerCost = 50;
+
+        if (options.requiresGift)
+        {
+          options.giftResourceType = ResourceType.Gold;
+          options.giftAmountRequired = 10;
+          options.giftAmountGiven = 0;
+        }
+        
+        FeatureFactory.createGroveDwelling(tileI, tileJ, options);
       }
     }
   }
@@ -124,7 +165,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
         // Create cave dungeon
-        FeatureFactory.createCaveDungeon(tileI, tilej);
+        FeatureFactory.createCaveDungeon(tileI, tileJ);
       }
     }
   }

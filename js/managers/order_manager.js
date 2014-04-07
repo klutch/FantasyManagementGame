@@ -209,7 +209,7 @@ OrderManager.prototype.processQueuedOrders = function()
   }
   
   // Check for end of turn
-  if (this.doneProcessingOrdersForTurn)
+  if (this.doneProcessingOrdersForTurn && turnManager.state == TurnState.Processing)
   {
     turnManager.endProcessing();
     adventurerManager.resetGroupMovement();
@@ -420,6 +420,8 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
+          notificationManager.createDwellingVisitNotification(featureId);
+          turnManager.pauseProcessing();
           
           if (!root.doesGroupHaveOrders(groupId))
           {

@@ -25,6 +25,7 @@ var orderManager;
 var turnManager;
 var raidManager;
 var pathfinderManager;
+var notificationManager;
 
 // Initialize
 function initialize()

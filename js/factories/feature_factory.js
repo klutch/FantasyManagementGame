@@ -14,7 +14,7 @@ FeatureFactory.createPlayerCastle = function(tileI, tileJ)
   return feature;
 };
 
-FeatureFactory.createTownDwelling = function(tileI, tileJ)
+FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
 {
   var feature = new Feature(
     worldManager.getUnusedFeatureId(),
@@ -23,13 +23,22 @@ FeatureFactory.createTownDwelling = function(tileI, tileJ)
     tileJ,
     2,
     2);
+  
+  options = options || {};
+  for (var key in options)
+  {
+    if (options.hasOwnProperty(key))
+    {
+      feature[key] = options[key];
+    }
+  }
   
   feature.dwellingType = DwellingType.Town;
   worldManager.addFeature(feature);
   return feature;
 };
 
-FeatureFactory.createGroveDwelling = function(tileI, tileJ)
+FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
 {
   var feature = new Feature(
     worldManager.getUnusedFeatureId(),
@@ -39,12 +48,21 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ)
     2,
     2);
   
+  options = options || {};
+  for (var key in options)
+  {
+    if (options.hasOwnProperty(key))
+    {
+      feature[key] = options[key];
+    }
+  }
+  
   feature.dwellingType = DwellingType.Grove;
   worldManager.addFeature(feature);
   return feature;
 };
 
-FeatureFactory.createCaveDungeon = function(tileI, tileJ)
+FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
 {
   var feature = new Feature(
     worldManager.getUnusedFeatureId(),
@@ -54,12 +72,21 @@ FeatureFactory.createCaveDungeon = function(tileI, tileJ)
     2,
     2);
   
+  options = options || {};
+  for (var key in options)
+  {
+    if (options.hasOwnProperty(key))
+    {
+      feature[key] = options[key];
+    }
+  }
+  
   feature.dungeonType = DungeonType.Cave;
   worldManager.addFeature(feature);
   return feature;
 };
 
-FeatureFactory.createTavernGathering = function(tileI, tileJ)
+FeatureFactory.createTavernGathering = function(tileI, tileJ, options)
 {
   var feature = new Feature(
     worldManager.getUnusedFeatureId(),
@@ -68,6 +95,15 @@ FeatureFactory.createTavernGathering = function(tileI, tileJ)
     tileJ,
     2,
     1);
+  
+  options = options || {};
+  for (var key in options)
+  {
+    if (options.hasOwnProperty(key))
+    {
+      feature[key] = options[key];
+    }
+  }
   
   feature.gatheringType = GatheringType.Tavern;
   worldManager.addFeature(feature);

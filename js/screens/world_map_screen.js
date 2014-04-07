@@ -183,6 +183,37 @@ WorldMapScreen.prototype.setTileSelectorColor = function(tint)
   this.worldMap.tileSelection.tint = tint;
 };
 
+WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
+{
+  if (worldManager.doesTileExist(tileI, tileJ))
+  {
+    var tile = worldManager.getTile(tileI, tileJ);
+    var feature = tile.featureId == undefined ? null : worldManager.world.features[tile.featureId];
+    var string = "";
+    
+    string += "Tile [" + tile.i + ", " + tile.j + "]:\n";
+    string += "\ttype: " + tile.type + "\n";
+    
+    if (feature != null)
+    {
+      string += "\nFeature [" + feature.id + "]:";
+      string += "\ttype: " + feature.type + "\n";
+      
+      if (feature.type == FeatureType.Dwelling)
+      {
+        string += "\tdwellingType: " + feature.dwellingType + "\n";
+        string += "\tisLoyaltyFree: " + feature.isLoyaltyFree + "\n";
+        string += "\trequiresGift: " + feature.requiresGift + "\n";
+      }
+    }
+  }
+  else
+  {
+    string += "Tile does not exist.";
+  }
+  alert(string);
+};
+
 WorldMapScreen.prototype.handleInput = function()
 {
   // Handle input
@@ -208,7 +239,7 @@ WorldMapScreen.prototype.handleInput = function()
   }
   if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
   {
-    alert("world map clicked: [" + this.worldMap.tileGridI + ", " + this.worldMap.tileGridJ + "]");
+    this.debugClick(this.worldMap.tileGridI, this.worldMap.tileGridJ);
   }
   
   // E key -- End turn
