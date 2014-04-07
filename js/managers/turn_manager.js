@@ -12,11 +12,19 @@ TurnManager.prototype.startProcessing = function()
   {
     orderManager.endOrderSetup();
   }
+  
+  // Add notification screen
+  screenManager.addScreen(notificationManager.notificationScreen);
+  screenManager.screens[ScreenType.WorldMap].inputEnabled = false;
 };
 
 TurnManager.prototype.endProcessing = function()
 {
   this.state = TurnState.Ready;
+  
+  // Remove notifications screen
+  screenManager.removeScreen(ScreenType.Notification);
+  screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
 };
 
 TurnManager.prototype.pauseProcessing = function()

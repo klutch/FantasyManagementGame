@@ -5,6 +5,7 @@ var DwellingLoyaltyComponent = function(screen, featureId)
   this.screen = screen;
   this.featureId = featureId;
   this.feature = worldManager.world.features[this.featureId];
+  this.z = 1;
   
   // Panel
   this.panel = new PanelComponent({
@@ -38,7 +39,7 @@ DwellingLoyaltyComponent.prototype.getGreetingText = function()
 {
   if (this.feature.isLoyaltyFree)
   {
-    return "A group of locals comes out and gives\n" +
+    return "A group of locals come out and give\n" +
       "you a warm welcome. They pledge their\n" +
       "loyalty to you freely.\n\n" +
       "You may now hire workers from them.";
@@ -75,7 +76,7 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       this.screen,
       {
         x: 100,
-        y: 232,
+        y: 180,
         normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
         hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
         text: "Done",
@@ -107,23 +108,23 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       this.panel.addChild(giftButton);
       numButtons++;
     }
+    
+    // Subjugate button
+    subjugateButton = new ButtonComponent(
+      this.screen,
+      {
+        x: 100,
+        y: 180 + numButtons * 48,
+        normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
+        hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+        text: "Subjugate Dwelling",
+        centerX: true,
+        centerY: true,
+        onClick: function(e) { root.subjugate(); }
+      });
+    this.panel.addChild(subjugateButton);
+    numButtons++;
   }
-  
-  // Subjugate button
-  subjugateButton = new ButtonComponent(
-    this.screen,
-    {
-      x: 100,
-      y: 180 + numButtons * 48,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
-      text: "Subjugate Dwelling",
-      centerX: true,
-      centerY: true,
-      onClick: function(e) { root.subjugate(); }
-    });
-  this.panel.addChild(subjugateButton);
-  numButtons++;
   
   // Leave button
   if (addLeaveButton)
