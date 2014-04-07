@@ -49,5 +49,9 @@ NotificationManager.prototype.update = function()
         this.notificationScreen.openNotification(this.notifications[0]);
       }
     }
+    else
+    {
+      turnManager.resumeProcessing();
+    }
   }
 };

@@ -33,7 +33,7 @@ NotificationScreen.prototype.openNotification = function(notification)
 {
   if (notification.type == NotificationType.DwellingVisit)
   {
-    var componentInstance = new notification.component(this, notification.featureId);
+    var componentInstance = new notification.component(this, notification, notification.featureId);
     
     notification.componentInstance = componentInstance;
     this.container.addChild(this.background);

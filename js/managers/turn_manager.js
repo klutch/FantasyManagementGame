@@ -29,7 +29,6 @@ TurnManager.prototype.endProcessing = function()
 
 TurnManager.prototype.pauseProcessing = function()
 {
-  console.log("paused processing");
   this.state = TurnState.PausedProcessing;
 };
 

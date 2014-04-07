@@ -1,8 +1,9 @@
-var DwellingLoyaltyComponent = function(screen, featureId)
+var DwellingLoyaltyComponent = function(screen, notification, featureId)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.screen = screen;
+  this.notification = notification;
   this.featureId = featureId;
   this.feature = worldManager.world.features[this.featureId];
   this.z = 1;
@@ -82,7 +83,7 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
         text: "Done",
         centerX: true,
         centerY: true,
-        onClick: function(e) { root.done(); }
+        onClick: function(e) { root.close(); }
       });
     this.panel.addChild(doneButton);
     numButtons++;
@@ -139,8 +140,14 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
         text: "Leave",
         centerX: true,
         centerY: true,
-        onClick: function(e) { root.done(); }
+        onClick: function(e) { root.close(); }
       });
     this.panel.addChild(leaveButton);
   }
+};
+
+DwellingLoyaltyComponent.prototype.close = function()
+{
+  this.screen.closeNotification(this.notification);
+  notificationManager.removeNotification(this.notification);
 };
