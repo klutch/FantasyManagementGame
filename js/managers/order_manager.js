@@ -300,7 +300,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
   }
 };
 
-OrderManager.prototype.createReturnOrder = function(groupId)
+OrderManager.prototype.createReturnOrder = function(groupId, options)
 {
   var root = this;
   var group = adventurerManager.groups[groupId];
@@ -308,6 +308,9 @@ OrderManager.prototype.createReturnOrder = function(groupId)
   var pathfindingOptions = {preferDiscoveredTerrain: true};
   var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ, pathfindingOptions);
   var order;
+  
+  options = options || {};
+  options.isDoneForThisTurn = options.isDoneForThisTurn == undefined ? false : options.isDoneForThisTurn;
   
   if (path != null)
   {
@@ -334,7 +337,8 @@ OrderManager.prototype.createReturnOrder = function(groupId)
         {
           root.pathPreview.clearPath(this.path.getHead());
           adventurerManager.moveGroupIntoFeature(groupId);
-        }
+        },
+        isDoneForThisTurn: options.isDoneForThisTurn
       });
     this.addOrder(order);
     this.pathPreview.drawPath(path);
@@ -425,7 +429,7 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
           
           if (!root.doesGroupHaveOrders(groupId))
           {
-            root.createReturnOrder(groupId);
+            root.createReturnOrder(groupId, {isDoneForThisTurn: true});
           }
         }
       });

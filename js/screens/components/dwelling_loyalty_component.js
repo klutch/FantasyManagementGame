@@ -7,6 +7,9 @@ var DwellingLoyaltyComponent = function(screen, notification, featureId)
   this.featureId = featureId;
   this.feature = worldManager.world.features[this.featureId];
   this.z = 1;
+  this.buttons = [];
+  this.inputEnabled = true;
+  this.confirmBox = null;
   
   // Panel
   this.panel = new PanelComponent({
@@ -66,7 +69,6 @@ DwellingLoyaltyComponent.prototype.getGreetingText = function()
 DwellingLoyaltyComponent.prototype.buildButtons = function()
 {
   var root = this;
-  var numButtons = 0;
   var addLeaveButton = true;
   var subjugateButton;
   
@@ -83,10 +85,16 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
         text: "Done",
         centerX: true,
         centerY: true,
-        onClick: function(e) { root.close(); }
+        onClick: function(e) 
+        {
+          if (root.inputEnabled)
+          {
+            root.close();
+          }
+        }
       });
     this.panel.addChild(doneButton);
-    numButtons++;
+    this.buttons.push(doneButton);
     addLeaveButton = false;
   }
   else
@@ -98,16 +106,43 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
         this.screen,
         {
           x: 100,
-          y: 180 + numButtons * 48,
+          y: 180 + this.buttons.length * 48,
           normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
           hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
           text: "Offer Gift",
           centerX: true,
           centerY: true,
-          onClick: function(e) { root.openGiftPanel(); }
+          onClick: function(e) 
+          {
+            if (root.inputEnabled)
+            {
+              root.confirmBox = new ConfirmBoxComponent(
+                root.screen,
+                "Give a gift of " + root.feature.giftAmountRequired + " " + root.feature.giftResourceType + "?",
+                function()
+                {
+                  // Okay
+                  console.log("TODO: Put a call to gift giving logic right here. Also handle cases where player doesn't have the amount required.");
+                  root.removeChild(root.confirmBox);
+                  root.close();
+                  notificationManager.removeNotification(root.notification);
+                },
+                function()
+                {
+                  // Cancel
+                  root.removeChild(root.confirmBox);
+                  root.inputEnabled = true;
+                },
+                {
+                  x: Math.floor(game.containerWidth * 0.5),
+                  y: Math.floor(game.containerHeight * 0.5)
+                });
+              root.addChild(root.confirmBox);
+            }
+          }
         });
       this.panel.addChild(giftButton);
-      numButtons++;
+      this.buttons.push(giftButton);
     }
     
     // Subjugate button
@@ -115,16 +150,22 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       this.screen,
       {
         x: 100,
-        y: 180 + numButtons * 48,
+        y: 180 + this.buttons.length * 48,
         normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
         hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
         text: "Subjugate Dwelling",
         centerX: true,
         centerY: true,
-        onClick: function(e) { root.subjugate(); }
+        onClick: function(e) 
+        {
+          if (root.inputEnabled)
+          {
+            console.log("subjugate");
+          }
+        }
       });
     this.panel.addChild(subjugateButton);
-    numButtons++;
+    this.buttons.push(subjugateButton);
   }
   
   // Leave button
@@ -134,15 +175,22 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       this.screen,
       {
         x: 100,
-        y: 180 + numButtons * 48,
+        y: 180 + this.buttons.length * 48,
         normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
         hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
         text: "Leave",
         centerX: true,
         centerY: true,
-        onClick: function(e) { root.close(); }
+        onClick: function(e) 
+        {
+          if (root.inputEnabled)
+          {
+            root.close();
+          }
+        }
       });
     this.panel.addChild(leaveButton);
+    this.buttons.push(leaveButton);
   }
 };
 
