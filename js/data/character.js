@@ -12,7 +12,9 @@ var Character = function(id, type, options)
   options.baseDefense = options.baseDefense || 0;
   options.baseSupport = options.baseSupport || 0;
   options.movementAbility = options.movementAbility || 50;
-  options.isWorker = options.isWorker || false;
+  options.isMiner = options.isMiner || false;
+  options.isLogger = options.isLogger || false;
+  options.isLaborer = options.isLaborer || false;
   options.description = options.description || "TODO: This character needs a description.";
   options.discoveryRadius = options.discoveryRadius || 8;
   
@@ -22,6 +24,9 @@ var Character = function(id, type, options)
   this.baseDefense = options.baseDefense;
   this.baseSupport = options.baseSupport;
   this.movementAbility = options.movementAbility;
-  this.isWorker = options.isWorker;
+  this.isMiner = options.isMiner;
+  this.isLogger = options.isLogger;
+  this.isLaborer = options.isLaborer;
+  this.isWorker = this.isMiner || this.isLogger || this.isLaborer;
   this.discoveryRadius = options.discoveryRadius;
 };

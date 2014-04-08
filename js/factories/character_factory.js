@@ -41,3 +41,39 @@ CharacterFactory.createHealer = function(powerLevel)
       description: "Healers are trained to support their team."
     });
 };
+
+CharacterFactory.createMinerWorker = function()
+{
+  return new Character(
+    characterManager.getUnusedCharacterId(),
+    CharacterType.Worker,
+    {
+      isMiner: true,
+      movementAbility: 30,
+      description: "Miners mine for valuable resources, and can clear paths through mountainous terrain."
+    });
+};
+
+CharacterFactory.createLoggerWorker = function()
+{
+  return new Character(
+    characterManager.getUnusedCharacterId(),
+    CharacterType.Worker,
+    {
+      isLogger: true,
+      movementAbility: 40,
+      description: "Loggers cut down forest terrain, and give you logs."
+    });
+};
+
+CharacterFactory.createLaborerWorker = function()
+{
+  return new Character(
+    characterManager.getUnusedCharacterId(),
+    CharacterType.Worker,
+    {
+      isLaborer: true,
+      movementAbility: 40,
+      description: "Laborers perform more generic tasks, like building roads."
+    });
+};

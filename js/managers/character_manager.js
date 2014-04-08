@@ -23,29 +23,60 @@ CharacterManager.prototype.initialize = function()
   worldMapScreen.groupMenu.addGroup(startingGroup.id);
 };
 
-CharacterManager.prototype.getNumAdventurers = function()
+CharacterManager.prototype.getPlayerControlledGroups = function()
+{
+  var playerControlledGroups = [];
+  
+  _.each(this.groups, function(group)
+    {
+      if (group.playerControlled)
+      {
+        playerControlledGroups.push(group);
+      }
+    });
+  
+  return playerControlledGroups;
+};
+
+CharacterManager.prototype.getNumPlayerAdventurers = function()
 {
   var count = 0;
+  var playerGroups = this.getPlayerControlledGroups();
   
-  for (var i = 0; i < this.characters.length; i++)
+  for (var i = 0; i < playerGroups.length; i++)
   {
-    if (!this.characters[i].isWorker)
+    var group = playerGroups[i];
+    
+    for (var j = 0; j < group.characterIds.length; j++)
     {
-      count++;
+      var character = characterManager.characters[group.characterIds[j]];
+      
+      if (!character.isWorker)
+      {
+        count++;
+      }
     }
   }
   return count;
 };
 
-CharacterManager.prototype.getNumWorkers = function()
+CharacterManager.prototype.getNumPlayerWorkers = function()
 {
   var count = 0;
+  var playerGroups = this.getPlayerControlledGroups();
   
-  for (var i = 0; i < this.characters.length; i++)
+  for (var i = 0; i < playerGroups.length; i++)
   {
-    if (this.characters[i].isWorker)
+    var group = playerGroups[i];
+    
+    for (var j = 0; j < group.characterIds.length; j++)
     {
-      count++;
+      var character = characterManager.characters[group.characterIds[j]];
+      
+      if (character.isWorker)
+      {
+        count++;
+      }
     }
   }
   return count;

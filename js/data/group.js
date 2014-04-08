@@ -6,7 +6,7 @@ var Group = function(id, options)
   options.tileJ = options.tileJ || 0;
   options.featureId = options.featureId == null ? -1 : options.featureId;
   options.name = options.name || "Group " + id;
-  options.takesOrders = options.takesOrders || false;
+  options.playerControlled = options.playerControlled == undefined ? true : options.playerControlled;
   
   this.id = id;
   this.characterIds = options.characterIds;
@@ -15,6 +15,7 @@ var Group = function(id, options)
   this.featureId = options.featureId;
   this.name = options.name;
   this.movementUsed = 0;
+  this.playerControlled = options.playerControlled;
   
   if (this.featureId != -1)
   {

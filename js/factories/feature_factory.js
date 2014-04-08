@@ -1,5 +1,17 @@
 var FeatureFactory = {};
 
+FeatureFactory.copyOptionsToFeature = function(feature, options)
+{
+  options = options || {};
+  for (var key in options)
+  {
+    if (options.hasOwnProperty(key))
+    {
+      feature[key] = options[key];
+    }
+  }
+};
+
 FeatureFactory.createPlayerCastle = function(tileI, tileJ)
 {
   var feature = new Feature(
@@ -23,17 +35,16 @@ FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
+  var workerGroup = characterManager.createGroup({name: "Available Workers", playerControlled: false});
   
-  options = options || {};
-  for (var key in options)
-  {
-    if (options.hasOwnProperty(key))
-    {
-      feature[key] = options[key];
-    }
-  }
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createMinerWorker());
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createMinerWorker());
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLaborerWorker());
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLaborerWorker());
   
+  this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Town;
+  feature.workerGroupId = workerGroup.id;
   worldManager.addFeature(feature);
   return feature;
 };
@@ -47,17 +58,16 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
+  var workerGroup = characterManager.createGroup({name: "Available Workers", playerControlled: false});
   
-  options = options || {};
-  for (var key in options)
-  {
-    if (options.hasOwnProperty(key))
-    {
-      feature[key] = options[key];
-    }
-  }
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createMinerWorker());
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLoggerWorker());
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLoggerWorker());
+  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLaborerWorker());
   
+  this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Grove;
+  feature.workerGroupId = workerGroup.id;
   worldManager.addFeature(feature);
   return feature;
 };
@@ -72,15 +82,7 @@ FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
     2,
     2);
   
-  options = options || {};
-  for (var key in options)
-  {
-    if (options.hasOwnProperty(key))
-    {
-      feature[key] = options[key];
-    }
-  }
-  
+  this.copyOptionsToFeature(feature, options);
   feature.dungeonType = DungeonType.Cave;
   worldManager.addFeature(feature);
   return feature;
@@ -96,15 +98,7 @@ FeatureFactory.createTavernGathering = function(tileI, tileJ, options)
     2,
     1);
   
-  options = options || {};
-  for (var key in options)
-  {
-    if (options.hasOwnProperty(key))
-    {
-      feature[key] = options[key];
-    }
-  }
-  
+  this.copyOptionsToFeature(feature, options);
   feature.gatheringType = GatheringType.Tavern;
   worldManager.addFeature(feature);
   return feature;
