@@ -5,6 +5,7 @@ var HireWorkerPanelComponent = function(screen, notification, featureId)
   this.screen = screen;
   this.featureId = featureId;
   this.feature = worldManager.getFeature(featureId);
+  this.z = 1;
   
   this.buildAvailableWorkersPanel();
   this.buildBuyerPanel();
@@ -26,9 +27,9 @@ HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
   this.addChild(this.availablePanel);
   
   // Title
-  this.availableTitle = new PIXI.BitmapText("Available", {font: "14px big_pixelmix", tint: 0xFFFF00});
+  this.availableTitle = new PIXI.BitmapText("Available", {font: "18px big_pixelmix", tint: 0xFFFF00});
   this.availableTitle.position.x = 16;
-  this.availablePanel.position.y = -32;
+  this.availableTitle.position.y = -20;
   this.availablePanel.addChild(this.availableTitle);
 };
 
@@ -46,9 +47,9 @@ HireWorkerPanelComponent.prototype.buildBuyerPanel = function()
   this.addChild(this.buyerPanel);
   
   // Title
-  this.buyerTitle = new PIXI.BitmapText("Buying", {font: "14px big_pixelmix", tint: 0xFFFF00});
+  this.buyerTitle = new PIXI.BitmapText("Buying", {font: "18px big_pixelmix", tint: 0xFFFF00});
   this.buyerTitle.position.x = 16;
-  this.buyerTitle.position.y = -32;
+  this.buyerTitle.position.y = -20;
   this.buyerPanel.addChild(this.buyerTitle);
 };
 
