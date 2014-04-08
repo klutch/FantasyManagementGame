@@ -1,6 +1,5 @@
 var DwellingManager = function()
 {
-  this.workers = {};  // workers[featureId] = array of adventurers
 };
 
 DwellingManager.prototype.makeLoyal = function(featureId)
