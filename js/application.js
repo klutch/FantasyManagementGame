@@ -26,7 +26,7 @@ var turnManager;
 var raidManager;
 var pathfinderManager;
 var notificationManager;
-var loyaltyManager;
+var dwellingManager;
 
 // Initialize
 function initialize()

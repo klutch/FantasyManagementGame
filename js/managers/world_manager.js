@@ -63,6 +63,12 @@ WorldManager.prototype.generateTile = function(i, j)
   return this.world.tiles[i][j];
 };
 
+// Get feature
+WorldManager.prototype.getFeature = function(featureId)
+{
+  return this.world.features[featureId];
+};
+
 // Add feature
 WorldManager.prototype.addFeature = function(feature)
 {

@@ -39,7 +39,7 @@ Game.prototype.startNewGame = function()
   raidManager = new RaidManager();
   pathfinderManager = new PathfinderManager();
   notificationManager = new NotificationManager();
-  loyaltyManager = new LoyaltyManager();
+  dwellingManager = new DwellingManager();
   
   // Create screens
   worldMapScreen = new WorldMapScreen();
@@ -65,6 +65,7 @@ Game.prototype.update = function()
   if (raidManager != null) { raidManager.update(); }
   if (pathfinderManager != null) { pathfinderManager.update(); }
   if (notificationManager != null) { notificationManager.update(); }
+  if (dwellingManager != null) { dwellingManager.update(); }
   screenManager.update();
   inputManager.postUpdate();
 };

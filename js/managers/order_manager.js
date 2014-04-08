@@ -442,9 +442,18 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
+          
+          // Create notification and pause processing
           notificationManager.createDwellingVisitNotification(featureId);
           turnManager.pauseProcessing();
           
+          // Make dwelling loyal if it is offered freely
+          if (feature.isLoyaltyFree)
+          {
+            dwellingManager.makeLoyal(featureId);
+          }
+          
+          // Create return order if there are no other orders left
           if (!root.doesGroupHaveOrders(groupId))
           {
             root.createReturnOrder(groupId, {isDoneForThisTurn: true});

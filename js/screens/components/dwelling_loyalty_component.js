@@ -123,7 +123,7 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
                 {
                   // Okay (can only be called if the player has enough of the resource)
                   resourceManager.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
-                  loyaltyManager.makeLoyal(root.feature.id);
+                  dwellingManager.makeLoyal(root.feature.id);
                   root.removeChild(root.confirmBox);
                   root.close();
                   notificationManager.removeNotification(root.notification);
