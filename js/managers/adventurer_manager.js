@@ -21,17 +21,6 @@ AdventurerManager.prototype.initialize = function()
   this.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
   this.addAdventurer(startingGroup.id, AdventurerFactory.createHealer(10));
   worldMapScreen.groupMenu.addGroup(startingGroup.id);
-  
-  // Temporarily create extra groups (for ui testing)
-  for (var i = 0; i < 7; i++)
-  {
-    var group = this.createGroup({featureId: worldManager.world.playerCastleFeatureId});
-    
-    this.addAdventurer(group.id, AdventurerFactory.createArcher(50));
-    this.addAdventurer(group.id, AdventurerFactory.createKnight(50));
-    this.addAdventurer(group.id, AdventurerFactory.createHealer(50));
-    worldMapScreen.groupMenu.addGroup(group.id);
-  }
 };
 
 AdventurerManager.prototype.getNumAdventurers = function()
