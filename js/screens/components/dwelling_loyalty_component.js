@@ -121,8 +121,9 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
                 "Give a gift of " + root.feature.giftAmountRequired + " " + root.feature.giftResourceType + "?",
                 function()
                 {
-                  // Okay
-                  console.log("TODO: Put a call to gift giving logic right here. Also handle cases where player doesn't have the amount required.");
+                  // Okay (can only be called if the player has enough of the resource)
+                  resourceManager.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
+                  loyaltyManager.makeLoyal(root.feature.id);
                   root.removeChild(root.confirmBox);
                   root.close();
                   notificationManager.removeNotification(root.notification);
@@ -196,6 +197,25 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
 
 DwellingLoyaltyComponent.prototype.close = function()
 {
-  this.screen.closeNotification(this.notification);
+  this.screen.closeNotification();
   notificationManager.removeNotification(this.notification);
+};
+
+DwellingLoyaltyComponent.prototype.update = function()
+{
+  // Update confirm button's okay state, based one whether or not the player has enough to give
+  if (this.feature.requiresGift && this.confirmBox != null)
+  {
+    var availableAmount = resourceManager.resourceQuantities[this.feature.giftResourceType];
+    var hasEnough = availableAmount >= this.feature.giftAmountRequired;
+    
+    if (this.confirmBox.okayButton.enabled && !hasEnough)
+    {
+      this.confirmBox.okayButton.setEnabled(false);
+    }
+    else if (!this.confirmBox.okayButton.enabled && hasEnough)
+    {
+      this.confirmBox.okayButton.setEnabled(true);
+    }
+  }
 };

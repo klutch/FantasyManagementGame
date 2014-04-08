@@ -39,6 +39,7 @@ Game.prototype.startNewGame = function()
   raidManager = new RaidManager();
   pathfinderManager = new PathfinderManager();
   notificationManager = new NotificationManager();
+  loyaltyManager = new LoyaltyManager();
   
   // Create screens
   worldMapScreen = new WorldMapScreen();

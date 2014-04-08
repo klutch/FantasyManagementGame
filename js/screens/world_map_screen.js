@@ -203,6 +203,7 @@ WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
         string += "\tdwellingType: " + feature.dwellingType + "\n";
         string += "\tisLoyaltyFree: " + feature.isLoyaltyFree + "\n";
         string += "\trequiresGift: " + feature.requiresGift + "\n";
+        string += "\tisLoyal: " + feature.isLoyal + "\n";
       }
     }
   }

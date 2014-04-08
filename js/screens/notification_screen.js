@@ -3,6 +3,7 @@ var NotificationScreen = function()
   this.type = ScreenType.Notification;
   this.inputEnabled = true;
   this.z = 90;
+  this.openComponent = null;
   
   // Background
   this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
@@ -35,21 +36,26 @@ NotificationScreen.prototype.openNotification = function(notification)
   {
     var componentInstance = new notification.component(this, notification, notification.featureId);
     
-    notification.componentInstance = componentInstance;
     this.container.addChild(this.background);
     this.container.addChild(componentInstance);
     this.container.children.sort(depthCompare);
+    this.openComponent = componentInstance;
   }
   
   notification.open = true;
 };
 
-NotificationScreen.prototype.closeNotification = function(notification)
+NotificationScreen.prototype.closeNotification = function()
 {
-  this.container.removeChild(notification.componentInstance);
+  this.container.removeChild(this.openComponent);
   this.container.removeChild(this.background);
+  this.openComponent = null;
 };
 
 NotificationScreen.prototype.update = function()
 {
+  if (this.openComponent != null)
+  {
+    this.openComponent.update();
+  }
 };

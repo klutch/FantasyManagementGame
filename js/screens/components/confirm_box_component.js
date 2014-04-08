@@ -44,10 +44,17 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
       y: 100,
       normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
       hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[2]),
       centerX: true,
       centerY: true,
       text: "Okay",
-      onClick: onOkay
+      onClick: function()
+      {
+        if (this.enabled)
+        {
+          onOkay();
+        }
+      }
     });
   this.panel.addChild(this.okayButton);
   

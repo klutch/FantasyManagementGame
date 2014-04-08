@@ -38,5 +38,19 @@ var ResourceManager = function()
 
 ResourceManager.prototype.initialize = function()
 {
+  // Initialize quantities to zero
   _.each(ResourceType, function(resourceType) { this.resourceQuantities[resourceType] = 0; }, this);
+  
+  // Now give starting quantities
+  this.resourceQuantities[ResourceType.Gold] = 300;
+};
+
+ResourceManager.prototype.decreaseQuantity = function(type, amount)
+{
+  this.resourceQuantities[type] = Math.max(0, this.resourceQuantities[type] - amount);
+};
+
+ResourceManager.prototype.increaseQuantity = function(type, amount)
+{
+  this.resourceQuantities[type] += amount;
 };

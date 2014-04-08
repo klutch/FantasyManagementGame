@@ -227,7 +227,8 @@ var AssetPathManager = function()
   ];
   this.assetPaths.ui.standardButtons = [
     "img/ui/standard_button.png",
-    "img/ui/standard_button_over.png"
+    "img/ui/standard_button_over.png",
+    "img/ui/standard_button_disabled.png"
   ];
   this.assetPaths.ui.transparent = ["img/ui/transparent.png"];
   this.assetPaths.ui.divider = ["img/ui/divider.png"];
