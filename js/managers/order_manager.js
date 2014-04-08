@@ -127,10 +127,26 @@ OrderManager.prototype.processOrderMovement = function(order)
   var group = adventurerManager.groups[order.groupId];
   var groupMovementAbility = adventurerManager.getGroupMovementAbility(order.groupId);
   var remainingMovement = groupMovementAbility - group.movementUsed;
+  var recalculatePath = false;
   
-  if (doesTileExist && nextTile.discovered)
+  // Determine whether to move, or to perform discovery
+  if (nextNode.unsure)
   {
-    // Movement
+    // Attempt discovery
+    if (remainingMovement >= 20)
+    {
+      worldManager.discoverRadius(order.path.i, order.path.j, adventurerManager.getGroupDiscoveryRadius(order.groupId));
+      group.movementUsed += 20;
+      recalculatePath = true;
+    }
+    else
+    {
+      order.isDoneForThisTurn = true;
+    }
+  }
+  else
+  {
+    // Attempt movement
     if (nextTile.movementCost <= remainingMovement)
     {
       adventurerManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
@@ -142,22 +158,9 @@ OrderManager.prototype.processOrderMovement = function(order)
       order.isDoneForThisTurn = true;
     }
   }
-  else
-  {
-    // Discover area
-    if (remainingMovement >= 20)
-    {
-      worldManager.discoverRadius(group.tileI, group.tileJ, 8);
-      group.movementUsed += 20;   // TODO: Come up with a discovery cost
-    }
-    else
-    {
-      order.isDoneForThisTurn = true;
-    }
-  }
   
   // Recalculate paths when hitting an unsure node
-  if (order.path.unsure && order.path.next != null)
+  if (recalculatePath)
   {
     var tailNode = order.path.getTail();
     var newPath = pathfinderManager.findPath(group.tileI, group.tileJ, tailNode.i, tailNode.j, order.pathfindingOptions);
@@ -176,9 +179,15 @@ OrderManager.prototype.processOrderMovement = function(order)
       this.cancelOrder(order.id);
       if (!this.doesGroupHaveOrders(group.id))
       {
-        this.createReturnOrder(group.id);
+        this.createReturnOrder(group.id, {isDoneForThisTurn: true});
       }
     }
+  }
+  
+  // Check movement used
+  if (group.movementUsed >= groupMovementAbility)
+  {
+    order.isDoneForThisTurn = true;
   }
 };
 
@@ -194,8 +203,13 @@ OrderManager.prototype.processQueuedOrders = function()
     {
       var currentOrder = this.groupOrders[groupId][0];
       
-      currentOrder.doWork();
+      // Do order work (and ensure this order hasn't been flagged as done for this turn already)
+      if (!currentOrder.isDoneForThisTurn)
+      {
+        currentOrder.doWork();
+      }
       
+      // Check completion status
       if (currentOrder.isComplete())
       {
         this.removeOrder(currentOrder.id);
