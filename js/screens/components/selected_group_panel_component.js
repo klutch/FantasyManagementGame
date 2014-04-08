@@ -122,7 +122,7 @@ SelectedGroupPanelComponent.prototype.update = function()
   var groupHasOrders = orderManager.doesGroupHaveOrders(this.groupId);
   
   // Escape key -- Deselect group
-  if (inputManager.simpleKey(KeyCode.Escape))
+  if (this.screen.inputEnabled && inputManager.simpleKey(KeyCode.Escape))
   {
     adventurerManager.deselectGroup();
   }

@@ -139,6 +139,7 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
                   y: Math.floor(game.containerHeight * 0.5)
                 });
               root.addChild(root.confirmBox);
+              root.inputEnabled = false;
             }
           }
         });
