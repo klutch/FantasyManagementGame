@@ -1,7 +1,7 @@
 var Group = function(id, options)
 {
   options = options || {};
-  options.adventurerIds = options.adventurerIds || [];
+  options.characterIds = options.characterIds || [];
   options.tileI = options.tileI || 0;
   options.tileJ = options.tileJ || 0;
   options.featureId = options.featureId == null ? -1 : options.featureId;
@@ -9,7 +9,7 @@ var Group = function(id, options)
   options.takesOrders = options.takesOrders || false;
   
   this.id = id;
-  this.adventurerIds = options.adventurerIds;
+  this.characterIds = options.characterIds;
   this.tileI = options.tileI;
   this.tileJ = options.tileJ;
   this.featureId = options.featureId;

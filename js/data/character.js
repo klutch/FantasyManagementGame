@@ -1,11 +1,11 @@
-var AdventurerType = Object.freeze({
+var CharacterType = Object.freeze({
   Worker: "Worker",
   Archer: "Archer",
   Knight: "Knight",
   Healer: "Healer"
 });
 
-var Adventurer = function(id, type, options)
+var Character = function(id, type, options)
 {
   options = options || {};
   options.baseOffense = options.baseOffense || 0;
@@ -13,7 +13,7 @@ var Adventurer = function(id, type, options)
   options.baseSupport = options.baseSupport || 0;
   options.movementAbility = options.movementAbility || 50;
   options.isWorker = options.isWorker || false;
-  options.description = options.description || "TODO: This adventurer needs a description.";
+  options.description = options.description || "TODO: This character needs a description.";
   options.discoveryRadius = options.discoveryRadius || 8;
   
   this.id = id;

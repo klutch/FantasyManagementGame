@@ -8,7 +8,7 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   this.base();
   this.screen = screen;
   this.groupId = groupId;
-  this.group = adventurerManager.groups[groupId];
+  this.group = characterManager.groups[groupId];
   this.position.x = game.containerWidth - 416;
   this.position.y = 50;
   this.z = options.z;
@@ -32,18 +32,18 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   
   // Group stats
   this.groupStats = new PIXI.BitmapText(
-    adventurerManager.getGroupOffense(this.groupId).toString() + " / " +
-    adventurerManager.getGroupDefense(this.groupId).toString() + " / " +
-    adventurerManager.getGroupSupport(this.groupId).toString(),
+    characterManager.getGroupOffense(this.groupId).toString() + " / " +
+    characterManager.getGroupDefense(this.groupId).toString() + " / " +
+    characterManager.getGroupSupport(this.groupId).toString(),
     {font: "14px big_pixelmix", tint: 0xCCCCCC});
   this.groupStats.position.x = 16;
   this.groupStats.position.y = 40;
   this.panel.addChild(this.groupStats);
   
   // Portraits
-  for (var i = 0; i < this.group.adventurerIds.length; i++)
+  for (var i = 0; i < this.group.characterIds.length; i++)
   {
-    var portrait = new PortraitComponent(this.group.adventurerIds[i], {x: 16 + 48 * i, y: 64});
+    var portrait = new PortraitComponent(this.group.characterIds[i], {x: 16 + 48 * i, y: 64});
     
     this.panel.addChild(portrait);
   }
@@ -124,7 +124,7 @@ SelectedGroupPanelComponent.prototype.update = function()
   // Escape key -- Deselect group
   if (this.screen.inputEnabled && inputManager.simpleKey(KeyCode.Escape))
   {
-    adventurerManager.deselectGroup();
+    characterManager.deselectGroup();
   }
   
   // Modify move button

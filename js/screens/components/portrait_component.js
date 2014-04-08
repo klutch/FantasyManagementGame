@@ -1,4 +1,4 @@
-var PortraitComponent = function(adventurerId, options)
+var PortraitComponent = function(characterId, options)
 {
   options = options || {};
   options.x = options.x || 0;
@@ -6,11 +6,11 @@ var PortraitComponent = function(adventurerId, options)
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
-  this.adventurerId = adventurerId;
-  this.adventurer = adventurerManager.adventurers[adventurerId];
+  this.characterId = characterId;
+  this.character = characterManager.characters[characterId];
   this.position.x = options.x;
   this.position.y = options.y;
-  this.portraitSprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[this.adventurer.type]);
+  this.portraitSprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[this.character.type]);
   this.portraitSprite.interactive = true;
   this.portraitSprite.buttonMode = true;
   this.portraitSprite.mouseup = this.onClick;

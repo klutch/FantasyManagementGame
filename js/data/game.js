@@ -27,13 +27,10 @@ Game.prototype.closeMainMenu = function()
 
 Game.prototype.startNewGame = function()
 {
-  var worldMapScreen;
-  var startingGroup;
-  
   // Setup managers
   worldManager = new WorldManager();
   resourceManager = new ResourceManager();
-  adventurerManager = new AdventurerManager();
+  characterManager = new CharacterManager();
   orderManager = new OrderManager();
   turnManager = new TurnManager();
   raidManager = new RaidManager();
@@ -42,14 +39,13 @@ Game.prototype.startNewGame = function()
   dwellingManager = new DwellingManager();
   
   // Create screens
-  worldMapScreen = new WorldMapScreen();
-  screenManager.addScreen(worldMapScreen);
+  screenManager.addScreen(new WorldMapScreen());
   screenManager.addScreen(new TooltipScreen());
   
   // Initialize managers
   worldManager.initialize();
   resourceManager.initialize();
-  adventurerManager.initialize();
+  characterManager.initialize();
   orderManager.initialize();
   notificationManager.initialize();
   
@@ -60,6 +56,7 @@ Game.prototype.startNewGame = function()
 Game.prototype.update = function()
 {
   inputManager.update();
+  if (characterManager != null) { characterManager.update(); }
   if (orderManager != null) { orderManager.update(); }
   if (turnManager != null) { turnManager.update(); }
   if (raidManager != null) { raidManager.update(); }

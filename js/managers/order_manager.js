@@ -128,8 +128,8 @@ OrderManager.prototype.processOrderMovement = function(order)
   var nextNode = order.path.next;
   var doesTileExist = worldManager.doesTileExist(nextNode.i, nextNode.j);
   var nextTile = doesTileExist ? worldManager.getTile(nextNode.i, nextNode.j) : null;
-  var group = adventurerManager.groups[order.groupId];
-  var groupMovementAbility = adventurerManager.getGroupMovementAbility(order.groupId);
+  var group = characterManager.groups[order.groupId];
+  var groupMovementAbility = characterManager.getGroupMovementAbility(order.groupId);
   var remainingMovement = groupMovementAbility - group.movementUsed;
   var recalculatePath = false;
   
@@ -139,7 +139,7 @@ OrderManager.prototype.processOrderMovement = function(order)
     // Attempt discovery
     if (remainingMovement >= 20)
     {
-      worldManager.discoverRadius(order.path.i, order.path.j, adventurerManager.getGroupDiscoveryRadius(order.groupId));
+      worldManager.discoverRadius(order.path.i, order.path.j, characterManager.getGroupDiscoveryRadius(order.groupId));
       group.movementUsed += 20;
       recalculatePath = true;
     }
@@ -153,7 +153,7 @@ OrderManager.prototype.processOrderMovement = function(order)
     // Attempt movement
     if (nextTile.movementCost <= remainingMovement)
     {
-      adventurerManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
+      characterManager.moveGroupToTile(group.id, nextTile.i, nextTile.j);
       group.movementUsed += nextTile.movementCost;
       order.path = nextNode;
     }
@@ -230,7 +230,7 @@ OrderManager.prototype.processQueuedOrders = function()
   if (this.doneProcessingOrdersForTurn && turnManager.state == TurnState.Processing)
   {
     turnManager.endProcessing();
-    adventurerManager.resetGroupMovement();
+    characterManager.resetGroupMovement();
     this.resetOrderProcessingStatus();
   }
 };
@@ -262,7 +262,7 @@ OrderManager.prototype.getStartingPoint = function(groupId)
   }
   else
   {
-    var group = adventurerManager.groups[groupId];
+    var group = characterManager.groups[groupId];
     
     return [group.tileI, group.tileJ];
   }
@@ -271,7 +271,7 @@ OrderManager.prototype.getStartingPoint = function(groupId)
 OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
 {
   var root = this;
-  var group = adventurerManager.groups[groupId];
+  var group = characterManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var pathfindingOptions = {preferDiscoveredTerrain: false};
   var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], tileI, tileJ, pathfindingOptions);
@@ -300,7 +300,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         onComplete: function() 
         {
           root.pathPreview.clearPath(this.path.getHead());
-          worldManager.discoverRadius(tileI, tileJ, adventurerManager.getGroupDiscoveryRadius(groupId));
+          worldManager.discoverRadius(tileI, tileJ, characterManager.getGroupDiscoveryRadius(groupId));
           
           if (!root.doesGroupHaveOrders(groupId))
           {
@@ -321,7 +321,7 @@ OrderManager.prototype.createExploreOrder = function(groupId, tileI, tileJ)
 OrderManager.prototype.createReturnOrder = function(groupId, options)
 {
   var root = this;
-  var group = adventurerManager.groups[groupId];
+  var group = characterManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var pathfindingOptions = {preferDiscoveredTerrain: true};
   var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], worldManager.world.playerCastleI, worldManager.world.playerCastleJ, pathfindingOptions);
@@ -354,7 +354,7 @@ OrderManager.prototype.createReturnOrder = function(groupId, options)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
-          adventurerManager.moveGroupIntoFeature(groupId);
+          characterManager.moveGroupIntoFeature(groupId);
         },
         isDoneForThisTurn: options.isDoneForThisTurn
       });
@@ -371,7 +371,7 @@ OrderManager.prototype.createReturnOrder = function(groupId, options)
 OrderManager.prototype.createRaidOrder = function(groupId, featureId)
 {
   var root = this;
-  var group = adventurerManager.groups[groupId];
+  var group = characterManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
   var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
@@ -398,7 +398,7 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
         onComplete: function() 
         {
           root.pathPreview.clearPath(this.path.getHead());
-          adventurerManager.moveGroupIntoFeature(groupId);
+          characterManager.moveGroupIntoFeature(groupId);
           raidManager.createRaid(featureId, groupId);
         }
       });
@@ -415,7 +415,7 @@ OrderManager.prototype.createRaidOrder = function(groupId, featureId)
 OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
 {
   var root = this;
-  var group = adventurerManager.groups[groupId];
+  var group = characterManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
   var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
@@ -473,7 +473,7 @@ OrderManager.prototype.createVisitDwellingOrder = function(groupId, featureId)
 OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
 {
   var root = this;
-  var group = adventurerManager.groups[groupId];
+  var group = characterManager.groups[groupId];
   var startingPoint = this.getStartingPoint(groupId);
   var feature = worldManager.world.features[featureId];
   var path = pathfinderManager.findPath(startingPoint[0], startingPoint[1], feature.tileI, feature.tileJ);
@@ -651,7 +651,7 @@ OrderManager.prototype.update = function()
   {
     if (inputManager.simpleKey(KeyCode.Enter))
     {
-      var startingGroup = adventurerManager.groups[0];
+      var startingGroup = characterManager.groups[0];
 
       pathfinderManager.findPath(startingGroup.tileI, startingGroup.tileJ, mouseI, mouseJ);
     }
@@ -680,7 +680,7 @@ OrderManager.prototype.update = function()
         // Show sub menu
         if (this.worldMapScreen.orderSubmenu == null)
         {
-          this.worldMapScreen.openOrderSubmenu(contexts, adventurerManager.selectedGroupId, mouseI, mouseJ);
+          this.worldMapScreen.openOrderSubmenu(contexts, characterManager.selectedGroupId, mouseI, mouseJ);
         }
       }
       else if (numContexts == 1)
@@ -698,11 +698,11 @@ OrderManager.prototype.update = function()
         // Create order
         if (contextKey == OrderType.Explore)
         {
-          this.createExploreOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+          this.createExploreOrder(characterManager.selectedGroupId, mouseI, mouseJ);
         }
         else if (contextKey == OrderType.Mine)
         {
-          this.createMineOrder(adventurerManager.selectedGroupId, mouseI, mouseJ);
+          this.createMineOrder(characterManager.selectedGroupId, mouseI, mouseJ);
         }
         if (!inputManager.keysPressed[KeyCode.Shift])
         {

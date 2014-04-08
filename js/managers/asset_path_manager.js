@@ -299,10 +299,10 @@ var AssetPathManager = function()
   this.assetPaths.ui.resources[ResourceType.Diamond] = ["img/ui/resource_diamond.png"];
   this.assetPaths.ui.resources[ResourceType.Xenotime] = ["img/ui/resource_xenotime.png"];
   this.assetPaths.ui.portraits = {};
-  this.assetPaths.ui.portraits[AdventurerType.Worker] = ["img/ui/portraits/worker.png"];
-  this.assetPaths.ui.portraits[AdventurerType.Archer] = ["img/ui/portraits/archer.png"];
-  this.assetPaths.ui.portraits[AdventurerType.Knight] = ["img/ui/portraits/knight.png"];
-  this.assetPaths.ui.portraits[AdventurerType.Healer] = ["img/ui/portraits/healer.png"];
+  this.assetPaths.ui.portraits[CharacterType.Worker] = ["img/ui/portraits/worker.png"];
+  this.assetPaths.ui.portraits[CharacterType.Archer] = ["img/ui/portraits/archer.png"];
+  this.assetPaths.ui.portraits[CharacterType.Knight] = ["img/ui/portraits/knight.png"];
+  this.assetPaths.ui.portraits[CharacterType.Healer] = ["img/ui/portraits/healer.png"];
 };
 
 AssetPathManager.prototype.preload = function(onComplete)

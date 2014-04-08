@@ -18,7 +18,7 @@ var game;
 var screenManager;
 var inputManager;
 var worldManager;
-var adventurerManager;
+var characterManager;
 var assetPathManager = new AssetPathManager();
 var resourceManager;
 var orderManager;

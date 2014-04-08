@@ -28,7 +28,7 @@ var WorldMapScreen = function()
   this.pathPreview = new PathPreviewComponent({z: this.z + 1});
   
   // Create adventurer groups component
-  this.adventurerGroups = new AdventurerGroupsComponent({z: this.z + 2});
+  this.worldGroups = new WorldGroupsComponent({z: this.z + 2});
   
   // Create resource bar
   this.resourceBar = new PanelComponent({
@@ -102,7 +102,7 @@ WorldMapScreen.prototype.onAddScreen = function()
 {
   game.stage.addChild(this.worldMap);
   this.worldMap.addChild(this.pathPreview);
-  this.worldMap.addChild(this.adventurerGroups);
+  this.worldMap.addChild(this.worldGroups);
   game.stage.addChild(this.resourceBar);
   game.stage.addChild(this.homeButton);
   game.stage.addChild(this.mainButtonsContainer);
@@ -113,7 +113,7 @@ WorldMapScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.worldMap);
   this.worldMap.removeChild(this.pathPreview);
-  this.worldMap.removeChild(this.adventurerGroups);
+  this.worldMap.removeChild(this.worldGroups);
   game.stage.removeChild(this.resourceBar);
   game.stage.removeChild(this.homeButton);
   game.stage.removeChild(this.mainButtonsContainer);
@@ -273,7 +273,7 @@ WorldMapScreen.prototype.update = function()
   if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }
   
   // Update adventurer groups
-  this.adventurerGroups.update();
+  this.worldGroups.update();
   
   // Handle input
   if (this.inputEnabled) { this.handleInput(); }

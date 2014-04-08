@@ -1,10 +1,10 @@
-var AdventurerFactory = {};
+var CharacterFactory = {};
 
-AdventurerFactory.createArcher = function(powerLevel)
+CharacterFactory.createArcher = function(powerLevel)
 {
-  return new Adventurer(
-    adventurerManager.getUnusedAdventurerId(),
-    AdventurerType.Archer,
+  return new Character(
+    characterManager.getUnusedCharacterId(),
+    CharacterType.Archer,
     {
       baseOffense: Math.ceil(0.85 * powerLevel),
       baseDefense: 0,
@@ -14,11 +14,11 @@ AdventurerFactory.createArcher = function(powerLevel)
     });
 };
 
-AdventurerFactory.createKnight = function(powerLevel)
+CharacterFactory.createKnight = function(powerLevel)
 {
-  return new Adventurer(
-    adventurerManager.getUnusedAdventurerId(),
-    AdventurerType.Knight,
+  return new Character(
+    characterManager.getUnusedCharacterId(),
+    CharacterType.Knight,
     {
       baseOffense: Math.ceil(0.5 * powerLevel),
       baseDefense: Math.ceil(0.5 * powerLevel),
@@ -28,11 +28,11 @@ AdventurerFactory.createKnight = function(powerLevel)
     });
 };
 
-AdventurerFactory.createHealer = function(powerLevel)
+CharacterFactory.createHealer = function(powerLevel)
 {
-  return new Adventurer(
-    adventurerManager.getUnusedAdventurerId(),
-    AdventurerType.Healer,
+  return new Character(
+    characterManager.getUnusedCharacterId(),
+    CharacterType.Healer,
     {
       baseOffense: 0,
       baseDefense: 0,
