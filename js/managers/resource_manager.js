@@ -34,6 +34,9 @@ var ResourceType = Object.freeze({
 var ResourceManager = function()
 {
   this.resourceQuantities = {};
-  
+};
+
+ResourceManager.prototype.initialize = function()
+{
   _.each(ResourceType, function(resourceType) { this.resourceQuantities[resourceType] = 0; }, this);
 };

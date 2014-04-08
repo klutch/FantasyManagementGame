@@ -4,12 +4,16 @@ var OrderManager = function()
   this.lastTileGridI = -999999;
   this.lastTileGridJ = -999999;
   this.hasMouseChangedTiles = false;
+  this.settingUpOrder = false;
+  this.doneProcessingOrdersForTurn = true;
+};
+
+OrderManager.prototype.initialize = function()
+{
   this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   this.worldMap = this.worldMapScreen.worldMap;
   this.tooltip = screenManager.screens[ScreenType.Tooltip].tooltip;
-  this.pathPreview = screenManager.screens[ScreenType.WorldMap].pathPreview;
-  this.settingUpOrder = false;
-  this.doneProcessingOrdersForTurn = true;
+  this.pathPreview = this.worldMapScreen.pathPreview;
 };
 
 OrderManager.prototype.getUnusedId = function()

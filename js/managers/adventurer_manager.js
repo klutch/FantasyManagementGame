@@ -4,9 +4,34 @@ var AdventurerManager = function()
   this.groups = [];
   this.barracksGroup;
   this.selectedGroupId = -1;
+};
+
+AdventurerManager.prototype.initialize = function()
+{
+  var startingGroup = adventurerManager.createGroup({name: "Starting Group", featureId: worldManager.world.playerCastleFeatureId});
+  var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   
   // Create a special barracks group
   this.barracksGroup = new Group(-1, {name: "Barracks", featureId: 0});
+  
+  // Create starting group
+  this.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
+  this.addAdventurer(startingGroup.id, AdventurerFactory.createArcher(10));
+  this.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
+  this.addAdventurer(startingGroup.id, AdventurerFactory.createKnight(10));
+  this.addAdventurer(startingGroup.id, AdventurerFactory.createHealer(10));
+  worldMapScreen.groupMenu.addGroup(startingGroup.id);
+  
+  // Temporarily create extra groups (for ui testing)
+  for (var i = 0; i < 7; i++)
+  {
+    var group = this.createGroup({featureId: worldManager.world.playerCastleFeatureId});
+    
+    this.addAdventurer(group.id, AdventurerFactory.createArcher(50));
+    this.addAdventurer(group.id, AdventurerFactory.createKnight(50));
+    this.addAdventurer(group.id, AdventurerFactory.createHealer(50));
+    worldMapScreen.groupMenu.addGroup(group.id);
+  }
 };
 
 AdventurerManager.prototype.getNumAdventurers = function()

@@ -20,6 +20,12 @@ var Group = function(id, options)
   {
     var feature = worldManager.world.features[this.featureId];
     
+    // Temporary debug
+    if (feature == undefined)
+    {
+      console.error("Feature is undefined");
+    }
+    
     this.tileI = feature.tileI;
     this.tileJ = feature.tileJ;
   }

@@ -1,11 +1,10 @@
-var WorldMapScreen = function(world)
+var WorldMapScreen = function()
 {
   var root = this;
   
   this.type = ScreenType.WorldMap;
   this.inputEnabled = true;
   this.z = 80;
-  this.world = world;
   this.isGroupMenuOpen = false;
   this.selectedGroupPanel = null;
   

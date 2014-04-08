@@ -6,6 +6,15 @@ var WorldManager = function(seed)
   this.featureGenerator = new FeatureGenerator(seed);
 };
 
+WorldManager.prototype.initialize = function()
+{
+  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  
+  this.featureGenerator.generatePlayerCastle();
+  this.discoverRadius(this.world.playerCastleI + 2, this.world.playerCastleJ + 2, 32);
+  this.worldMapScreen.worldMap.setCamera((this.world.playerCastleI + 2) * TILE_SIZE, (this.world.playerCastleJ + 2) * TILE_SIZE);
+};
+
 WorldManager.prototype.getGridI = function(x) { return Math.floor(x / TILE_SIZE); };
 WorldManager.prototype.getGridJ = function(y) { return Math.floor(y / TILE_SIZE); };
 

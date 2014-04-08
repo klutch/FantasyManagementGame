@@ -1,6 +1,10 @@
 var NotificationManager = function()
 {
   this.notifications = [];
+};
+
+NotificationManager.prototype.initialize = function()
+{
   this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   this.notificationScreen = new NotificationScreen();
 };
