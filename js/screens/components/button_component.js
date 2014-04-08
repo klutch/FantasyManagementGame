@@ -95,6 +95,8 @@ ButtonComponent.prototype.click = function(interactionData)
   }
 };
 
+ButtonComponent.prototype.touchstart = ButtonComponent.prototype.click;
+
 ButtonComponent.prototype.mouseover = function(interactionData)
 {
   if (!this.screen.inputEnabled)
