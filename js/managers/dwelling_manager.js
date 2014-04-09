@@ -55,6 +55,7 @@ DwellingManager.prototype.update = function()
         
         if (feature.type == FeatureType.Dwelling && feature.isLoyal)
         {
+          inputManager.leftButtonHandled = true;
           this.worldMapScreen.openHirePanel(tile.featureId);
         }
       }

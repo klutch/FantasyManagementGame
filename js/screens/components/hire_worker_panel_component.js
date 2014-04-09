@@ -1,5 +1,7 @@
 var HireWorkerPanelComponent = function(screen, featureId, options)
 {
+  var root = this;
+  
   options = options || {};
   
   this.base = PIXI.DisplayObjectContainer;
@@ -13,9 +15,43 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.buyerButtons = [];
   this.buyingCharacterIds = {};
   this.rebuildMenus = true;
+  this.centerScreenX = Math.floor(game.containerWidth * 0.5);
+  this.centerScreenY = Math.floor(game.containerHeight * 0.5);
   
+  // Panels
   this.buildAvailableWorkersPanel();
   this.buildBuyerPanel();
+  
+  // Buy button
+  this.buyButton = new ButtonComponent(
+    this.screen,
+    {
+      x: this.centerScreenX + 220,
+      y: this.centerScreenY + 200,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[2]),
+      text: "Buy",
+      centerX: true,
+      centerY: true,
+      onClick: function(e) { root.buy(); }
+    });
+  this.addChild(this.buyButton);
+  
+  // Cancel button
+  this.cancelButton = new ButtonComponent(
+    this.screen,
+    {
+      x: this.centerScreenX + 40,
+      y: this.centerScreenY + 200,
+      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      text: "Cancel",
+      centerX: true,
+      centerY: true,
+      onClick: function(e) { root.cancel(); }
+    });
+  this.addChild(this.cancelButton);
 };
 
 HireWorkerPanelComponent.prototype = new PIXI.DisplayObjectContainer;
@@ -41,9 +77,9 @@ HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
 {
   // Panel
   this.availablePanel = new PanelComponent({
-    x: Math.floor(game.containerWidth * 0.5) - 100,
-    y: Math.floor(game.containerHeight * 0.5),
-    width: 180,
+    x: this.centerScreenX - 160,
+    y: this.centerScreenY,
+    width: 280,
     height: 340,
     centerX: true,
     centerY: true
@@ -51,7 +87,7 @@ HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
   this.addChild(this.availablePanel);
   
   // Title
-  this.availableTitle = new PIXI.BitmapText("Available", {font: "18px big_pixelmix", tint: 0xFFFF00});
+  this.availableTitle = new PIXI.BitmapText(this.group.name, {font: "18px big_pixelmix", tint: 0xFFFF00});
   this.availableTitle.position.x = 16;
   this.availableTitle.position.y = -24;
   this.availablePanel.addChild(this.availableTitle);
@@ -61,9 +97,9 @@ HireWorkerPanelComponent.prototype.buildBuyerPanel = function()
 {
   // Panel
   this.buyerPanel = new PanelComponent({
-    x: Math.floor(game.containerWidth * 0.5) + 100,
-    y: Math.floor(game.containerHeight * 0.5),
-    width: 180,
+    x: this.centerScreenX + 160,
+    y: this.centerScreenY,
+    width: 280,
     height: 340,
     centerX: true,
     centerY: true
@@ -94,10 +130,9 @@ HireWorkerPanelComponent.prototype.buildMenus = function()
     var priceLabel = new PIXI.BitmapText(cost.toString(), {font: "12px big_pixelmix", tint: 0xCCCCCC});
     var onClick = null;
 
-    container.position.x = 4;
-    container.position.y = 4 + i * 64;
+    container.position.x = 4; // y calculated below (based on which panel its in)
 
-    backgroundButton.width = 160;
+    backgroundButton.width = 260;
     backgroundButton.height = 60;
     backgroundButton.characterId = character.id;
     backgroundButton.interactive = true;
@@ -124,7 +159,8 @@ HireWorkerPanelComponent.prototype.buildMenus = function()
       {
         root.moveCharacterToBuyerMenu(this.characterId);
       };
-
+      
+      container.position.y = 4 + this.availableButtons.length * 64;
       this.availablePanel.addChild(container);
       this.availableButtons.push(container);
     }
@@ -135,6 +171,7 @@ HireWorkerPanelComponent.prototype.buildMenus = function()
         root.moveCharacterToAvailableMenu(this.characterId);
       };
 
+      container.position.y = 4 + this.buyerButtons.length * 64;
       this.buyerPanel.addChild(container);
       this.buyerButtons.push(container);
     }
@@ -169,6 +206,20 @@ HireWorkerPanelComponent.prototype.moveCharacterToAvailableMenu = function(chara
 {
   delete this.buyingCharacterIds[characterId];
   this.rebuildMenus = true;
+};
+
+HireWorkerPanelComponent.prototype.buy = function()
+{
+  // Create new player controlled group
+  // Remove workers from feature's group
+  // Put them in new group
+  // Give them a return order
+};
+
+HireWorkerPanelComponent.prototype.cancel = function()
+{
+  console.log("cancel");
+  this.screen.closeHirePanel();
 };
 
 HireWorkerPanelComponent.prototype.update = function()

@@ -232,7 +232,7 @@ WorldMapScreen.prototype.openHirePanel = function(featureId)
   game.stage.addChild(this.background);
   game.stage.addChild(this.hirePanel);
   game.stage.children.sort(depthCompare);
-  this.inputEnabled = false;
+  //this.inputEnabled = false;
 };
 
 WorldMapScreen.prototype.closeHirePanel = function()
@@ -240,7 +240,7 @@ WorldMapScreen.prototype.closeHirePanel = function()
   game.stage.removeChild(this.background);
   game.stage.removeChild(this.hirePanel);
   this.hirePanel = null;
-  this.inputEnabled = true;
+  //this.inputEnabled = true;
 };
 
 WorldMapScreen.prototype.handleInput = function()
