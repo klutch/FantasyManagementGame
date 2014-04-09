@@ -17,19 +17,20 @@ DwellingManager.prototype.makeLoyal = function(featureId)
 
 // TODO: This function will eventually factor in morale when determining how much
 // you have to pay to get someone to work for you.
-DwellingManager.prototype.getWorkerCost = function(featureId, workerType)
+DwellingManager.prototype.getWorkerCost = function(featureId, characterId)
 {
   var cost = 0;
+  var character = characterManager.characters[characterId];
   
-  if (workerType == WorkerType.Miner)
+  if (character.isMiner)
   {
     cost = 20;
   }
-  else if (workerType == WorkerType.Logger)
+  else if (character.isLogger)
   {
     cost = 15;
   }
-  else if (workerType == WorkerType.Laborer)
+  else if (character.isLaborer)
   {
     cost = 30;
   }

@@ -11,15 +11,18 @@ var PortraitComponent = function(characterId, options)
   this.position.x = options.x;
   this.position.y = options.y;
   this.portraitSprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[this.character.type]);
-  this.portraitSprite.interactive = true;
-  this.portraitSprite.buttonMode = true;
-  this.portraitSprite.mouseup = this.onClick;
+  this.interactive = true;
+  this.buttonMode = true;
+  this.onClick = options.onClick;
   this.addChild(this.portraitSprite);
 };
 
 PortraitComponent.prototype = new PIXI.DisplayObjectContainer;
 
-PortraitComponent.prototype.onClick = function()
+PortraitComponent.prototype.click = function(interactionData)
 {
-  inputManager.leftButtonHandled = true;
+  if (this.onClick != null)
+  {
+    this.onClick(interactionData);
+  }
 };
