@@ -1,11 +1,13 @@
-var HireWorkerPanelComponent = function(screen, notification, featureId)
+var HireWorkerPanelComponent = function(screen, featureId, options)
 {
+  options = options || {};
+  
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.screen = screen;
   this.featureId = featureId;
   this.feature = worldManager.getFeature(featureId);
-  this.z = 1;
+  this.z = options.z;
   
   this.buildAvailableWorkersPanel();
   this.buildBuyerPanel();

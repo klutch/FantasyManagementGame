@@ -35,8 +35,7 @@ NotificationManager.prototype.createDwellingVisitNotification = function(feature
   var notification = new Notification(
     NotificationType.DwellingVisit,
     {
-      featureId: featureId,
-      component: feature.isLoyal ? HireWorkerPanelComponent : DwellingLoyaltyComponent
+      featureId: featureId
     });
   
   this.addNotification(notification);

@@ -2,6 +2,12 @@ var DwellingManager = function()
 {
 };
 
+DwellingManager.prototype.initialize = function()
+{
+  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.worldMap = this.worldMapScreen.worldMap;
+};
+
 DwellingManager.prototype.makeLoyal = function(featureId)
 {
   var feature = worldManager.world.features[featureId];
@@ -33,4 +39,24 @@ DwellingManager.prototype.getWorkerCost = function(featureId, workerType)
 
 DwellingManager.prototype.update = function()
 {
+  var mouseI = this.worldMap.tileGridI;
+  var mouseJ = this.worldMap.tileGridJ;
+  
+  if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
+  {
+    if (worldManager.doesTileExist(mouseI, mouseJ))
+    {
+      var tile = worldManager.getTile(mouseI, mouseJ);
+      
+      if (tile.featureId != undefined)
+      {
+        var feature = worldManager.getFeature(tile.featureId);
+        
+        if (feature.type == FeatureType.Dwelling && feature.isLoyal)
+        {
+          this.worldMapScreen.openHirePanel(tile.featureId);
+        }
+      }
+    }
+  }
 };

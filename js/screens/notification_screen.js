@@ -3,7 +3,7 @@ var NotificationScreen = function()
   this.type = ScreenType.Notification;
   this.inputEnabled = true;
   this.z = 90;
-  this.openComponent = null;
+  this.dwellingVisitPanel = null;
   
   // Background
   this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
@@ -34,12 +34,10 @@ NotificationScreen.prototype.openNotification = function(notification)
 {
   if (notification.type == NotificationType.DwellingVisit)
   {
-    var componentInstance = new notification.component(this, notification, notification.featureId);
-    
+    this.dwellingVisitPanel = new DwellingLoyaltyComponent(this, notification, notification.featureId);
     this.container.addChild(this.background);
-    this.container.addChild(componentInstance);
+    this.container.addChild(this.dwellingVisitPanel);
     this.container.children.sort(depthCompare);
-    this.openComponent = componentInstance;
   }
   
   notification.open = true;
@@ -47,15 +45,15 @@ NotificationScreen.prototype.openNotification = function(notification)
 
 NotificationScreen.prototype.closeNotification = function()
 {
-  this.container.removeChild(this.openComponent);
+  this.container.removeChild(this.dwellingVisitPanel);
   this.container.removeChild(this.background);
-  this.openComponent = null;
+  this.dwellingVisitPanel = null;
 };
 
 NotificationScreen.prototype.update = function()
 {
-  if (this.openComponent != null)
+  if (this.dwellingVisitPanel != null)
   {
-    this.openComponent.update();
+    this.dwellingVisitPanel.update();
   }
 };

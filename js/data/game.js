@@ -48,6 +48,7 @@ Game.prototype.startNewGame = function()
   characterManager.initialize();
   orderManager.initialize();
   notificationManager.initialize();
+  dwellingManager.initialize();
   
   // Change state
   this.state = GameState.WorldMap;
