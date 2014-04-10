@@ -40,6 +40,7 @@ Game.prototype.startNewGame = function()
   
   // Create screens
   screenManager.addScreen(new WorldMapScreen());
+  screenManager.addScreen(new ShopScreen());
   screenManager.addScreen(new TooltipScreen());
   
   // Initialize managers

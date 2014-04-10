@@ -7,16 +7,6 @@ var WorldMapScreen = function()
   this.z = 80;
   this.isGroupMenuOpen = false;
   this.selectedGroupPanel = null;
-  this.hirePanel = null;
-  
-  // Background
-  this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
-  this.background.position.x = -16;
-  this.background.position.y = -16;
-  this.background.z = this.z + 0.8;
-  this.background.width = game.containerWidth + 32;
-  this.background.height = game.containerHeight + 32;
-  this.background.alpha = 0.5;
   
   // Create button container
   this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
@@ -225,24 +215,6 @@ WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
   alert(string);
 };
 
-WorldMapScreen.prototype.openHirePanel = function(featureId)
-{
-  this.hirePanel = new HireWorkerPanelComponent(this, featureId, {z: this.z + 2});
-  
-  game.stage.addChild(this.background);
-  game.stage.addChild(this.hirePanel);
-  game.stage.children.sort(depthCompare);
-  //this.inputEnabled = false;
-};
-
-WorldMapScreen.prototype.closeHirePanel = function()
-{
-  game.stage.removeChild(this.background);
-  game.stage.removeChild(this.hirePanel);
-  this.hirePanel = null;
-  //this.inputEnabled = true;
-};
-
 WorldMapScreen.prototype.handleInput = function()
 {
   // Handle input
@@ -292,7 +264,6 @@ WorldMapScreen.prototype.update = function()
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });
   if (this.orderSubmenu != null) { this.orderSubmenu.update(); }
   if (this.selectedGroupPanel != null) { this.selectedGroupPanel.update(); }
-  if (this.hirePanel != null) { this.hirePanel.update(); }
   this.worldGroups.update();
   
   // Handle input

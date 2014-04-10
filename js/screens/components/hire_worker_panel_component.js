@@ -49,7 +49,11 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
       text: "Cancel",
       centerX: true,
       centerY: true,
-      onClick: function(e) { root.cancel(); }
+      onClick: function(e) 
+      {
+        root.screen.closeHirePanel();
+        screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
+      }
     });
   this.addChild(this.cancelButton);
 };
@@ -214,12 +218,6 @@ HireWorkerPanelComponent.prototype.buy = function()
   // Remove workers from feature's group
   // Put them in new group
   // Give them a return order
-};
-
-HireWorkerPanelComponent.prototype.cancel = function()
-{
-  console.log("cancel");
-  this.screen.closeHirePanel();
 };
 
 HireWorkerPanelComponent.prototype.update = function()

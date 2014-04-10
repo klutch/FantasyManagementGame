@@ -5,6 +5,7 @@ var DwellingManager = function()
 DwellingManager.prototype.initialize = function()
 {
   this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.shopScreen = screenManager.screens[ScreenType.Shop];
   this.worldMap = this.worldMapScreen.worldMap;
 };
 
@@ -56,7 +57,8 @@ DwellingManager.prototype.update = function()
         if (feature.type == FeatureType.Dwelling && feature.isLoyal)
         {
           inputManager.leftButtonHandled = true;
-          this.worldMapScreen.openHirePanel(tile.featureId);
+          this.worldMapScreen.inputEnabled = false;
+          this.shopScreen.openHirePanel(feature.id);
         }
       }
     }
