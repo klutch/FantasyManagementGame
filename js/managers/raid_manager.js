@@ -22,7 +22,7 @@ RaidManager.prototype.createRaid = function(featureId, groupId)
       turnsToComplete: 3,
       onComplete: function()
       {
-        var group = characterManager.groups[groupId];
+        var group = groupManager.getGroup(groupId);
         var returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
         
         if (returnPath != null)

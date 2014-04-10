@@ -19,6 +19,7 @@ var screenManager;
 var inputManager;
 var worldManager;
 var characterManager;
+var groupManager;
 var assetPathManager = new AssetPathManager();
 var resourceManager;
 var orderManager;

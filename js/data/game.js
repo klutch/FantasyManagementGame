@@ -31,6 +31,7 @@ Game.prototype.startNewGame = function()
   worldManager = new WorldManager();
   resourceManager = new ResourceManager();
   characterManager = new CharacterManager();
+  groupManager = new GroupManager();
   orderManager = new OrderManager();
   turnManager = new TurnManager();
   raidManager = new RaidManager();
@@ -47,6 +48,7 @@ Game.prototype.startNewGame = function()
   worldManager.initialize();
   resourceManager.initialize();
   characterManager.initialize();
+  groupManager.initialize();
   orderManager.initialize();
   notificationManager.initialize();
   dwellingManager.initialize();
@@ -59,6 +61,7 @@ Game.prototype.update = function()
 {
   inputManager.update();
   if (characterManager != null) { characterManager.update(); }
+  if (groupManager != null) { groupManager.update(); }
   if (orderManager != null) { orderManager.update(); }
   if (turnManager != null) { turnManager.update(); }
   if (raidManager != null) { raidManager.update(); }

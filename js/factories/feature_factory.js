@@ -35,12 +35,12 @@ FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
-  var workerGroup = characterManager.createGroup({name: "Available Workers", playerControlled: false});
+  var workerGroup = groupManager.createGroup({name: "Available Workers", playerControlled: false});
   
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createMinerWorker());
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createMinerWorker());
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLaborerWorker());
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLaborerWorker());
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Town;
@@ -58,12 +58,12 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
-  var workerGroup = characterManager.createGroup({name: "Available Workers", playerControlled: false});
+  var workerGroup = groupManager.createGroup({name: "Available Workers", playerControlled: false});
   
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createMinerWorker());
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLoggerWorker());
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLoggerWorker());
-  characterManager.addCharacter(workerGroup.id, CharacterFactory.createLaborerWorker());
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
+  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Grove;

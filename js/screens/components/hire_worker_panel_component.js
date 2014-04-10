@@ -9,7 +9,7 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.screen = screen;
   this.featureId = featureId;
   this.feature = worldManager.getFeature(featureId);
-  this.group = characterManager.groups[this.feature.workerGroupId];
+  this.group = groupManager.getGroup(this.feature.workerGroupId);
   this.z = options.z;
   this.availableButtons = [];
   this.buyerButtons = [];
@@ -34,7 +34,13 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
       text: "Buy",
       centerX: true,
       centerY: true,
-      onClick: function(e) { root.buy(); }
+      onClick: function(e) 
+      {
+        // Create new player controlled group
+        // Remove workers from feature's group
+        // Put them in new group
+        // Give them a return order
+      }
     });
   this.addChild(this.buyButton);
   
@@ -79,7 +85,6 @@ HireWorkerPanelComponent.prototype.getWorkerText = function(character)
 
 HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
 {
-  // Panel
   this.availablePanel = new PanelComponent({
     x: this.centerScreenX - 160,
     y: this.centerScreenY,
@@ -90,7 +95,6 @@ HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
   });
   this.addChild(this.availablePanel);
   
-  // Title
   this.availableTitle = new PIXI.BitmapText(this.group.name, {font: "18px big_pixelmix", tint: 0xFFFF00});
   this.availableTitle.position.x = 16;
   this.availableTitle.position.y = -24;
@@ -99,7 +103,6 @@ HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
 
 HireWorkerPanelComponent.prototype.buildBuyerPanel = function()
 {
-  // Panel
   this.buyerPanel = new PanelComponent({
     x: this.centerScreenX + 160,
     y: this.centerScreenY,
@@ -110,7 +113,6 @@ HireWorkerPanelComponent.prototype.buildBuyerPanel = function()
   });
   this.addChild(this.buyerPanel);
   
-  // Title
   this.buyerTitle = new PIXI.BitmapText("Buying", {font: "18px big_pixelmix", tint: 0xFFFF00});
   this.buyerTitle.position.x = 16;
   this.buyerTitle.position.y = -24;
@@ -210,14 +212,6 @@ HireWorkerPanelComponent.prototype.moveCharacterToAvailableMenu = function(chara
 {
   delete this.buyingCharacterIds[characterId];
   this.rebuildMenus = true;
-};
-
-HireWorkerPanelComponent.prototype.buy = function()
-{
-  // Create new player controlled group
-  // Remove workers from feature's group
-  // Put them in new group
-  // Give them a return order
 };
 
 HireWorkerPanelComponent.prototype.update = function()

@@ -5,7 +5,7 @@ var GroupSelectorComponent = function(screen, groupMenu, groupId)
   this.screen = screen;
   this.groupMenu = groupMenu;
   this.groupId = groupId;
-  this.group = characterManager.groups[groupId];
+  this.group = groupManager.getGroup(groupId);
   this.buttonTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]);
   this.buttonOverTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]);
   this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * groupMenu.selectors.length, this.buttonTexture.width - 8, this.buttonTexture.height);
@@ -95,7 +95,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
 
 GroupSelectorComponent.prototype.select = function()
 {
-  characterManager.selectGroup(this.groupId);
+  groupManager.selectGroup(this.groupId);
 };
 
 GroupSelectorComponent.prototype.handleInput = function()
@@ -144,9 +144,9 @@ GroupSelectorComponent.prototype.update = function()
   
   // Update group stat text
   this.groupStats.setText(
-      characterManager.getGroupOffense(this.groupId).toString() + " / " +
-      characterManager.getGroupDefense(this.groupId).toString() + " / " +
-      characterManager.getGroupSupport(this.groupId).toString());
+      groupManager.getGroupOffense(this.groupId).toString() + " / " +
+      groupManager.getGroupDefense(this.groupId).toString() + " / " +
+      groupManager.getGroupSupport(this.groupId).toString());
   
   // Handle input
   if (this.screen.inputEnabled)

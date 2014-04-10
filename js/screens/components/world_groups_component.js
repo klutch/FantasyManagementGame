@@ -11,7 +11,7 @@ WorldGroupsComponent.prototype = new PIXI.DisplayObjectContainer;
 WorldGroupsComponent.prototype.showGroup = function(groupId)
 {
   var sprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.partyIcons);
-  var tile = characterManager.getGroupTile(groupId);
+  var tile = groupManager.getGroupTile(groupId);
   
   sprite.position.x = tile.i * TILE_SIZE;
   sprite.position.y = tile.j * TILE_SIZE;
@@ -32,7 +32,7 @@ WorldGroupsComponent.prototype.update = function()
     if (this.groupSprites.hasOwnProperty(key))
     {
       var sprite = this.groupSprites[key];
-      var group = characterManager.groups[key];
+      var group = groupManager.getGroup(key);
       
       sprite.position.x += (group.tileI * TILE_SIZE - sprite.position.x) / 8;
       sprite.position.y += (group.tileJ * TILE_SIZE - sprite.position.y) / 8;

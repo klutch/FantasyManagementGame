@@ -5,9 +5,10 @@ var CharacterType = Object.freeze({
   Healer: "Healer"
 });
 
-var Character = function(id, type, options)
+var Character = function(id, options)
 {
   options = options || {};
+  options.type = options.type || CharacterType.Worker;
   options.baseOffense = options.baseOffense || 0;
   options.baseDefense = options.baseDefense || 0;
   options.baseSupport = options.baseSupport || 0;
@@ -19,7 +20,7 @@ var Character = function(id, type, options)
   options.discoveryRadius = options.discoveryRadius || 8;
   
   this.id = id;
-  this.type = type;
+  this.type = options.type;
   this.baseOffense = options.baseOffense;
   this.baseDefense = options.baseDefense;
   this.baseSupport = options.baseSupport;

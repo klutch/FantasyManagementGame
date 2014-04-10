@@ -8,7 +8,7 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   this.base();
   this.screen = screen;
   this.groupId = groupId;
-  this.group = characterManager.groups[groupId];
+  this.group = groupManager.getGroup(groupId);
   this.position.x = game.containerWidth - 416;
   this.position.y = 50;
   this.z = options.z;
@@ -32,9 +32,9 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   
   // Group stats
   this.groupStats = new PIXI.BitmapText(
-    characterManager.getGroupOffense(this.groupId).toString() + " / " +
-    characterManager.getGroupDefense(this.groupId).toString() + " / " +
-    characterManager.getGroupSupport(this.groupId).toString(),
+    groupManager.getGroupOffense(this.groupId).toString() + " / " +
+    groupManager.getGroupDefense(this.groupId).toString() + " / " +
+    groupManager.getGroupSupport(this.groupId).toString(),
     {font: "14px big_pixelmix", tint: 0xCCCCCC});
   this.groupStats.position.x = 16;
   this.groupStats.position.y = 40;
