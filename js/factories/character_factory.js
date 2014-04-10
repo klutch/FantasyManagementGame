@@ -8,6 +8,7 @@ CharacterFactory.createArcher = function(powerLevel)
     baseDefense: 0,
     baseSupport: Math.ceil(0.15 * powerLevel),
     movementAbility: 70,
+    isExplorer: true,
     description: "Archers are heavily focused on offense, but can provide a small amount of support."
   });
 };

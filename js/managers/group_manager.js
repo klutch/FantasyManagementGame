@@ -206,7 +206,7 @@ GroupManager.prototype.getGroupMovementAbility = function(groupId)
 
 GroupManager.prototype.getGroupDiscoveryRadius = function(groupId)
 {
-  var group = this.groups[groupId];
+  var group = this.getGroup(groupId);
   var highestDiscoveryRadius = 0;
   
   for (var i = 0; i < group.characterIds.length; i++)
@@ -219,6 +219,102 @@ GroupManager.prototype.getGroupDiscoveryRadius = function(groupId)
     }
   }
   return highestDiscoveryRadius;
+};
+
+GroupManager.prototype.canGroupExplore = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = characterManager.getCharacter(group.characterIds[i]);
+    
+    if (character.isExplorer)
+    {
+      return true;
+    }
+  }
+  return false;
+};
+
+GroupManager.prototype.canGroupMine = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = characterManager.getCharacter(group.characterIds[i]);
+    
+    if (character.isMiner)
+    {
+      return true;
+    }
+  }
+  return false;
+};
+
+GroupManager.prototype.canGroupLog = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = characterManager.getCharacter(group.characterIds[i]);
+    
+    if (character.isLogger)
+    {
+      return true;
+    }
+  }
+  return false;
+};
+
+GroupManager.prototype.canGroupVisitDwelling = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = characterManager.getCharacter(group.characterIds[i]);
+    
+    if (!character.isWorker)
+    {
+      return true;
+    }
+  }
+  return false;
+};
+
+GroupManager.prototype.canGroupVisitGathering = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = characterManager.getCharacter(group.characterIds[i]);
+    
+    if (!character.isWorker)
+    {
+      return true;
+    }
+  }
+  return false;
+};
+
+GroupManager.prototype.canGroupRaid = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = characterManager.getCharacter(group.characterIds[i]);
+    
+    if (!character.isWorker)
+    {
+      return true;
+    }
+  }
+  return false;
 };
 
 GroupManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)

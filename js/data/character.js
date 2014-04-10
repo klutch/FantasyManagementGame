@@ -16,18 +16,18 @@ var Character = function(id, options)
   options.isMiner = options.isMiner || false;
   options.isLogger = options.isLogger || false;
   options.isLaborer = options.isLaborer || false;
+  options.isExplorer = options.isExplorer || false;
   options.description = options.description || "TODO: This character needs a description.";
   options.discoveryRadius = options.discoveryRadius || 8;
   
+  for (var key in options)
+  {
+    if (options.hasOwnProperty(key))
+    {
+      this[key] = options[key];
+    }
+  }
+  
   this.id = id;
-  this.type = options.type;
-  this.baseOffense = options.baseOffense;
-  this.baseDefense = options.baseDefense;
-  this.baseSupport = options.baseSupport;
-  this.movementAbility = options.movementAbility;
-  this.isMiner = options.isMiner;
-  this.isLogger = options.isLogger;
-  this.isLaborer = options.isLaborer;
   this.isWorker = this.isMiner || this.isLogger || this.isLaborer;
-  this.discoveryRadius = options.discoveryRadius;
 };

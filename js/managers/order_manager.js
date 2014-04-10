@@ -522,7 +522,7 @@ OrderManager.prototype.createVisitGatheringOrder = function(groupId, featureId)
   }
 };
 
-OrderManager.prototype.getOrderContexts = function(i, j)
+OrderManager.prototype.getOrderContexts = function(groupId, i, j)
 {
   var contexts = {};
   var exploreContext = false;
@@ -534,25 +534,40 @@ OrderManager.prototype.getOrderContexts = function(i, j)
   var fightContext = false;
   var returnContext = false;
   var tile;
+  var canExplore = groupManager.canGroupExplore(groupId);
+  var canMine = groupManager.canGroupMine(groupId);
+  var canLog = groupManager.canGroupLog(groupId);
+  var canVisitDwelling = groupManager.canGroupVisitDwelling(groupId);
+  var canVisitGathering = groupManager.canGroupVisitGathering(groupId);
+  var canRaid = groupManager.canGroupRaid(groupId);
   
   // Check for undiscovered/non-existant tile
   if (!worldManager.doesTileExist(i, j) || !(tile = worldManager.getTile(i, j)).discovered)
   {
-    contexts[OrderType.Explore] = true;
-    return contexts;
+    if (canExplore)
+    {
+      contexts[OrderType.Explore] = true;
+      return contexts;
+    }
   }
   
   // Check for mining context
   if (tile.type == TileType.Mountain)
   {
-    contexts[OrderType.Mine] = true;
-    return contexts;
+    if (canMine)
+    {
+      contexts[OrderType.Mine] = true;
+      return contexts;
+    }
   }
   
   // Check for cut-logs context
   if (tile.type == TileType.Forest)
   {
-    contexts[OrderType.CutLogs] = true;
+    if (canLog)
+    {
+      contexts[OrderType.CutLogs] = true;
+    }
   }
   
   if (tile.featureId != undefined)
@@ -569,19 +584,19 @@ OrderManager.prototype.getOrderContexts = function(i, j)
     }
     
     // Check for dwelling context
-    if (feature.type == FeatureType.Dwelling)
+    if (feature.type == FeatureType.Dwelling && canVisitDwelling)
     {
       contexts[OrderType.VisitDwelling] = true;
     }
     
     // Check for gathering context
-    if (feature.type == FeatureType.Gathering)
+    if (feature.type == FeatureType.Gathering && canVisitGathering)
     {
       contexts[OrderType.VisitGathering] = true;
     }
     
     // Check for raid context
-    if (feature.type == FeatureType.Dungeon)
+    if (feature.type == FeatureType.Dungeon && canRaid)
     {
       contexts[OrderType.Raid] = true;
     }
@@ -592,7 +607,10 @@ OrderManager.prototype.getOrderContexts = function(i, j)
   // Check for explorable tiles
   if (tile.type != TileType.Water && tile.type != TileType.Mountain)
   {
-    contexts[OrderType.Explore] = true;
+    if (canExplore)
+    {
+      contexts[OrderType.Explore] = true;
+    }
   }
   
   return contexts;
@@ -675,7 +693,7 @@ OrderManager.prototype.update = function()
     // Check for mouse
     if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
     {
-      var contexts = this.getOrderContexts(mouseI, mouseJ);
+      var contexts = this.getOrderContexts(groupManager.selectedGroupId, mouseI, mouseJ);
       var numContexts = _.size(contexts);
       
       inputManager.leftButtonHandled = true;
