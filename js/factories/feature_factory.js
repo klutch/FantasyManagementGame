@@ -42,6 +42,9 @@ FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
   groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
+  workerGroup.tileI = feature.tileI;
+  workerGroup.tileJ = feature.tileJ;
+  
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Town;
   feature.workerGroupId = workerGroup.id;
@@ -64,6 +67,9 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
   groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
   groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
   groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
+  
+  workerGroup.tileI = feature.tileI;
+  workerGroup.tileJ = feature.tileJ;
   
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Grove;

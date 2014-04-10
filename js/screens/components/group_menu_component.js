@@ -8,7 +8,7 @@ var GroupMenuComponent = function(screen, options)
   this.base();
   this.screen = screen;
   this.width = options.width;
-  this.selectors = [];
+  this.selectors = {};
   this.z = options.z;
   delete options.z;
   

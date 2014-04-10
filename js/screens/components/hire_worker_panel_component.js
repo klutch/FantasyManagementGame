@@ -14,9 +14,11 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.availableButtons = [];
   this.buyerButtons = [];
   this.buyingCharacterIds = {};
+  this.totalCost = 0;
   this.rebuildMenus = true;
   this.centerScreenX = Math.floor(game.containerWidth * 0.5);
   this.centerScreenY = Math.floor(game.containerHeight * 0.5);
+  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
   
   // Panels
   this.buildAvailableWorkersPanel();
@@ -34,12 +36,34 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
       text: "Buy",
       centerX: true,
       centerY: true,
-      onClick: function(e) 
+      onClick: function(e)
       {
-        // Create new player controlled group
-        // Remove workers from feature's group
-        // Put them in new group
-        // Give them a return order
+        if (this.enabled)
+        {
+          var newGroup = groupManager.createGroup({
+            name: "Workers",
+            playerControlled: true,
+            tileI: root.group.tileI,
+            tileJ: root.group.tileJ,
+            featureId: root.featureId
+          });
+          
+          resourceManager.decreaseQuantity(ResourceType.Gold, root.totalCost);
+          
+          for (var characterId in root.buyingCharacterIds)
+          {
+            if (root.buyingCharacterIds.hasOwnProperty(characterId))
+            {
+              groupManager.removeCharacterFromGroup(root.group.id, characterId);
+              groupManager.addCharacterToGroup(newGroup.id, characterId);
+            }
+          };
+          
+          orderManager.createReturnOrder(newGroup.id);
+          root.screen.closeHirePanel();
+          root.worldMapScreen.inputEnabled = true;
+          root.worldMapScreen.groupMenu.addGroup(newGroup.id);
+        }
       }
     });
   this.addChild(this.buyButton);
@@ -58,7 +82,7 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
       onClick: function(e) 
       {
         root.screen.closeHirePanel();
-        screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
+        root.worldMapScreen.inputEnabled = true;
       }
     });
   this.addChild(this.cancelButton);
@@ -204,22 +228,46 @@ HireWorkerPanelComponent.prototype.clearMenus = function()
 
 HireWorkerPanelComponent.prototype.moveCharacterToBuyerMenu = function(characterId)
 {
+  this.totalCost += dwellingManager.getWorkerCost(this.featureId, characterId);
   this.buyingCharacterIds[characterId] = true;
   this.rebuildMenus = true;
 };
 
 HireWorkerPanelComponent.prototype.moveCharacterToAvailableMenu = function(characterId)
 {
+  this.totalCost -= dwellingManager.getWorkerCost(this.featureId, characterId);
   delete this.buyingCharacterIds[characterId];
   this.rebuildMenus = true;
 };
 
 HireWorkerPanelComponent.prototype.update = function()
 {
+  var canAfford = this.totalCost <= resourceManager.resourceQuantities[ResourceType.Gold];
+  var size = _.size(this.buyingCharacterIds);
+  
   if (this.rebuildMenus)
   {
     this.clearMenus();
     this.buildMenus();
     this.rebuildMenus = false;
+  }
+  
+  if (size == 0)
+  {
+    if (this.buyButton.enabled)
+    {
+      this.buyButton.setEnabled(false);
+    }
+    
+    return;
+  }
+  
+  if (canAfford && !this.buyButton.enabled)
+  {
+    this.buyButton.setEnabled(true);
+  }
+  else if (!canAfford && this.buyButton.enabled)
+  {
+    this.buyButton.setEnabled(false);
   }
 };
