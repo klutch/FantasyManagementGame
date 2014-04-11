@@ -547,8 +547,8 @@ OrderManager.prototype.getOrderContexts = function(groupId, i, j)
     if (canExplore)
     {
       contexts[OrderType.Explore] = true;
-      return contexts;
     }
+    return contexts;
   }
   
   // Check for mining context
@@ -557,8 +557,8 @@ OrderManager.prototype.getOrderContexts = function(groupId, i, j)
     if (canMine)
     {
       contexts[OrderType.Mine] = true;
-      return contexts;
     }
+    return contexts;
   }
   
   // Check for cut-logs context
