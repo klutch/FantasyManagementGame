@@ -619,8 +619,7 @@ OrderManager.prototype.getOrderContexts = function(groupId, i, j)
 OrderManager.prototype.rebuildPaths = function(groupId)
 {
   var orders = this.groupOrders[groupId];
-  var startingI;
-  var startingJ;
+  var group = groupManager.getGroup(groupId);
   
   // Early exit
   if (orders == null || orders.length == 0)
@@ -635,23 +634,44 @@ OrderManager.prototype.rebuildPaths = function(groupId)
   }
   
   // Rebuild paths
-  startingI = orders[0].path.getTail().i;
-  startingJ = orders[0].path.getTail().j;
-  for (var i = 1; i < orders.length; i++)
+  if (orders.length == 1)
   {
-    var order = orders[i];
+    var startingI = group.tileI;
+    var startingJ = group.tileJ;
+    var order = orders[0];
     var tail = order.path.getTail();
     var newPath = pathfinderManager.findPath(startingI, startingJ, tail.i, tail.j, order.pathfindingOptions);
     
     if (newPath != null)
     {
       order.path = newPath;
-      startingI = order.path.getTail().i;
-      startingJ = order.path.getTail().j;
     }
     else
     {
       console.error("Couldn't find new path when rebuilding them.");
+    }
+  }
+  else
+  {
+    var startingI = orders[0].path.getTail().i;
+    var startingJ = orders[0].path.getTail().j;
+    
+    for (var i = 1; i < orders.length; i++)
+    {
+      var order = orders[i];
+      var tail = order.path.getTail();
+      var newPath = pathfinderManager.findPath(startingI, startingJ, tail.i, tail.j, order.pathfindingOptions);
+
+      if (newPath != null)
+      {
+        order.path = newPath;
+        startingI = order.path.getTail().i;
+        startingJ = order.path.getTail().j;
+      }
+      else
+      {
+        console.error("Couldn't find new path when rebuilding them.");
+      }
     }
   }
   
