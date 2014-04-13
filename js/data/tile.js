@@ -1,11 +1,11 @@
 var TileType = Object.freeze({
   Water: 0,
-  Plains: 1,
-  Snow: 2,
-  Grassland: 3,
-  Swamp: 4,
-  Arid: 5,
-  Sand: 6,
+  Arid: 1,
+  Sand: 2,
+  Swamp: 3,
+  Grassland: 4,
+  Plains: 5,
+  Snow: 6,
   Road: 7,
   Mountain: 8,
   Forest: 9
