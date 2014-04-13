@@ -145,8 +145,8 @@ OrderSubMenuComponent.prototype.commonOnClick = function()
   if (!inputManager.keysPressed[KeyCode.Shift])
   {
     orderManager.endOrderSetup();
-    this.close();
   }
+  this.close();
 };
 
 OrderSubMenuComponent.prototype.close = function()
