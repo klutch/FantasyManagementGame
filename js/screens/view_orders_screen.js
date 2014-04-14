@@ -6,13 +6,14 @@ var ViewOrdersScreen = function(groupId)
   this.inputEnabled = true;
   this.z = 90;
   this.groupId = groupId;
-  this.orders = orderManager.groupOrders[this.groupId];
+  this.orderSystem = game.systemManager.getSystem(SystemType.Order);
+  this.orders = this.orderSystem.groupOrders[this.groupId];
   this.orderLabels = [];
   this.removeButtons = [];
   this.rebuildPathsOnClose = false;
   
   // Background
-  this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
+  this.background = PIXI.Sprite.fromImage(game.assetManager.paths.ui.black);
   this.background.position.x = -16;
   this.background.position.y = -16;
   this.background.z = this.z;
@@ -42,8 +43,8 @@ var ViewOrdersScreen = function(groupId)
     {
       x: this.panel.width - 96,
       y: this.panel.height - 34,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
       text: "Done",
       centerX: true,
       centerY: true,
@@ -51,10 +52,10 @@ var ViewOrdersScreen = function(groupId)
       {
         if (root.rebuildPathsOnClose)
         {
-          orderManager.rebuildPaths(root.groupId);
+          root.orderSystem.rebuildPaths(root.groupId);
         }
-        screenManager.removeScreen(ScreenType.ViewOrders);
-        screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
+        game.screenManager.removeScreen(ScreenType.ViewOrders);
+        game.screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
       }
     });
   this.panel.addChild(this.doneButton);
@@ -91,12 +92,12 @@ ViewOrdersScreen.prototype.buildOrders = function()
       {
         x: 16,
         y: y - 12,
-        normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.closeButtons[0]),
-        hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.closeButtons[1]),
+        normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.closeButtons[0]),
+        hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.closeButtons[1]),
         onClick: function(e)
         {
-          orderManager.cancelOrder(this.orderId); // I hate javascript's scoping
-          root.orders = orderManager.groupOrders[root.groupId] || [];
+          root.orderSystem.cancelOrder(this.orderId); // I hate javascript's scoping
+          root.orders = root.orderSystem.groupOrders[root.groupId] || [];
           root.clearOrders();
           root.buildOrders();
           root.rebuildPathsOnClose = true;
