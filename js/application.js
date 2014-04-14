@@ -2,61 +2,36 @@
  * Copyright 2014 Graeme Collins
  */
 
-var TILE_SIZE = 32;
-var CHUNK_SIZE = 32;
-var NUM_TERRAIN_TYPES = 9;
-var OFFENSE_COLOR = 0xed2129;
-var DEFENSE_COLOR = 0x0072bc;
-var SUPPORT_COLOR = 0x8fd82c;
-var DEFAULT_TILE_SELECTOR_COLOR = 0xCCCCCC;
-var DEBUG_PATHFINDER = false;
+// Core game variables
+var game;
+
+/*
 var fps;
 var fpsText;
-var lastLoop = new Date();
-var isLoaded = false;
-var game;
-var screenManager;
-var inputManager;
-var worldManager;
-var characterManager;
-var groupManager;
-var assetPathManager = new AssetPathManager();
-var resourceManager;
-var orderManager;
-var turnManager;
-var raidManager;
-var pathfinderManager;
-var notificationManager;
-var dwellingManager;
+var lastLoop = new Date();*/
 
 // Initialize
 function initialize()
 {
-  // Start preloading
-  assetPathManager.preload(finishInitializing);
+  game = new GameEngine();
   
   // Start main loop
   requestAnimFrame(loop);
 }
 
 // Finish initializing (after preloading has finished)
+/*
 function finishInitializing()
 {
-  // Initialize game
-  game = new Game();
-  
-  // Initialize FPS
   fps = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
   fpsText = new PIXI.Text("...", { font: "bold 20pt Trebuchet MS", fill: "white" });
   fpsText.y = game.containerHeight - 32;
   fpsText.z = 110;
   game.stage.addChild(fpsText);
-  
-  // Open main menu
-  screenManager.addScreen(new MainMenuScreen());
+  game.stage.children.sort(depthCompare);
   
   isLoaded = true;
-}
+}*/
 
 // Get random integer between values
 function getRandomInt(a, b)
@@ -69,6 +44,7 @@ function getRandomInt(a, b)
 }
 
 // Update fps
+/*
 function updateFps()
 {
   var thisLoop = new Date();
@@ -83,7 +59,7 @@ function updateFps()
   }
   lastLoop = thisLoop;
   fpsText.setText("FPS: " + Math.floor(averageFps));
-}
+}*/
 
 // Depth sorting
 function depthCompare(a, b)
@@ -106,13 +82,10 @@ function depthCompare(a, b)
 // Game loop
 function loop()
 {
-  if (isLoaded)
+  if (game.isLoaded)
   {
-    // Update
-    updateFps();
+    //updateFps();
     game.update();
-
-    // Draw
     game.draw();
   }
   requestAnimFrame(loop);

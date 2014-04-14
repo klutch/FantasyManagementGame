@@ -87,7 +87,7 @@ ButtonComponent.prototype.click = function(interactionData)
     return;
   }
   
-  inputManager.leftButtonHandled = true;
+  game.inputManager.leftButtonHandled = true;
   
   if (this.onClick != null)
   {
@@ -121,7 +121,7 @@ ButtonComponent.prototype.mouseover = function(interactionData)
   // Tooltips
   if (this.tooltipText != null)
   {
-    screenManager.screens[ScreenType.Tooltip].addTooltip(this.tooltipCategory, this.tooltipTag, this.tooltipText);
+    game.screenManager.screens[ScreenType.Tooltip].addTooltip(this.tooltipCategory, this.tooltipTag, this.tooltipText);
   }
   
   // Callback
@@ -152,7 +152,7 @@ ButtonComponent.prototype.mouseout = function(interactionData)
   // Tooltips
   if (this.tooltipText != null)
   {
-    screenManager.screens[ScreenType.Tooltip].removeTooltip(this.tooltipCategory, this.tooltipTag);
+    game.screenManager.screens[ScreenType.Tooltip].removeTooltip(this.tooltipCategory, this.tooltipTag);
   }
   
   // Callback

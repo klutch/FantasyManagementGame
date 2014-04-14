@@ -31,12 +31,13 @@ var ResourceType = Object.freeze({
   Xenotime: "Xenotime"
 });
 
-var ResourceManager = function()
+var ResourceSystem = function()
 {
+  this.type = SystemType.Resource;
   this.resourceQuantities = {};
 };
 
-ResourceManager.prototype.initialize = function()
+ResourceSystem.prototype.initialize = function()
 {
   // Initialize quantities to zero
   _.each(ResourceType, function(resourceType) { this.resourceQuantities[resourceType] = 0; }, this);
@@ -45,12 +46,16 @@ ResourceManager.prototype.initialize = function()
   this.resourceQuantities[ResourceType.Gold] = 300;
 };
 
-ResourceManager.prototype.decreaseQuantity = function(type, amount)
+ResourceSystem.prototype.decreaseQuantity = function(type, amount)
 {
   this.resourceQuantities[type] = Math.max(0, this.resourceQuantities[type] - amount);
 };
 
-ResourceManager.prototype.increaseQuantity = function(type, amount)
+ResourceSystem.prototype.increaseQuantity = function(type, amount)
 {
   this.resourceQuantities[type] += amount;
+};
+
+ResourceSystem.prototype.update = function()
+{
 };

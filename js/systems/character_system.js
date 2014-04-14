@@ -1,33 +1,34 @@
-var CharacterManager = function()
+var CharacterSystem = function()
 {
   this.characters = [];
+  this.type = SystemType.Character;
 };
 
-CharacterManager.prototype.initialize = function()
+CharacterSystem.prototype.initialize = function()
 {
 };
 
-CharacterManager.prototype.getCharacter = function(characterId)
+CharacterSystem.prototype.getCharacter = function(characterId)
 {
   return this.characters[characterId];
 };
 
-CharacterManager.prototype.getCharacterOffense = function(characterId)
+CharacterSystem.prototype.getCharacterOffense = function(characterId)
 {
   return this.characters[characterId].baseOffense;
 };
 
-CharacterManager.prototype.getCharacterDefense = function(characterId)
+CharacterSystem.prototype.getCharacterDefense = function(characterId)
 {
   return this.characters[characterId].baseDefense;
 };
 
-CharacterManager.prototype.getCharacterSupport = function(characterId)
+CharacterSystem.prototype.getCharacterSupport = function(characterId)
 {
   return this.characters[characterId].baseSupport;
 };
 
-CharacterManager.prototype.getUnusedCharacterId = function()
+CharacterSystem.prototype.getUnusedCharacterId = function()
 {
   for (var i = 0; i < this.characters.length; i++)
   {
@@ -39,14 +40,14 @@ CharacterManager.prototype.getUnusedCharacterId = function()
   return this.characters.length;
 };
 
-/*CharacterManager.prototype.addCharacter = function(groupId, character)
+/*CharacterSystem.prototype.addCharacter = function(groupId, character)
 {
   var group = this.groups[groupId];
   
   this.characters[character.id] = character;
   group.characterIds.push(character.id);
 };*/
-CharacterManager.prototype.createCharacter = function(options)
+CharacterSystem.prototype.createCharacter = function(options)
 {
   var id = this.getUnusedCharacterId();
   var character = new Character(id, options);
@@ -56,6 +57,6 @@ CharacterManager.prototype.createCharacter = function(options)
   return character;
 };
 
-CharacterManager.prototype.update = function()
+CharacterSystem.prototype.update = function()
 {
 };

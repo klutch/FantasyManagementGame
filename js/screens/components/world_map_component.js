@@ -12,7 +12,7 @@ var WorldMapComponent = function()
   this.z = 0;
   this.tileGridI = 0;
   this.tileGridJ = 0;
-  this.tileSelection = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.tiles.tileSelection));
+  this.tileSelection = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.tiles.tileSelection));
   this.tileSelection.tint = DEFAULT_TILE_SELECTOR_COLOR;
   this.minScale = 0.05;
   this.maxScale = 1;
@@ -22,14 +22,15 @@ var WorldMapComponent = function()
   this.totalChunksToGenerate = 0;
   this.tilesToDraw = [];
   this.tilePosition = new PIXI.Point(0, 0); // Reusable position. Used in drawTile()
-  this.pathOverlaySprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.pathOverlay);
+  this.pathOverlaySprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.pathOverlay);
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
   
   // Create terrain sprites
   this.terrainSprites = {};
   _.each(TileType, function(type)
     {
       this.terrainSprites[type] = [];
-      _.each(assetPathManager.assetPaths.terrainTiles[type], function(path)
+      _.each(game.assetManager.paths.terrainTiles[type], function(path)
         {
           this.terrainSprites[type].push(PIXI.Sprite.fromImage(path));
         },
@@ -45,7 +46,7 @@ var WorldMapComponent = function()
       for (var i = 0; i < 32; i++)
       {
         if (i == 16) { continue; }
-        this.transitionSprites[type][i] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.transitionTiles[type][i]);
+        this.transitionSprites[type][i] = PIXI.Sprite.fromImage(game.assetManager.paths.transitionTiles[type][i]);
       }
     },
     this);
@@ -60,7 +61,7 @@ var WorldMapComponent = function()
     _.each(subTypes, function(subType)
     {
       this.featureSprites[featureType][subType] = [];
-      _.each(assetPathManager.assetPaths.featureTiles[featureType][subType], function(path)
+      _.each(game.assetManager.paths.featureTiles[featureType][subType], function(path)
       {
         this.featureSprites[featureType][subType].push(PIXI.Sprite.fromImage(path));
       },
@@ -179,19 +180,19 @@ WorldMapComponent.prototype.getEdgeTransition = function(baseTileType, tileType,
   var index = 0;
   var sprite;
   
-  if (worldManager.getOrCreateTile(tileI - 1, tileJ).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI - 1, tileJ).type == tileType)
   {
     index += 1;
   }
-  if (worldManager.getOrCreateTile(tileI, tileJ - 1).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI, tileJ - 1).type == tileType)
   {
     index += 2;
   }
-  if (worldManager.getOrCreateTile(tileI + 1, tileJ).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI + 1, tileJ).type == tileType)
   {
     index += 4;
   }
-  if (worldManager.getOrCreateTile(tileI, tileJ + 1).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI, tileJ + 1).type == tileType)
   {
     index += 8;
   }
@@ -211,19 +212,19 @@ WorldMapComponent.prototype.getCornerTransition = function(baseTileType, tileTyp
   var index = 0;
   var sprite;
   
-  if (worldManager.getOrCreateTile(tileI - 1, tileJ - 1).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI - 1, tileJ - 1).type == tileType)
   {
     index += 1;
   }
-  if (worldManager.getOrCreateTile(tileI + 1, tileJ - 1).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI + 1, tileJ - 1).type == tileType)
   {
     index += 2;
   }
-  if (worldManager.getOrCreateTile(tileI + 1, tileJ + 1).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI + 1, tileJ + 1).type == tileType)
   {
     index += 4;
   }
-  if (worldManager.getOrCreateTile(tileI - 1, tileJ + 1).type == tileType)
+  if (this.worldSystem.getOrCreateTile(tileI - 1, tileJ + 1).type == tileType)
   {
     index += 8;
   }
@@ -256,7 +257,7 @@ WorldMapComponent.prototype.drawTile = function(i, j)
 {
   var chunkI = this.getChunkI(i);
   var chunkJ = this.getChunkJ(j);
-  var tile = worldManager.getTile(i, j);
+  var tile = this.worldSystem.getTile(i, j);
   var tileSprite = this.getTileSprite(tile);
   var chunkSprite = this.doesChunkExist(chunkI, chunkJ) ? this.chunkSprites[chunkI][chunkJ] : this.generateChunkSprite(chunkI, chunkJ);
   var color;
@@ -288,7 +289,7 @@ WorldMapComponent.prototype.drawTile = function(i, j)
   // Render feature tile
   if (tile.featureId != null)
   {
-    var feature = worldManager.world.features[tile.featureId];
+    var feature = this.worldSystem.world.features[tile.featureId];
     var featureSprite = this.getFeatureSprite(feature, tile.featureTextureI, tile.featureTextureJ);
     
     chunkSprite.texture.render(featureSprite, this.tilePosition);
@@ -305,8 +306,8 @@ WorldMapComponent.prototype.moveCamera = function(deltaX, deltaY)
 // Move the camera to the home castle
 WorldMapComponent.prototype.moveCameraToHome = function()
 {
-  this.camera.targetPosition.x = (worldManager.world.playerCastleI + 2) * TILE_SIZE;
-  this.camera.targetPosition.y = (worldManager.world.playerCastleJ + 2) * TILE_SIZE;
+  this.camera.targetPosition.x = (this.worldSystem.world.playerCastleI + 2) * TILE_SIZE;
+  this.camera.targetPosition.y = (this.worldSystem.world.playerCastleJ + 2) * TILE_SIZE;
 };
 
 // Set camera position
@@ -359,8 +360,8 @@ WorldMapComponent.prototype.update = function()
   this.scale.y = this.camera.scale.y;
 
   // Tile grid
-  this.tileGridI = worldManager.getGridI(this.convertScreenToWorldX(inputManager.mousePosition.x));
-  this.tileGridJ = worldManager.getGridJ(this.convertScreenToWorldY(inputManager.mousePosition.y));
+  this.tileGridI = this.worldSystem.getGridI(this.convertScreenToWorldX(game.inputManager.mousePosition.x));
+  this.tileGridJ = this.worldSystem.getGridJ(this.convertScreenToWorldY(game.inputManager.mousePosition.y));
   this.tileSelection.position.x = this.tileGridI * TILE_SIZE;
   this.tileSelection.position.y = this.tileGridJ * TILE_SIZE;
   

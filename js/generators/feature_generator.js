@@ -1,6 +1,7 @@
 // Feature generator constructor
-var FeatureGenerator = function(seed)
+var FeatureGenerator = function(worldSystem, seed)
 {
+  this.worldSystem = worldSystem;
   this.seed = seed;
   this.dwellingGridSize = 512;
   this.dwellingGrid = [];
@@ -80,9 +81,9 @@ FeatureGenerator.prototype.generatePlayerCastle = function()
   
   // Create feature
   feature = FeatureFactory.createPlayerCastle(castleI, castleJ);
-  worldManager.world.playerCastleI = castleI;
-  worldManager.world.playerCastleJ = castleJ;
-  worldManager.world.playerCastleFeatureId = feature.id;
+  this.worldSystem.world.playerCastleI = castleI;
+  this.worldSystem.world.playerCastleJ = castleJ;
+  this.worldSystem.world.playerCastleFeatureId = feature.id;
 };
 
 // Get a coin flip based on 
@@ -97,7 +98,7 @@ FeatureGenerator.prototype.getCoinFlip = function(tileI, tileJ, iMultiplier, jMu
 // Try to generate a feature at a given tile
 FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
 {
-  var tile = worldManager.getTile(tileI, tileJ);
+  var tile = this.worldSystem.getTile(tileI, tileJ);
   
   // Try dwellings
   if (this.getDwellingValue(tileI, tileJ) == 1)
@@ -106,7 +107,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 2))
       {
-        if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)   // try to build close to roads
+        if (this.worldSystem.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)   // try to build close to roads
         {
           if (this.getCoinFlip(tileI, tileJ, 7, 133))
           {
@@ -176,7 +177,7 @@ FeatureGenerator.prototype.tryGenerateAt = function(tileI, tileJ)
     {
       if (this.checkTerrainType(tile.type, tileI, tileJ, 2, 1))
       {
-        if (worldManager.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
+        if (this.worldSystem.terrainGenerator.getRoadNoise(tileI, tileJ) > 0.5)
         {
           if (this.coinFlips[(tileI * 17 + tileJ * 113) & (this.numCoinFlips - 1)])
           {
@@ -210,11 +211,13 @@ FeatureGenerator.prototype.getGatheringValue = function(x, y)
 // Check terrain type given a location and a grid size
 FeatureGenerator.prototype.checkTerrainType = function(tileType, tileI, tileJ, width, height)
 {
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
+  
   for (var i = tileI, limitI = tileI + width; i < limitI; i++)
   {
     for (var j = tileJ, limitJ = tileJ + height; j < limitJ; j++)
     {
-      var tile = worldManager.doesTileExist(i, j) ? worldManager.getTile(i, j) : worldManager.generateTile(i, j);
+      var tile = this.worldSystem.doesTileExist(i, j) ? this.worldSystem.getTile(i, j) : this.worldSystem.generateTile(i, j);
       
       if (tile.type != tileType)
       {

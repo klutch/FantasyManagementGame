@@ -8,7 +8,7 @@ var ShopScreen = function()
   this.container.z = this.z;
   
   // Background
-  this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
+  this.background = PIXI.Sprite.fromImage(game.assetManager.paths.ui.black);
   this.background.position.x = -16;
   this.background.position.y = -16;
   this.background.z = 0;

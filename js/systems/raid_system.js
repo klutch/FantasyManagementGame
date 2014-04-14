@@ -1,9 +1,14 @@
-var RaidManager = function()
+var RaidSystem = function()
 {
+  this.type = SystemType.Raid;
   this.raids = [];
 };
 
-RaidManager.prototype.getUnusedId = function()
+RaidSystem.prototype.initialize = function()
+{
+};
+
+RaidSystem.prototype.getUnusedId = function()
 {
   var count = 0;
   
@@ -12,7 +17,7 @@ RaidManager.prototype.getUnusedId = function()
   return count;
 };
 
-RaidManager.prototype.createRaid = function(featureId, groupId)
+RaidSystem.prototype.createRaid = function(featureId, groupId)
 {
   var raid = new Raid(
     this.getUnusedId(),
@@ -40,7 +45,7 @@ RaidManager.prototype.createRaid = function(featureId, groupId)
   this.raids[raid.id] = raid;
 };
 
-RaidManager.prototype.processRaids = function()
+RaidSystem.prototype.processRaids = function()
 {
   var completedRaids = [];
   
@@ -65,6 +70,6 @@ RaidManager.prototype.processRaids = function()
   }
 };
 
-RaidManager.prototype.update = function()
+RaidSystem.prototype.update = function()
 {
 };

@@ -14,33 +14,36 @@ FeatureFactory.copyOptionsToFeature = function(feature, options)
 
 FeatureFactory.createPlayerCastle = function(tileI, tileJ)
 {
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
   var feature = new Feature(
-    worldManager.getUnusedFeatureId(),
+    worldSystem.getUnusedFeatureId(),
     FeatureType.Castle,
     tileI,
     tileJ,
     4,
     4);
   feature.castleType = CastleType.Player;
-  worldManager.addFeature(feature);
+  worldSystem.addFeature(feature);
   return feature;
 };
 
 FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
 {
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
   var feature = new Feature(
-    worldManager.getUnusedFeatureId(),
+    worldSystem.getUnusedFeatureId(),
     FeatureType.Dwelling,
     tileI,
     tileJ,
     2,
     2);
-  var workerGroup = groupManager.createGroup({name: "Available Workers", playerControlled: false});
+  var workerGroup = groupSystem.createGroup({name: "Available Workers", playerControlled: false});
   
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
   workerGroup.tileI = feature.tileI;
   workerGroup.tileJ = feature.tileJ;
@@ -48,25 +51,27 @@ FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Town;
   feature.workerGroupId = workerGroup.id;
-  worldManager.addFeature(feature);
+  worldSystem.addFeature(feature);
   return feature;
 };
 
 FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
 {
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
   var feature = new Feature(
-    worldManager.getUnusedFeatureId(),
+    worldSystem.getUnusedFeatureId(),
     FeatureType.Dwelling,
     tileI,
     tileJ,
     2,
     2);
-  var workerGroup = groupManager.createGroup({name: "Available Workers", playerControlled: false});
+  var workerGroup = groupSystem.createGroup({name: "Available Workers", playerControlled: false});
   
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
-  groupManager.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
   workerGroup.tileI = feature.tileI;
   workerGroup.tileJ = feature.tileJ;
@@ -74,14 +79,15 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Grove;
   feature.workerGroupId = workerGroup.id;
-  worldManager.addFeature(feature);
+  worldSystem.addFeature(feature);
   return feature;
 };
 
 FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
 {
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
   var feature = new Feature(
-    worldManager.getUnusedFeatureId(),
+    worldSystem.getUnusedFeatureId(),
     FeatureType.Dungeon,
     tileI,
     tileJ,
@@ -90,14 +96,15 @@ FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
   
   this.copyOptionsToFeature(feature, options);
   feature.dungeonType = DungeonType.Cave;
-  worldManager.addFeature(feature);
+  worldSystem.addFeature(feature);
   return feature;
 };
 
 FeatureFactory.createTavernGathering = function(tileI, tileJ, options)
 {
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
   var feature = new Feature(
-    worldManager.getUnusedFeatureId(),
+    worldSystem.getUnusedFeatureId(),
     FeatureType.Gathering,
     tileI,
     tileJ,
@@ -106,6 +113,6 @@ FeatureFactory.createTavernGathering = function(tileI, tileJ, options)
   
   this.copyOptionsToFeature(feature, options);
   feature.gatheringType = GatheringType.Tavern;
-  worldManager.addFeature(feature);
+  worldSystem.addFeature(feature);
   return feature;
 };

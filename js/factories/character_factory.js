@@ -2,7 +2,9 @@ var CharacterFactory = {};
 
 CharacterFactory.createArcher = function(powerLevel)
 {
-  return characterManager.createCharacter({
+  var characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  return characterSystem.createCharacter({
     type: CharacterType.Archer,
     baseOffense: Math.ceil(0.85 * powerLevel),
     baseDefense: 0,
@@ -15,7 +17,9 @@ CharacterFactory.createArcher = function(powerLevel)
 
 CharacterFactory.createKnight = function(powerLevel)
 {
-  return characterManager.createCharacter({
+  var characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  return characterSystem.createCharacter({
     type: CharacterType.Knight,
     baseOffense: Math.ceil(0.5 * powerLevel),
     baseDefense: Math.ceil(0.5 * powerLevel),
@@ -27,7 +31,9 @@ CharacterFactory.createKnight = function(powerLevel)
 
 CharacterFactory.createHealer = function(powerLevel)
 {
-  return characterManager.createCharacter({
+  var characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  return characterSystem.createCharacter({
     type: CharacterType.Healer,
     baseOffense: 0,
     baseDefense: 0,
@@ -39,7 +45,9 @@ CharacterFactory.createHealer = function(powerLevel)
 
 CharacterFactory.createMinerWorker = function()
 {
-  return characterManager.createCharacter({
+  var characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  return characterSystem.createCharacter({
     type: CharacterType.Worker,
     isMiner: true,
     movementAbility: 30,
@@ -49,7 +57,9 @@ CharacterFactory.createMinerWorker = function()
 
 CharacterFactory.createLoggerWorker = function()
 {
-  return characterManager.createCharacter({
+  var characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  return characterSystem.createCharacter({
     type: CharacterType.Worker,
     isLogger: true,
     movementAbility: 40,
@@ -59,7 +69,9 @@ CharacterFactory.createLoggerWorker = function()
 
 CharacterFactory.createLaborerWorker = function()
 {
-  return characterManager.createCharacter({
+  var characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  return characterSystem.createCharacter({
     type: CharacterType.Worker,
     isLaborer: true,
     movementAbility: 40,

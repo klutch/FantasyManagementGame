@@ -9,6 +9,7 @@ var GroupMenuComponent = function(screen, options)
   this.screen = screen;
   this.width = options.width;
   this.selectors = {};
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.z = options.z;
   delete options.z;
   
@@ -24,21 +25,21 @@ var GroupMenuComponent = function(screen, options)
       y: 132,
       centerX: true,
       centerY: true,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
       text: "Manage Groups"
     });
   this.addChild(this.manageGroupsButton);
   
   // Create dividers
   this.dividers = [];
-  this.dividers[0] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.divider);
+  this.dividers[0] = PIXI.Sprite.fromImage(game.assetManager.paths.ui.divider);
   this.dividers[0].anchor.x = 0.5;
   this.dividers[0].position.x = middleX;
   this.dividers[0].position.y = this.manageGroupsButton.position.y - 32;
   this.addChild(this.dividers[0]);
   
-  this.dividers[1] = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.divider);
+  this.dividers[1] = PIXI.Sprite.fromImage(game.assetManager.paths.ui.divider);
   this.dividers[1].anchor.x = 0.5;
   this.dividers[1].position.x = middleX;
   this.dividers[1].position.y = this.manageGroupsButton.position.y + 28;
@@ -81,9 +82,9 @@ GroupMenuComponent.prototype.removeGroup = function(groupId)
 GroupMenuComponent.prototype.update = function()
 {
   // Update text
-  this.totalAdventurersRight.setText(groupManager.getNumPlayerAdventurers().toString());
+  this.totalAdventurersRight.setText(this.groupSystem.getNumPlayerAdventurers().toString());
   this.totalAdventurersRight.position.x = this.width - (28 + this.totalAdventurersRight.textWidth);
-  this.totalWorkersRight.setText(groupManager.getNumPlayerWorkers().toString());
+  this.totalWorkersRight.setText(this.groupSystem.getNumPlayerWorkers().toString());
   this.totalWorkersRight.position.x = this.width - (28 + this.totalWorkersRight.textWidth);
   
   // Update selectors

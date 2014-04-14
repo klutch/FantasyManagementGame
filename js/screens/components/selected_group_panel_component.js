@@ -8,12 +8,15 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   this.base();
   this.screen = screen;
   this.groupId = groupId;
-  this.group = groupManager.getGroup(groupId);
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.orderSystem = game.systemManager.getSystem(SystemType.Order);
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  this.group = this.groupSystem.getGroup(groupId);
   this.position.x = game.containerWidth - 416;
   this.position.y = 50;
   this.z = options.z;
   this.orderButtons = [];
-  this.tooltipScreen = screenManager.screens[ScreenType.Tooltip];
+  this.tooltipScreen = game.screenManager.screens[ScreenType.Tooltip];
   
   // Panel
   this.panel = new PanelComponent({
@@ -32,9 +35,9 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   
   // Group stats
   this.groupStats = new PIXI.BitmapText(
-    groupManager.getGroupOffense(this.groupId).toString() + " / " +
-    groupManager.getGroupDefense(this.groupId).toString() + " / " +
-    groupManager.getGroupSupport(this.groupId).toString(),
+    this.groupSystem.getGroupOffense(this.groupId).toString() + " / " +
+    this.groupSystem.getGroupDefense(this.groupId).toString() + " / " +
+    this.groupSystem.getGroupSupport(this.groupId).toString(),
     {font: "14px big_pixelmix", tint: 0xCCCCCC});
   this.groupStats.position.x = 16;
   this.groupStats.position.y = 40;
@@ -54,8 +57,8 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
     {
       x: 0,
       y: this.panel.height + 8,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[0]),
-      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.travelOrderButtons[2]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.travelOrderButtons[0]),
+      disabledTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.travelOrderButtons[2]),
       tooltipCategory: "selectedGroupPanel",
       tooltipTag: "moveGroupButton",
       tooltipText: "Move group",
@@ -63,13 +66,13 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
         {
           if (this.enabled)
           {
-            inputManager.leftButtonHandled = true;
-            orderManager.startOrderSetup();
+            game.inputManager.leftButtonHandled = true;
+            root.orderSystem.startOrderSetup();
           }
           else
           {
-            inputManager.leftButtonHandled = true;
-            orderManager.endOrderSetup();
+            game.inputManager.leftButtonHandled = true;
+            root.orderSystem.endOrderSetup();
           }
         }
     });
@@ -82,8 +85,8 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
     {
       x: 32,
       y: this.panel.height + 8,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[0]),
-      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.ordersMenuButtons[2]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.ordersMenuButtons[0]),
+      disabledTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.ordersMenuButtons[2]),
       tooltipCategory: "selectedGroupPanel",
       tooltipTag: "viewOrdersButton",
       tooltipText: "View orders",
@@ -91,10 +94,10 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
         {
           if (this.enabled)
           {
-            inputManager.leftButtonHandled = true;
+            game.inputManager.leftButtonHandled = true;
             root.tooltipScreen.removeCategory("selectedGroupPanel");
             root.tooltipScreen.removeCategory("worldMapScreen");
-            screenManager.addScreen(new ViewOrdersScreen(root.groupId));
+            game.screenManager.addScreen(new ViewOrdersScreen(root.groupId));
             root.screen.inputEnabled = false;
           }
         }
@@ -119,20 +122,20 @@ SelectedGroupPanelComponent.prototype.disableMoveButton = function()
 
 SelectedGroupPanelComponent.prototype.update = function()
 {
-  var groupHasOrders = orderManager.doesGroupHaveOrders(this.groupId);
+  var groupHasOrders = this.orderSystem.doesGroupHaveOrders(this.groupId);
   
   // Escape key -- Deselect group
-  if (this.screen.inputEnabled && inputManager.simpleKey(KeyCode.Escape))
+  if (this.screen.inputEnabled && game.inputManager.simpleKey(KeyCode.Escape))
   {
-    characterManager.deselectGroup();
+    this.characterSystem.deselectGroup();
   }
   
   // Modify move button
-  if (orderManager.settingUpOrder && this.moveButton.enabled)
+  if (this.orderSystem.settingUpOrder && this.moveButton.enabled)
   {
     this.disableMoveButton();
   }
-  else if (!orderManager.settingUpOrder && !this.moveButton.enabled)
+  else if (!this.orderSystem.settingUpOrder && !this.moveButton.enabled)
   {
     this.enableMoveButton();
   }

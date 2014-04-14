@@ -1,17 +1,24 @@
-var GroupManager = function()
+var GroupSystem = function()
 {
+  this.type = SystemType.Group;
   this.groups = [];
   this.barracksGroup;
   this.selectedGroupId = -1;
 };
 
-GroupManager.prototype.initialize = function()
+GroupSystem.prototype.initialize = function()
 {
-  var startingGroup = this.createGroup({name: "Starting Group", featureId: worldManager.world.playerCastleFeatureId});
-  var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  var startingGroup;
+  var worldMapScreen;
+  
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  
+  startingGroup = this.createGroup({name: "Starting Group", featureId: this.worldSystem.world.playerCastleFeatureId});
+  worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   
   // Create a special barracks group
-  this.barracksGroup = new Group(-1, {name: "Barracks", featureId: 0});
+  this.barracksGroup = new Group(-1, {name: "Barracks", featureId: this.worldSystem.world.playerCastleFeatureId});
   
   // Create starting group
   this.addCharacterToGroup(startingGroup.id, CharacterFactory.createArcher(10).id);
@@ -22,12 +29,12 @@ GroupManager.prototype.initialize = function()
   worldMapScreen.groupMenu.addGroup(startingGroup.id);
 };
 
-GroupManager.prototype.getGroup = function(groupId)
+GroupSystem.prototype.getGroup = function(groupId)
 {
   return this.groups[groupId];
 };
 
-GroupManager.prototype.getPlayerControlledGroups = function()
+GroupSystem.prototype.getPlayerControlledGroups = function()
 {
   var playerControlledGroups = [];
   
@@ -42,7 +49,7 @@ GroupManager.prototype.getPlayerControlledGroups = function()
   return playerControlledGroups;
 };
 
-GroupManager.prototype.getNumPlayerAdventurers = function()
+GroupSystem.prototype.getNumPlayerAdventurers = function()
 {
   var count = 0;
   var playerGroups = this.getPlayerControlledGroups();
@@ -53,7 +60,7 @@ GroupManager.prototype.getNumPlayerAdventurers = function()
     
     for (var j = 0; j < group.characterIds.length; j++)
     {
-      var character = characterManager.getCharacter(group.characterIds[j]);
+      var character = this.characterSystem.getCharacter(group.characterIds[j]);
       
       if (!character.isWorker)
       {
@@ -64,7 +71,7 @@ GroupManager.prototype.getNumPlayerAdventurers = function()
   return count;
 };
 
-GroupManager.prototype.getNumPlayerWorkers = function()
+GroupSystem.prototype.getNumPlayerWorkers = function()
 {
   var count = 0;
   var playerGroups = this.getPlayerControlledGroups();
@@ -75,7 +82,7 @@ GroupManager.prototype.getNumPlayerWorkers = function()
     
     for (var j = 0; j < group.characterIds.length; j++)
     {
-      var character = characterManager.getCharacter(group.characterIds[j]);
+      var character = this.characterSystem.getCharacter(group.characterIds[j]);
       
       if (character.isWorker)
       {
@@ -86,46 +93,46 @@ GroupManager.prototype.getNumPlayerWorkers = function()
   return count;
 };
 
-GroupManager.prototype.getGroupOffense = function(groupId)
+GroupSystem.prototype.getGroupOffense = function(groupId)
 {
   var total = 0;
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    total += characterManager.getCharacterOffense(group.characterIds[i]);
+    total += this.characterSystem.getCharacterOffense(group.characterIds[i]);
   }
   
   return total;
 };
 
-GroupManager.prototype.getGroupDefense = function(groupId)
+GroupSystem.prototype.getGroupDefense = function(groupId)
 {
   var total = 0;
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    total += characterManager.getCharacterDefense(group.characterIds[i]);
+    total += this.characterSystem.getCharacterDefense(group.characterIds[i]);
   }
   
   return total;
 };
 
-GroupManager.prototype.getGroupSupport = function(groupId)
+GroupSystem.prototype.getGroupSupport = function(groupId)
 {
   var total = 0;
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    total += characterManager.getCharacterSupport(group.characterIds[i]);
+    total += this.characterSystem.getCharacterSupport(group.characterIds[i]);
   }
   
   return total;
 };
 
-GroupManager.prototype.getUnusedGroupId = function()
+GroupSystem.prototype.getUnusedGroupId = function()
 {
   for (var i = 0; i < this.groups.length; i++)
   {
@@ -137,7 +144,7 @@ GroupManager.prototype.getUnusedGroupId = function()
   return this.groups.length;
 };
 
-GroupManager.prototype.createGroup = function(options)
+GroupSystem.prototype.createGroup = function(options)
 {
   var id = this.getUnusedGroupId();
   var group = new Group(id, options);
@@ -147,9 +154,9 @@ GroupManager.prototype.createGroup = function(options)
   return group;
 };
 
-GroupManager.prototype.selectGroup = function(groupId)
+GroupSystem.prototype.selectGroup = function(groupId)
 {
-  var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   
   if (this.selectedGroupId != -1)
   {
@@ -160,18 +167,18 @@ GroupManager.prototype.selectGroup = function(groupId)
   worldMapScreen.openSelectedGroupPanel(groupId);
 };
 
-GroupManager.prototype.deselectGroup = function()
+GroupSystem.prototype.deselectGroup = function()
 {
   if (this.selectedGroupId != -1)
   {
-    var worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+    var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
     
     worldMapScreen.closeSelectedGroupPanel();
     this.selectedGroupId = -1;
   }
 }
 
-GroupManager.prototype.getGroupTile = function(groupId)
+GroupSystem.prototype.getGroupTile = function(groupId)
 {
   var group = this.getGroup(groupId);
   
@@ -187,14 +194,14 @@ GroupManager.prototype.getGroupTile = function(groupId)
   }
 };
 
-GroupManager.prototype.getGroupMovementAbility = function(groupId)
+GroupSystem.prototype.getGroupMovementAbility = function(groupId)
 {
   var group = this.groups[groupId];
   var lowestMovementAbility = 999;
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (character.movementAbility < lowestMovementAbility)
     {
@@ -204,14 +211,14 @@ GroupManager.prototype.getGroupMovementAbility = function(groupId)
   return lowestMovementAbility;
 };
 
-GroupManager.prototype.getGroupDiscoveryRadius = function(groupId)
+GroupSystem.prototype.getGroupDiscoveryRadius = function(groupId)
 {
   var group = this.getGroup(groupId);
   var highestDiscoveryRadius = 0;
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (character.discoveryRadius > highestDiscoveryRadius)
     {
@@ -221,13 +228,13 @@ GroupManager.prototype.getGroupDiscoveryRadius = function(groupId)
   return highestDiscoveryRadius;
 };
 
-GroupManager.prototype.canGroupExplore = function(groupId)
+GroupSystem.prototype.canGroupExplore = function(groupId)
 {
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (character.isExplorer)
     {
@@ -237,13 +244,13 @@ GroupManager.prototype.canGroupExplore = function(groupId)
   return false;
 };
 
-GroupManager.prototype.canGroupMine = function(groupId)
+GroupSystem.prototype.canGroupMine = function(groupId)
 {
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (character.isMiner)
     {
@@ -253,13 +260,13 @@ GroupManager.prototype.canGroupMine = function(groupId)
   return false;
 };
 
-GroupManager.prototype.canGroupLog = function(groupId)
+GroupSystem.prototype.canGroupLog = function(groupId)
 {
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (character.isLogger)
     {
@@ -269,13 +276,13 @@ GroupManager.prototype.canGroupLog = function(groupId)
   return false;
 };
 
-GroupManager.prototype.canGroupVisitDwelling = function(groupId)
+GroupSystem.prototype.canGroupVisitDwelling = function(groupId)
 {
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (!character.isWorker)
     {
@@ -285,13 +292,13 @@ GroupManager.prototype.canGroupVisitDwelling = function(groupId)
   return false;
 };
 
-GroupManager.prototype.canGroupVisitGathering = function(groupId)
+GroupSystem.prototype.canGroupVisitGathering = function(groupId)
 {
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (!character.isWorker)
     {
@@ -301,13 +308,13 @@ GroupManager.prototype.canGroupVisitGathering = function(groupId)
   return false;
 };
 
-GroupManager.prototype.canGroupRaid = function(groupId)
+GroupSystem.prototype.canGroupRaid = function(groupId)
 {
   var group = this.getGroup(groupId);
   
   for (var i = 0; i < group.characterIds.length; i++)
   {
-    var character = characterManager.getCharacter(group.characterIds[i]);
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
     
     if (!character.isWorker)
     {
@@ -317,14 +324,14 @@ GroupManager.prototype.canGroupRaid = function(groupId)
   return false;
 };
 
-GroupManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
+GroupSystem.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
 {
   var group = this.getGroup(groupId);
   
   // Add group to world map if currently in a feature
   if (group.isInFeature())
   {
-    screenManager.screens[ScreenType.WorldMap].worldGroups.showGroup(groupId);
+    game.screenManager.screens[ScreenType.WorldMap].worldGroups.showGroup(groupId);
   }
   
   group.featureId = -1;
@@ -332,7 +339,7 @@ GroupManager.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
   group.tileJ = tileJ;
 };
 
-GroupManager.prototype.moveGroupIntoFeature = function(groupId)
+GroupSystem.prototype.moveGroupIntoFeature = function(groupId)
 {
   var group = this.getGroup(groupId);
   var tile = worldManager.getTile(group.tileI, group.tileJ);
@@ -340,10 +347,10 @@ GroupManager.prototype.moveGroupIntoFeature = function(groupId)
   group.featureId = tile.featureId;
   
   // Remove group from world map
-  screenManager.screens[ScreenType.WorldMap].worldGroups.hideGroup(groupId);
+  game.screenManager.screens[ScreenType.WorldMap].worldGroups.hideGroup(groupId);
 };
 
-GroupManager.prototype.resetGroupMovement = function()
+GroupSystem.prototype.resetGroupMovement = function()
 {
   _.each(this.groups, function(group)
     {
@@ -351,14 +358,14 @@ GroupManager.prototype.resetGroupMovement = function()
     });
 };
 
-GroupManager.prototype.addCharacterToGroup = function(groupId, characterId)
+GroupSystem.prototype.addCharacterToGroup = function(groupId, characterId)
 {
   var group = this.getGroup(groupId);
   
   group.characterIds.push(characterId);
 };
 
-GroupManager.prototype.removeCharacterFromGroup = function(groupId, characterId)
+GroupSystem.prototype.removeCharacterFromGroup = function(groupId, characterId)
 {
   var group = this.getGroup(groupId);
   
@@ -374,6 +381,6 @@ GroupManager.prototype.removeCharacterFromGroup = function(groupId, characterId)
   group.characterIds = _.compact(group.characterIds);
 };
 
-GroupManager.prototype.update = function()
+GroupSystem.prototype.update = function()
 {
 };

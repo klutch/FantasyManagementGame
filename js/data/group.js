@@ -19,7 +19,7 @@ var Group = function(id, options)
   
   if (this.featureId != -1)
   {
-    var feature = worldManager.world.features[this.featureId];
+    var feature = game.systemManager.getSystem(SystemType.World).getFeature(this.featureId);
     
     // Temporary debug
     if (feature == undefined)

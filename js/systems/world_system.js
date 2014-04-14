@@ -1,31 +1,32 @@
-var WorldManager = function(seed)
+var WorldSystem = function(seed)
 {
+  this.type = SystemType.World;
   seed = seed || Math.random() * 11377;
   this.world = new World(seed);
-  this.terrainGenerator = new TerrainGenerator(seed);
-  this.featureGenerator = new FeatureGenerator(seed);
+  this.terrainGenerator = new TerrainGenerator(this, seed);
+  this.featureGenerator = new FeatureGenerator(this, seed);
 };
 
-WorldManager.prototype.initialize = function()
+WorldSystem.prototype.initialize = function()
 {
-  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   
   this.featureGenerator.generatePlayerCastle();
   this.discoverRadius(this.world.playerCastleI + 2, this.world.playerCastleJ + 2, 32);
   this.worldMapScreen.worldMap.setCamera((this.world.playerCastleI + 2) * TILE_SIZE, (this.world.playerCastleJ + 2) * TILE_SIZE);
 };
 
-WorldManager.prototype.getGridI = function(x) { return Math.floor(x / TILE_SIZE); };
-WorldManager.prototype.getGridJ = function(y) { return Math.floor(y / TILE_SIZE); };
+WorldSystem.prototype.getGridI = function(x) { return Math.floor(x / TILE_SIZE); };
+WorldSystem.prototype.getGridJ = function(y) { return Math.floor(y / TILE_SIZE); };
 
 // Get unused feature id
-WorldManager.prototype.getUnusedFeatureId = function()
+WorldSystem.prototype.getUnusedFeatureId = function()
 {
   return this.world.features.length;
 };
 
 // Does tile exist
-WorldManager.prototype.doesTileExist = function(i, j)
+WorldSystem.prototype.doesTileExist = function(i, j)
 {
   if (this.world.tiles[i] == null)
   {
@@ -39,19 +40,19 @@ WorldManager.prototype.doesTileExist = function(i, j)
 };
 
 // Get a tile
-WorldManager.prototype.getTile = function(i, j)
+WorldSystem.prototype.getTile = function(i, j)
 {
   return this.world.tiles[i][j];
 };
 
 // Get or create a tile
-WorldManager.prototype.getOrCreateTile = function(i, j)
+WorldSystem.prototype.getOrCreateTile = function(i, j)
 {
   return this.doesTileExist(i, j) ? this.getTile(i, j) : this.generateTile(i, j);
 };
 
 // Generate a tile
-WorldManager.prototype.generateTile = function(i, j)
+WorldSystem.prototype.generateTile = function(i, j)
 {
   if (this.world.tiles[i] == null)
   {
@@ -64,13 +65,13 @@ WorldManager.prototype.generateTile = function(i, j)
 };
 
 // Get feature
-WorldManager.prototype.getFeature = function(featureId)
+WorldSystem.prototype.getFeature = function(featureId)
 {
   return this.world.features[featureId];
 };
 
 // Add feature
-WorldManager.prototype.addFeature = function(feature)
+WorldSystem.prototype.addFeature = function(feature)
 {
   this.world.features[feature.id] = feature;
   
@@ -88,10 +89,10 @@ WorldManager.prototype.addFeature = function(feature)
 };
 
 // Discover tiles in a radius around a given tile
-WorldManager.prototype.discoverRadius = function(tileI, tileJ, radius)
+WorldSystem.prototype.discoverRadius = function(tileI, tileJ, radius)
 {
   var radiusSq = radius * radius;
-  var worldMap = screenManager.screens[ScreenType.WorldMap].worldMap;
+  var worldMap = game.screenManager.screens[ScreenType.WorldMap].worldMap;
   
   for (var i = tileI - radius, limitI = tileI + radius + 1; i < limitI; i++)
   {
@@ -112,4 +113,8 @@ WorldManager.prototype.discoverRadius = function(tileI, tileJ, radius)
       worldMap.addTileToDraw(i, j);
     }
   }
+};
+
+WorldSystem.prototype.update = function()
+{
 };

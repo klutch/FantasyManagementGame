@@ -80,6 +80,8 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ, opti
   var middlePointJ = Math.floor((startJ + endJ) * 0.5);
   var initialNode = new PathNode(startI, startJ);
   
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  
   // Setup options
   options = options || {};
   this.preferDiscoveredTerrain = options.preferDiscoveredTerrain == undefined ? true : options.preferDiscoveredTerrain;
@@ -100,7 +102,7 @@ PathfinderManager.prototype.findPath = function(startI, startJ, endI, endJ, opti
   
   if (DEBUG_PATHFINDER)
   {
-    this.debug = screenManager.screens[ScreenType.WorldMap].pathfinderDebug;
+    this.debug = game.screenManager.screens[ScreenType.WorldMap].pathfinderDebug;
     this.debug.clearNodes();
     this.debug.addOpenNode(initialNode);
     this.doingDebugFind = true;
@@ -192,10 +194,10 @@ PathfinderManager.prototype.step = function()
       }
 
       // Check if neighbor tile exists
-      doesTileExist = worldManager.doesTileExist(i, j);
+      doesTileExist = this.worldSystem.doesTileExist(i, j);
       if (doesTileExist)
       {
-        neighborTile = worldManager.getTile(i, j);
+        neighborTile = this.worldSystem.getTile(i, j);
         neighborKey = this.getKey(i, j);
         neighborNode = this.openList[neighborKey] || this.closedList[neighborKey] || new PathNode(i, j);
       }

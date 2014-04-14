@@ -6,11 +6,12 @@ var PortraitComponent = function(characterId, options)
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.characterId = characterId;
-  this.character = characterManager.characters[characterId];
+  this.character = this.characterSystem.getCharacter(characterId);
   this.position.x = options.x;
   this.position.y = options.y;
-  this.portraitSprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.portraits[this.character.type]);
+  this.portraitSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits[this.character.type]);
   this.interactive = true;
   this.buttonMode = true;
   this.onClick = options.onClick;

@@ -1,20 +1,21 @@
-var NotificationManager = function()
+var NotificationSystem = function()
 {
+  this.type = SystemType.Notification;
   this.notifications = [];
 };
 
-NotificationManager.prototype.initialize = function()
+NotificationSystem.prototype.initialize = function()
 {
-  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   this.notificationScreen = new NotificationScreen();
 };
 
-NotificationManager.prototype.addNotification = function(notification)
+NotificationSystem.prototype.addNotification = function(notification)
 {
   this.notifications.push(notification);
 };
 
-NotificationManager.prototype.removeNotification = function(notification)
+NotificationSystem.prototype.removeNotification = function(notification)
 {
   for (var i = 0; i < this.notifications.length; i++)
   {
@@ -28,7 +29,7 @@ NotificationManager.prototype.removeNotification = function(notification)
   this.notifications = _.compact(this.notifications);
 };
 
-NotificationManager.prototype.createDwellingVisitNotification = function(featureId)
+NotificationSystem.prototype.createDwellingVisitNotification = function(featureId)
 {
   var feature = worldManager.world.features[featureId];
   
@@ -41,9 +42,10 @@ NotificationManager.prototype.createDwellingVisitNotification = function(feature
   this.addNotification(notification);
 };
 
-NotificationManager.prototype.update = function()
+NotificationSystem.prototype.update = function()
 {
-  if (turnManager.state == TurnState.PausedProcessing)
+  /*
+  if (game.state == GameState.EventProcessing)
   {
     if (this.notifications.length > 0)
     {
@@ -56,5 +58,5 @@ NotificationManager.prototype.update = function()
     {
       turnManager.resumeProcessing();
     }
-  }
+  }*/
 };

@@ -5,9 +5,11 @@ var GroupSelectorComponent = function(screen, groupMenu, groupId)
   this.screen = screen;
   this.groupMenu = groupMenu;
   this.groupId = groupId;
-  this.group = groupManager.getGroup(groupId);
-  this.buttonTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[0]);
-  this.buttonOverTexture = PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupNameButtons[1]);
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.group = this.groupSystem.getGroup(groupId);
+  this.buttonTexture = PIXI.Texture.fromImage(game.assetManager.paths.ui.groupNameButtons[0]);
+  this.buttonOverTexture = PIXI.Texture.fromImage(game.assetManager.paths.ui.groupNameButtons[1]);
   this.buttonRect = new PIXI.Rectangle(0, 200 + 38 * _.size(groupMenu.selectors), this.buttonTexture.width - 8, this.buttonTexture.height);
   this.previewRect = new PIXI.Rectangle(258, this.buttonRect.y - 64, 320, 76 + this.group.characterIds.length * 64);
   this.isPanelOpen = false;
@@ -52,7 +54,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
   // Add adventurer portraits and text
   for (var i = 0; i < this.group.characterIds.length; i++)
   {
-    var character = characterManager.characters[this.group.characterIds[i]];
+    var character = this.characterSystem.getCharacter(this.group.characterIds[i]);
     var portrait = new PortraitComponent(character.id, {x: 16, y: 16 + 64 * i});
     var typeText = new PIXI.BitmapText(character.type, {font: "14px big_pixelmix", tint: 0xFFFF00});
     var statText = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xCCCCCC});
@@ -79,8 +81,8 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
       y: this.group.characterIds.length * 64 + 40,
       centerX: true,
       centerY: true,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
       text: "Edit Group",
       onClick: function(e) { }
     });
@@ -95,13 +97,13 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
 
 GroupSelectorComponent.prototype.select = function()
 {
-  groupManager.selectGroup(this.groupId);
+  this.groupSystem.selectGroup(this.groupId);
 };
 
 GroupSelectorComponent.prototype.handleInput = function()
 {
-  var isOverButtonRect = this.buttonRect.contains(inputManager.mousePosition.x, inputManager.mousePosition.y);
-  var isOverPanelRect = this.previewRect.contains(inputManager.mousePosition.x, inputManager.mousePosition.y);
+  var isOverButtonRect = this.buttonRect.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+  var isOverPanelRect = this.previewRect.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
   
   // Handle mouse over states
   if (!this.isPanelOpen && isOverButtonRect)
@@ -122,9 +124,9 @@ GroupSelectorComponent.prototype.handleInput = function()
   }
   
   // Handle mouse clicks
-  if (isOverButtonRect && inputManager.leftButton && !inputManager.leftButtonLastFrame)
+  if (isOverButtonRect && game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame)
   {
-    inputManager.leftButtonHandled = true;
+    game.inputManager.leftButtonHandled = true;
     this.select();
   }
 }
@@ -137,16 +139,16 @@ GroupSelectorComponent.prototype.update = function()
     var statText = this.statTexts[i];
     
     statText.setText(
-      characterManager.getCharacterOffense(statText.characterId).toString() + " / " +
-      characterManager.getCharacterDefense(statText.characterId).toString() + " / " +
-      characterManager.getCharacterSupport(statText.characterId).toString());
+      this.characterSystem.getCharacterOffense(statText.characterId).toString() + " / " +
+      this.characterSystem.getCharacterDefense(statText.characterId).toString() + " / " +
+      this.characterSystem.getCharacterSupport(statText.characterId).toString());
   }
   
   // Update group stat text
   this.groupStats.setText(
-      groupManager.getGroupOffense(this.groupId).toString() + " / " +
-      groupManager.getGroupDefense(this.groupId).toString() + " / " +
-      groupManager.getGroupSupport(this.groupId).toString());
+      this.groupSystem.getGroupOffense(this.groupId).toString() + " / " +
+      this.groupSystem.getGroupDefense(this.groupId).toString() + " / " +
+      this.groupSystem.getGroupSupport(this.groupId).toString());
   
   // Handle input
   if (this.screen.inputEnabled)

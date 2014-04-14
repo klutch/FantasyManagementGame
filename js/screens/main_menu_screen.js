@@ -4,7 +4,7 @@ var MainMenuScreen = function()
   this.inputEnabled = true;
   
   // Background
-  this.backgroundSprite = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.black));
+  this.backgroundSprite = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.black));
   this.backgroundSprite.width = game.containerWidth;
   this.backgroundSprite.height = game.containerHeight;
   
@@ -14,7 +14,7 @@ var MainMenuScreen = function()
   this.container.position.x = game.containerWidth * 0.5;
   
   // Logo
-  this.logoSprite = new PIXI.Sprite(PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.logo));
+  this.logoSprite = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.logo));
   this.logoSprite.anchor = new PIXI.Point(0.5, 0.5);
   this.logoSprite.position.y = -100;
   
@@ -27,8 +27,8 @@ var MainMenuScreen = function()
       text: "Start new game",
       centerX: true,
       centerY: true,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.mainMenuButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.mainMenuButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.mainMenuButtons[1]),
       onClick: function (e)
         {
           game.closeMainMenu();

@@ -45,7 +45,7 @@ PathPreviewComponent.prototype.drawPath = function(path, tint)
   
   while (currentNode != null)
   {
-    var sprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.pathOverlay);
+    var sprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.pathOverlay);
     
     sprite.position.x = currentNode.i * TILE_SIZE;
     sprite.position.y = currentNode.j * TILE_SIZE;

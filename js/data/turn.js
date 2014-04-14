@@ -1,5 +1,6 @@
 var TurnState = Object.freeze({
   Ready: 0,
-  Processing: 1,
-  PausedProcessing: 2
+  OrderProcessing: 1,
+  RaidProcessing: 2,
+  EventProcessing: 3
 });

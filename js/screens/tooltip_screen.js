@@ -117,5 +117,5 @@ TooltipScreen.prototype.removeCategory = function(category)
 
 TooltipScreen.prototype.update = function()
 {
-  this.setTooltipPosition(inputManager.mousePosition);
+  this.setTooltipPosition(game.inputManager.mousePosition);
 };

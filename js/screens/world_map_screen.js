@@ -46,7 +46,7 @@ var WorldMapScreen = function()
       x: game.containerWidth - 80,
       y: game.containerHeight - 80,
       z: this.z + 0.5,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.homeCastleButtons[0]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.homeCastleButtons[0]),
       onClick: function(e) { root.worldMap.moveCameraToHome(); },
       tooltipCategory: "worldMapScreen",
       tooltipTag: "homeCastleButton",
@@ -59,8 +59,8 @@ var WorldMapScreen = function()
     {
       x: 16,
       y: 16,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.groupButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.groupButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.groupButtons[1]),
       onClick: function(e) { root.toggleGroupMenu(); },
       tooltipCategory: "worldMapScreen",
       tooltipTag: "groupMenuButton",
@@ -74,8 +74,8 @@ var WorldMapScreen = function()
     {
       x: 80,
       y: 16,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.endTurnButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.endTurnButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.endTurnButtons[1]),
       onClick: function(e) { turnManager.startProcessing(); },
       tooltipCategory: "worldMapScreen",
       tooltipTag: "endTurnButton",
@@ -218,39 +218,39 @@ WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
 WorldMapScreen.prototype.handleInput = function()
 {
   // Handle input
-  if (inputManager.keysPressed[KeyCode.A])
+  if (game.inputManager.keysPressed[KeyCode.A])
   {
     this.worldMap.moveCamera(-5, 0);
   }
-  if (inputManager.keysPressed[KeyCode.D])
+  if (game.inputManager.keysPressed[KeyCode.D])
   {
     this.worldMap.moveCamera(5, 0);
   }
-  if (inputManager.keysPressed[KeyCode.S])
+  if (game.inputManager.keysPressed[KeyCode.S])
   {
     this.worldMap.moveCamera(0, 5);
   }
-  if (inputManager.keysPressed[KeyCode.W])
+  if (game.inputManager.keysPressed[KeyCode.W])
   {
     this.worldMap.moveCamera(0, -5);
   }
-  if (inputManager.mouseWheelDelta != 0)
+  if (game.inputManager.mouseWheelDelta != 0)
   {
-    this.worldMap.zoomCamera(inputManager.mouseWheelDelta * 0.1);
+    this.worldMap.zoomCamera(game.inputManager.mouseWheelDelta * 0.1);
   }
-  if (inputManager.leftButton && !inputManager.leftButtonLastFrame && !inputManager.leftButtonHandled)
+  if (game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame && !game.inputManager.leftButtonHandled)
   {
     this.debugClick(this.worldMap.tileGridI, this.worldMap.tileGridJ);
   }
   
   // E key -- End turn
-  if (inputManager.simpleKey(KeyCode.E))
+  if (game.inputManager.simpleKey(KeyCode.E))
   {
     this.endTurnButton.onClick();
   }
   
   // G key -- Toggle group menu
-  if (inputManager.simpleKey(KeyCode.G))
+  if (game.inputManager.simpleKey(KeyCode.G))
   {
     this.groupButton.onClick();
   }
