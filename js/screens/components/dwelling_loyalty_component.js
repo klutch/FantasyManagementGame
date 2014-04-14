@@ -5,7 +5,10 @@ var DwellingLoyaltyComponent = function(screen, notification, featureId)
   this.screen = screen;
   this.notification = notification;
   this.featureId = featureId;
-  this.feature = worldManager.world.features[this.featureId];
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.resourceSystem = game.systemManager.getSystem(SystemType.Resource);
+  this.dwellingSystem = game.systemManager.getSystem(SystemType.Dwelling);
+  this.feature = this.worldSystem.getFeature(this.featureId);
   this.z = 1;
   this.buttons = [];
   this.inputEnabled = true;
@@ -80,8 +83,8 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       {
         x: 100,
         y: 180,
-        normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-        hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+        normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+        hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
         text: "Done",
         centerX: true,
         centerY: true,
@@ -107,8 +110,8 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
         {
           x: 100,
           y: 180 + this.buttons.length * 48,
-          normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-          hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+          normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+          hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
           text: "Offer Gift",
           centerX: true,
           centerY: true,
@@ -122,8 +125,8 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
                 function()
                 {
                   // Okay (can only be called if the player has enough of the resource)
-                  resourceManager.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
-                  dwellingManager.makeLoyal(root.feature.id);
+                  root.resourceSystem.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
+                  root.dwellingSystem.makeLoyal(root.feature.id);
                   root.removeChild(root.confirmBox);
                   root.close();
                   notificationManager.removeNotification(root.notification);
@@ -153,8 +156,8 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       {
         x: 100,
         y: 180 + this.buttons.length * 48,
-        normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-        hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+        normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+        hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
         text: "Subjugate Dwelling",
         centerX: true,
         centerY: true,
@@ -178,8 +181,8 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
       {
         x: 100,
         y: 180 + this.buttons.length * 48,
-        normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-        hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+        normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+        hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
         text: "Leave",
         centerX: true,
         centerY: true,
@@ -207,7 +210,7 @@ DwellingLoyaltyComponent.prototype.update = function()
   // Update confirm button's okay state, based one whether or not the player has enough to give
   if (this.feature.requiresGift && this.confirmBox != null)
   {
-    var availableAmount = resourceManager.resourceQuantities[this.feature.giftResourceType];
+    var availableAmount = this.resourceSystem.resourceQuantities[this.feature.giftResourceType];
     var hasEnough = availableAmount >= this.feature.giftAmountRequired;
     
     if (this.confirmBox.okayButton.enabled && !hasEnough)

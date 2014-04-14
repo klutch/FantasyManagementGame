@@ -2,11 +2,11 @@ var SystemType = Object.freeze({
   Character: 0,
   Dwelling: 1,
   Group: 2,
-  Notification: 3,
-  Order: 4,
-  Raid: 5,
-  Resource: 6,
-  World: 7
+  Order: 3,
+  Raid: 4,
+  Resource: 5,
+  World: 6,
+  GameEvent: 7
 });
 
 var SystemManager = function()

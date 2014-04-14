@@ -8,11 +8,12 @@ var DEFAULT_TILE_SELECTOR_COLOR = 0xCCCCCC;
 var DEBUG_PATHFINDER = false;
 
 var GameState = Object.freeze({
-  MainMenu: 0,
-  WaitingOnPlayer: 1,
-  OrderProcessing: 2,
-  RaidProcessing: 3,
-  EventProcessing: 4
+  Idle: 0,
+  MainMenu: 1,
+  WaitingOnPlayer: 2,
+  OrderProcessing: 3,
+  RaidProcessing: 4,
+  EventProcessing: 5
 });
 
 var GameEngine = function()
@@ -58,8 +59,8 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.addSystem(new GroupSystem());
   this.systemManager.addSystem(new OrderSystem());
   this.systemManager.addSystem(new RaidSystem());
-  this.systemManager.addSystem(new NotificationSystem());
   this.systemManager.addSystem(new DwellingSystem());
+  this.systemManager.addSystem(new GameEventSystem());
   
   // Create screens
   this.screenManager.addScreen(new WorldMapScreen());
@@ -70,7 +71,6 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.getSystem(SystemType.World).initialize();
   this.systemManager.getSystem(SystemType.Group).initialize();
   this.systemManager.getSystem(SystemType.Dwelling).initialize();
-  this.systemManager.getSystem(SystemType.Notification).initialize();
   this.systemManager.getSystem(SystemType.Order).initialize();
   this.systemManager.getSystem(SystemType.Resource).initialize();
   
@@ -84,6 +84,7 @@ GameEngine.prototype.startWaitingOnPlayer = function()
 
 GameEngine.prototype.endWaitingOnPlayer = function()
 {
+  this.state = GameState.Idle;
 };
 
 GameEngine.prototype.startOrderProcessing = function()
@@ -100,6 +101,27 @@ GameEngine.prototype.startOrderProcessing = function()
 
 GameEngine.prototype.endOrderProcessing = function()
 {
+  this.state = GameState.Idle;
+};
+
+GameEngine.prototype.startRaidProcessing = function()
+{
+  this.state = GameState.RaidProcessing;
+};
+
+GameEngine.prototype.endRaidProcessing = function()
+{
+  this.state = GameState.Idle;
+};
+
+GameEngine.prototype.startEventProcessing = function()
+{
+  this.state = GameState.EventProcessing;
+};
+
+GameEngine.prototype.endEventProcessing = function()
+{
+  this.state = GameState.Idle;
 };
 
 GameEngine.prototype.update = function()

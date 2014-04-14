@@ -13,6 +13,7 @@ OrderSystem.prototype.initialize = function()
 {
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.gameEventSystem = game.systemManager.getSystem(SystemType.GameEvent);
   this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   this.worldMap = this.worldMapScreen.worldMap;
   this.tooltip = game.screenManager.screens[ScreenType.Tooltip].tooltip;
@@ -136,6 +137,9 @@ OrderSystem.prototype.processOrderMovement = function(order)
   var remainingMovement = groupMovementAbility - group.movementUsed;
   var recalculatePath = false;
   
+  // Cache the node we're starting at, for use with walk animation
+  order.walkStartNode = order.walkStartNode || order.path;
+  
   // Determine whether to move, or to perform discovery
   if (nextNode.unsure)
   {
@@ -195,6 +199,13 @@ OrderSystem.prototype.processOrderMovement = function(order)
   if (group.movementUsed >= groupMovementAbility)
   {
     order.isDoneForThisTurn = true;
+  }
+  
+  // Finally, create a walk event
+  if (order.isDoneForThisTurn)
+  {
+    this.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(order.groupId, order.walkStartNode, order.path));
+    delete order.walkStartNode;
   }
 };
 
@@ -762,8 +773,7 @@ OrderSystem.prototype.updateOrderProcessingState = function()
   if (this.doneProcessingOrdersForTurn && game.state == GameState.OrderProcessing)
   {
     game.endOrderProcessing();
-    // TODO: Start raid processing here
-    game.startWaitingOnPlayer();
+    game.startRaidProcessing();
     this.groupSystem.resetGroupMovement();
     this.resetOrderProcessingStatus();
   }

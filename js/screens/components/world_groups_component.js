@@ -9,6 +9,11 @@ var WorldGroupsComponent = function(options)
 
 WorldGroupsComponent.prototype = new PIXI.DisplayObjectContainer;
 
+WorldGroupsComponent.prototype.getSprite = function(groupId)
+{
+  return this.groupSprites[groupId];
+};
+
 WorldGroupsComponent.prototype.showGroup = function(groupId)
 {
   var sprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.partyIcons);
@@ -28,15 +33,4 @@ WorldGroupsComponent.prototype.hideGroup = function(groupId)
 
 WorldGroupsComponent.prototype.update = function()
 {
-  for (var key in this.groupSprites)
-  {
-    if (this.groupSprites.hasOwnProperty(key))
-    {
-      var sprite = this.groupSprites[key];
-      var group = this.groupSystem.getGroup(key);
-      
-      sprite.position.x += (group.tileI * TILE_SIZE - sprite.position.x) / 8;
-      sprite.position.y += (group.tileJ * TILE_SIZE - sprite.position.y) / 8;
-    }
-  }
 };

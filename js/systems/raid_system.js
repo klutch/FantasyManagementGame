@@ -6,6 +6,9 @@ var RaidSystem = function()
 
 RaidSystem.prototype.initialize = function()
 {
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.orderSystem = game.systemManager.getSystem(SystemType.Order);
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
 };
 
 RaidSystem.prototype.getUnusedId = function()
@@ -19,6 +22,7 @@ RaidSystem.prototype.getUnusedId = function()
 
 RaidSystem.prototype.createRaid = function(featureId, groupId)
 {
+  var root = this;
   var raid = new Raid(
     this.getUnusedId(),
     featureId,
@@ -27,13 +31,17 @@ RaidSystem.prototype.createRaid = function(featureId, groupId)
       turnsToComplete: 3,
       onComplete: function()
       {
-        var group = groupManager.getGroup(groupId);
-        var returnPath = PathfinderHelper.findPath(group.tileI, group.tileJ, worldManager.world.playerCastleI, worldManager.world.playerCastleJ);
+        var group = root.groupSystem.getGroup(groupId);
+        var returnPath = game.pathfinderManager.findPath(
+          group.tileI,
+          group.tileJ,
+          root.worldSystem.world.playerCastleI,
+          root.worldSystem.world.playerCastleJ);
         
         if (returnPath != null)
         {
-          screenManager.screens[ScreenType.WorldMap].pathPreview.drawPath(returnPath);
-          orderManager.createReturnOrder(groupId, returnPath);
+          game.screenManager.screens[ScreenType.WorldMap].pathPreview.drawPath(returnPath);
+          root.orderSystem.createReturnOrder(groupId, returnPath);
         }
         else
         {
@@ -68,6 +76,9 @@ RaidSystem.prototype.updateRaidProcessingState = function()
     raid.onComplete();
     delete this.raids[raid.id];
   }
+  
+  game.endRaidProcessing();
+  game.startEventProcessing();
 };
 
 RaidSystem.prototype.update = function()
