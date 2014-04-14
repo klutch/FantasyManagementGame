@@ -6,6 +6,7 @@ var DwellingSystem = function()
 DwellingSystem.prototype.initialize = function()
 {
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   this.shopScreen = game.screenManager.screens[ScreenType.Shop];
   this.worldMap = this.worldMapScreen.worldMap;
@@ -23,7 +24,7 @@ DwellingSystem.prototype.makeLoyal = function(featureId)
 DwellingSystem.prototype.getWorkerCost = function(featureId, characterId)
 {
   var cost = 0;
-  var character = characterManager.characters[characterId];
+  var character = this.characterSystem.getCharacter(characterId);
   
   if (character.isMiner)
   {

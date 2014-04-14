@@ -8,8 +8,14 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.base();
   this.screen = screen;
   this.featureId = featureId;
-  this.feature = worldManager.getFeature(featureId);
-  this.group = groupManager.getGroup(this.feature.workerGroupId);
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.resourceSystem = game.systemManager.getSystem(SystemType.Resource);
+  this.orderSystem = game.systemManager.getSystem(SystemType.Order);
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  this.dwellingSystem = game.systemManager.getSystem(SystemType.Dwelling);
+  this.feature = this.worldSystem.getFeature(featureId);
+  this.group = this.groupSystem.getGroup(this.feature.workerGroupId);
   this.z = options.z;
   this.availableButtons = [];
   this.buyerButtons = [];
@@ -18,7 +24,7 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.rebuildMenus = true;
   this.centerScreenX = Math.floor(game.containerWidth * 0.5);
   this.centerScreenY = Math.floor(game.containerHeight * 0.5);
-  this.worldMapScreen = screenManager.screens[ScreenType.WorldMap];
+  this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   
   // Panels
   this.buildAvailableWorkersPanel();
@@ -30,9 +36,9 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
     {
       x: this.centerScreenX + 220,
       y: this.centerScreenY + 200,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
-      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[2]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
+      disabledTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[2]),
       text: "Buy",
       centerX: true,
       centerY: true,
@@ -40,7 +46,7 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
       {
         if (this.enabled)
         {
-          var newGroup = groupManager.createGroup({
+          var newGroup = root.groupSystem.createGroup({
             name: "Workers",
             playerControlled: true,
             tileI: root.group.tileI,
@@ -48,18 +54,18 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
             featureId: root.featureId
           });
           
-          resourceManager.decreaseQuantity(ResourceType.Gold, root.totalCost);
+          root.resourceSystem.decreaseQuantity(ResourceType.Gold, root.totalCost);
           
           for (var characterId in root.buyingCharacterIds)
           {
             if (root.buyingCharacterIds.hasOwnProperty(characterId))
             {
-              groupManager.removeCharacterFromGroup(root.group.id, characterId);
-              groupManager.addCharacterToGroup(newGroup.id, characterId);
+              root.groupSystem.removeCharacterFromGroup(root.group.id, characterId);
+              root.groupSystem.addCharacterToGroup(newGroup.id, characterId);
             }
           };
           
-          orderManager.createReturnOrder(newGroup.id);
+          root.orderSystem.createReturnOrder(newGroup.id);
           root.screen.closeHirePanel();
           root.worldMapScreen.inputEnabled = true;
           root.worldMapScreen.groupMenu.addGroup(newGroup.id);
@@ -74,8 +80,8 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
     {
       x: this.centerScreenX + 40,
       y: this.centerScreenY + 200,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
       text: "Cancel",
       centerX: true,
       centerY: true,
@@ -150,13 +156,13 @@ HireWorkerPanelComponent.prototype.buildMenus = function()
   for (var i = 0; i < this.group.characterIds.length; i++)
   {
     var characterId = this.group.characterIds[i];
-    var character = characterManager.characters[characterId];
+    var character = this.characterSystem.getCharacter(characterId);
     var container = new PIXI.DisplayObjectContainer();
-    var backgroundButton = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.transparent);
+    var backgroundButton = PIXI.Sprite.fromImage(game.assetManager.paths.ui.transparent);
     var portrait = new PortraitComponent(character.id, {x: 4, y: 4});
     var label = new PIXI.BitmapText(this.getWorkerText(character), {font: "16px big_pixelmix", tint: 0xFFFF00});
-    var goldSprite = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.resources[ResourceType.Gold]);
-    var cost = dwellingManager.getWorkerCost(this.featureId, character.id);
+    var goldSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.resources[ResourceType.Gold]);
+    var cost = this.dwellingSystem.getWorkerCost(this.featureId, character.id);
     var priceLabel = new PIXI.BitmapText(cost.toString(), {font: "12px big_pixelmix", tint: 0xCCCCCC});
     var onClick = null;
 
@@ -228,21 +234,21 @@ HireWorkerPanelComponent.prototype.clearMenus = function()
 
 HireWorkerPanelComponent.prototype.moveCharacterToBuyerMenu = function(characterId)
 {
-  this.totalCost += dwellingManager.getWorkerCost(this.featureId, characterId);
+  this.totalCost += this.dwellingSystem.getWorkerCost(this.featureId, characterId);
   this.buyingCharacterIds[characterId] = true;
   this.rebuildMenus = true;
 };
 
 HireWorkerPanelComponent.prototype.moveCharacterToAvailableMenu = function(characterId)
 {
-  this.totalCost -= dwellingManager.getWorkerCost(this.featureId, characterId);
+  this.totalCost -= this.dwellingSystem.getWorkerCost(this.featureId, characterId);
   delete this.buyingCharacterIds[characterId];
   this.rebuildMenus = true;
 };
 
 HireWorkerPanelComponent.prototype.update = function()
 {
-  var canAfford = this.totalCost <= resourceManager.resourceQuantities[ResourceType.Gold];
+  var canAfford = this.totalCost <= this.resourceSystem.resourceQuantities[ResourceType.Gold];
   var size = _.size(this.buyingCharacterIds);
   
   if (this.rebuildMenus)
