@@ -40,13 +40,6 @@ CharacterSystem.prototype.getUnusedCharacterId = function()
   return this.characters.length;
 };
 
-/*CharacterSystem.prototype.addCharacter = function(groupId, character)
-{
-  var group = this.groups[groupId];
-  
-  this.characters[character.id] = character;
-  group.characterIds.push(character.id);
-};*/
 CharacterSystem.prototype.createCharacter = function(options)
 {
   var id = this.getUnusedCharacterId();

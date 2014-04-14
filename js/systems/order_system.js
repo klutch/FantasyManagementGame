@@ -198,46 +198,6 @@ OrderSystem.prototype.processOrderMovement = function(order)
   }
 };
 
-OrderSystem.prototype.processQueuedOrders = function()
-{
-  var completedOrders = [];
-  
-  this.doneProcessingOrdersForTurn = true;
-  
-  for (var groupId in this.groupOrders)
-  {
-    if (this.groupOrders.hasOwnProperty(groupId))
-    {
-      var currentOrder = this.groupOrders[groupId][0];
-      
-      // Do order work (and ensure this order hasn't been flagged as done for this turn already)
-      if (!currentOrder.isDoneForThisTurn)
-      {
-        currentOrder.doWork();
-      }
-      
-      // Check completion status
-      if (currentOrder.isComplete())
-      {
-        this.removeOrder(currentOrder.id);
-        currentOrder.onComplete();
-      }
-      else if (!currentOrder.isDoneForThisTurn)
-      {
-        this.doneProcessingOrdersForTurn = false;
-      }
-    }
-  }
-  
-  // Check for end of turn
-  if (this.doneProcessingOrdersForTurn && turnManager.state == TurnState.Processing)
-  {
-    turnManager.endProcessing();
-    this.groupSystem.resetGroupMovement();
-    this.resetOrderProcessingStatus();
-  }
-};
-
 OrderSystem.prototype.resetOrderProcessingStatus = function()
 {
   _.each(this.groupOrders, function(orders)
@@ -308,7 +268,7 @@ OrderSystem.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         onComplete: function() 
         {
           root.pathPreview.clearPath(this.path.getHead());
-          this.worldSystem.discoverRadius(tileI, tileJ, this.groupSystem.getGroupDiscoveryRadius(groupId));
+          root.worldSystem.discoverRadius(tileI, tileJ, root.groupSystem.getGroupDiscoveryRadius(groupId));
           
           if (!root.doesGroupHaveOrders(groupId))
           {
@@ -355,14 +315,14 @@ OrderSystem.prototype.createReturnOrder = function(groupId, options)
         },
         isComplete: function()
         {
-          var feature = this.worldSystem.world.features[this.featureId];
+          var feature = root.worldSystem.world.features[this.featureId];
 
           return feature.containsTile(group.tileI, group.tileJ);
         },
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
-          this.groupSystem.moveGroupIntoFeature(groupId);
+          root.groupSystem.moveGroupIntoFeature(groupId);
         },
         isDoneForThisTurn: options.isDoneForThisTurn
       });
@@ -406,7 +366,7 @@ OrderSystem.prototype.createRaidOrder = function(groupId, featureId)
         onComplete: function() 
         {
           root.pathPreview.clearPath(this.path.getHead());
-          this.groupSystem.moveGroupIntoFeature(groupId);
+          root.groupSystem.moveGroupIntoFeature(groupId);
           raidManager.createRaid(featureId, groupId);
         }
       });
@@ -685,7 +645,7 @@ OrderSystem.prototype.rebuildPaths = function(groupId)
   }
 }
 
-OrderSystem.prototype.update = function()
+OrderSystem.prototype.updateWaitingOnPlayerState = function()
 {
   var mouseI = this.worldMap.tileGridI;
   var mouseJ = this.worldMap.tileGridJ;
@@ -764,5 +724,59 @@ OrderSystem.prototype.update = function()
     // Cache mouse tile position
     this.lastTileGridI = mouseI;
     this.lastTileGridJ = mouseJ;
+  }
+};
+
+OrderSystem.prototype.updateOrderProcessingState = function()
+{
+  var completedOrders = [];
+  
+  this.doneProcessingOrdersForTurn = true;
+  
+  for (var groupId in this.groupOrders)
+  {
+    if (this.groupOrders.hasOwnProperty(groupId))
+    {
+      var currentOrder = this.groupOrders[groupId][0];
+      
+      // Do order work (and ensure this order hasn't been flagged as done for this turn already)
+      if (!currentOrder.isDoneForThisTurn)
+      {
+        currentOrder.doWork();
+      }
+      
+      // Check completion status
+      if (currentOrder.isComplete())
+      {
+        this.removeOrder(currentOrder.id);
+        currentOrder.onComplete();
+      }
+      else if (!currentOrder.isDoneForThisTurn)
+      {
+        this.doneProcessingOrdersForTurn = false;
+      }
+    }
+  }
+  
+  // Check for end of turn
+  if (this.doneProcessingOrdersForTurn && game.state == GameState.OrderProcessing)
+  {
+    game.endOrderProcessing();
+    // TODO: Start raid processing here
+    game.startWaitingOnPlayer();
+    this.groupSystem.resetGroupMovement();
+    this.resetOrderProcessingStatus();
+  }
+};
+
+OrderSystem.prototype.update = function()
+{
+  if (game.state == GameState.WaitingOnPlayer)
+  {
+    this.updateWaitingOnPlayerState();
+  }
+  else if (game.state == GameState.OrderProcessing)
+  {
+    this.updateOrderProcessingState();
   }
 };

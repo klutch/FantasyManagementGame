@@ -46,21 +46,24 @@ DwellingSystem.prototype.update = function()
   var mouseI = this.worldMap.tileGridI;
   var mouseJ = this.worldMap.tileGridJ;
   
-  if (game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame && !game.inputManager.leftButtonHandled)
+  if (game.state == GameState.WaitingOnPlayer)
   {
-    if (this.worldSystem.doesTileExist(mouseI, mouseJ))
+    if (game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame && !game.inputManager.leftButtonHandled)
     {
-      var tile = this.worldSystem.getTile(mouseI, mouseJ);
-      
-      if (tile.featureId != undefined)
+      if (this.worldSystem.doesTileExist(mouseI, mouseJ))
       {
-        var feature = this.worldSystem.getFeature(tile.featureId);
-        
-        if (feature.type == FeatureType.Dwelling && feature.isLoyal)
+        var tile = this.worldSystem.getTile(mouseI, mouseJ);
+
+        if (tile.featureId != undefined)
         {
-          game.inputManager.leftButtonHandled = true;
-          this.worldMapScreen.inputEnabled = false;
-          this.shopScreen.openHirePanel(feature.id);
+          var feature = this.worldSystem.getFeature(tile.featureId);
+
+          if (feature.type == FeatureType.Dwelling && feature.isLoyal)
+          {
+            game.inputManager.leftButtonHandled = true;
+            this.worldMapScreen.inputEnabled = false;
+            this.shopScreen.openHirePanel(feature.id);
+          }
         }
       }
     }

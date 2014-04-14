@@ -184,13 +184,13 @@ GroupSystem.prototype.getGroupTile = function(groupId)
   
   if (group.isInFeature())
   {
-    var feature = worldManager.getFeature(group.featureId);
+    var feature = this.worldSystem.getFeature(group.featureId);
     
-    return worldManager.getTile(feature.tileI, feature.tileJ);
+    return this.worldSystem.getTile(feature.tileI, feature.tileJ);
   }
   else
   {
-    return worldManager.getTile(group.tileI, group.tileJ);
+    return this.worldSystem.getTile(group.tileI, group.tileJ);
   }
 };
 
@@ -342,7 +342,7 @@ GroupSystem.prototype.moveGroupToTile = function(groupId, tileI, tileJ)
 GroupSystem.prototype.moveGroupIntoFeature = function(groupId)
 {
   var group = this.getGroup(groupId);
-  var tile = worldManager.getTile(group.tileI, group.tileJ);
+  var tile = this.worldSystem.getTile(group.tileI, group.tileJ);
   
   group.featureId = tile.featureId;
   

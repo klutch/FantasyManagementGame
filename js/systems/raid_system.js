@@ -45,7 +45,7 @@ RaidSystem.prototype.createRaid = function(featureId, groupId)
   this.raids[raid.id] = raid;
 };
 
-RaidSystem.prototype.processRaids = function()
+RaidSystem.prototype.updateRaidProcessingState = function()
 {
   var completedRaids = [];
   
@@ -72,4 +72,8 @@ RaidSystem.prototype.processRaids = function()
 
 RaidSystem.prototype.update = function()
 {
+  if (game.state == GameState.RaidProcessing)
+  {
+    this.updateRaidProcessingState();
+  }
 };

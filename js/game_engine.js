@@ -74,8 +74,32 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.getSystem(SystemType.Order).initialize();
   this.systemManager.getSystem(SystemType.Resource).initialize();
   
-  // Change state
+  this.startWaitingOnPlayer();
+};
+
+GameEngine.prototype.startWaitingOnPlayer = function()
+{
   this.state = GameState.WaitingOnPlayer;
+};
+
+GameEngine.prototype.endWaitingOnPlayer = function()
+{
+};
+
+GameEngine.prototype.startOrderProcessing = function()
+{
+  var orderSystem = this.systemManager.getSystem(SystemType.Order);
+  
+  if (orderSystem.settingUpOrder)
+  {
+    orderSystem.endOrderSetup();
+  }
+  
+  this.state = GameState.OrderProcessing;
+};
+
+GameEngine.prototype.endOrderProcessing = function()
+{
 };
 
 GameEngine.prototype.update = function()

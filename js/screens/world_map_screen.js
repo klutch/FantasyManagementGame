@@ -7,6 +7,7 @@ var WorldMapScreen = function()
   this.z = 80;
   this.isGroupMenuOpen = false;
   this.selectedGroupPanel = null;
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
   
   // Create button container
   this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
@@ -76,7 +77,11 @@ var WorldMapScreen = function()
       y: 16,
       normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.endTurnButtons[0]),
       hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.endTurnButtons[1]),
-      onClick: function(e) { turnManager.startProcessing(); },
+      onClick: function(e) 
+      {
+        game.endWaitingOnPlayer();
+        game.startOrderProcessing();
+      },
       tooltipCategory: "worldMapScreen",
       tooltipTag: "endTurnButton",
       tooltipText: "End turn"
@@ -184,10 +189,10 @@ WorldMapScreen.prototype.setTileSelectorColor = function(tint)
 
 WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
 {
-  if (worldManager.doesTileExist(tileI, tileJ))
+  if (this.worldSystem.doesTileExist(tileI, tileJ))
   {
-    var tile = worldManager.getTile(tileI, tileJ);
-    var feature = tile.featureId == undefined ? null : worldManager.world.features[tile.featureId];
+    var tile = this.worldSystem.getTile(tileI, tileJ);
+    var feature = tile.featureId == undefined ? null : this.worldSystem.getFeature(tile.featureId);
     var string = "";
     
     string += "Tile [" + tile.i + ", " + tile.j + "]:\n";
