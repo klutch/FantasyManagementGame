@@ -29,14 +29,6 @@ SystemManager.prototype.removeSystem = function(systemType)
   delete this.systems[systemType];
 };
 
-SystemManager.prototype.initializeSystems = function()
-{
-  _.each(this.systems, function(system)
-    {
-      system.initialize();
-    });
-};
-
 SystemManager.prototype.update = function()
 {
   _.each(this.systems, function(system)

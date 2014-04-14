@@ -67,7 +67,12 @@ GameEngine.prototype.startNewGame = function()
   this.screenManager.addScreen(new TooltipScreen());
   
   // Initialize systems
-  this.systemManager.initializeSystems();
+  this.systemManager.getSystem(SystemType.World).initialize();
+  this.systemManager.getSystem(SystemType.Group).initialize();
+  this.systemManager.getSystem(SystemType.Dwelling).initialize();
+  this.systemManager.getSystem(SystemType.Notification).initialize();
+  this.systemManager.getSystem(SystemType.Order).initialize();
+  this.systemManager.getSystem(SystemType.Resource).initialize();
   
   // Change state
   this.state = GameState.WaitingOnPlayer;
