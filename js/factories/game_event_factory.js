@@ -4,7 +4,7 @@ GameEventFactory.createWalkEvent = function(groupId, startNode, endNode)
 {
   var groupSystem = game.systemManager.getSystem(SystemType.Group);
   var worldMap = game.screenManager.screens[ScreenType.WorldMap].worldMap;
-  var walkSpeed = 3;  // in pixels
+  var walkSpeed = 4;  // in pixels
   
   return new GameEventNode({
     group: groupSystem.getGroup(groupId),
@@ -17,9 +17,9 @@ GameEventFactory.createWalkEvent = function(groupId, startNode, endNode)
       var relativeY = this.currentPathNode.j * TILE_SIZE - this.sprite.position.y;
       var length = Math.sqrt(relativeX * relativeX + relativeY * relativeY);
       
-      if (length < 5)
+      if (length < walkSpeed)
       {
-        if (this.currentPathNode.next == endNode)
+        if (this.currentPathNode == endNode)
         {
           this.isAtDestination = true;
         }
