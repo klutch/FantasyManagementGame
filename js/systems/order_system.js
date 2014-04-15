@@ -13,7 +13,7 @@ OrderSystem.prototype.initialize = function()
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.gameEventSystem = game.systemManager.getSystem(SystemType.GameEvent);
-  this.dwellingSystem = game.systemManager.getSystem(SystemType.Dwelling);
+  this.loyaltySystem = game.systemManager.getSystem(SystemType.Loyalty);
   this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   this.worldMap = this.worldMapScreen.worldMap;
   this.tooltip = game.screenManager.screens[ScreenType.Tooltip].tooltip;
@@ -429,7 +429,7 @@ OrderSystem.prototype.createVisitDwellingOrder = function(groupId, featureId)
           // Make dwelling loyal if it is offered freely
           if (feature.isLoyaltyFree)
           {
-            root.dwellingSystem.makeLoyal(featureId);
+            root.loyaltySystem.makeLoyal(featureId);
           }
           
           // Create return order if there are no other orders left

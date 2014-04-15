@@ -1,9 +1,9 @@
-var DwellingSystem = function()
+var ShopSystem = function()
 {
-  this.type = SystemType.Dwelling;
+  this.type = SystemType.Shop;
 };
 
-DwellingSystem.prototype.initialize = function()
+ShopSystem.prototype.initialize = function()
 {
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
@@ -12,37 +12,36 @@ DwellingSystem.prototype.initialize = function()
   this.worldMap = this.worldMapScreen.worldMap;
 };
 
-DwellingSystem.prototype.makeLoyal = function(featureId)
-{
-  var feature = this.worldSystem.world.features[featureId];
-  
-  feature.isLoyal = true;
-};
-
-// TODO: This function will eventually factor in morale when determining how much
+// TODO: This function will eventually factor in dwelling morale when determining how much
 // you have to pay to get someone to work for you.
-DwellingSystem.prototype.getWorkerCost = function(featureId, characterId)
+ShopSystem.prototype.getCharacterCost = function(featureId, characterId)
 {
   var cost = 0;
   var character = this.characterSystem.getCharacter(characterId);
+  var powerLevel = this.characterSystem.getCharacterPowerLevel(characterId);
   
-  if (character.isMiner)
+  if (character.isWorker)
   {
-    cost = 20;
+    if (character.isMiner)
+    {
+      cost += 20;
+    }
+    else if (character.isLogger)
+    {
+      cost += 15;
+    }
+    else if (character.isLaborer)
+    {
+      cost += 30;
+    }
   }
-  else if (character.isLogger)
-  {
-    cost = 15;
-  }
-  else if (character.isLaborer)
-  {
-    cost = 30;
-  }
+  
+  cost += powerLevel * 10;
   
   return cost;
 };
 
-DwellingSystem.prototype.update = function()
+ShopSystem.prototype.update = function()
 {
   var mouseI = this.worldMap.tileGridI;
   var mouseJ = this.worldMap.tileGridJ;

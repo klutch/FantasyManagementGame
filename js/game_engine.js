@@ -59,8 +59,9 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.addSystem(new GroupSystem());
   this.systemManager.addSystem(new OrderSystem());
   this.systemManager.addSystem(new RaidSystem());
-  this.systemManager.addSystem(new DwellingSystem());
+  this.systemManager.addSystem(new ShopSystem());
   this.systemManager.addSystem(new GameEventSystem());
+  this.systemManager.addSystem(new LoyaltySystem());
   
   // Create screens
   this.screenManager.addScreen(new WorldMapScreen());
@@ -70,9 +71,10 @@ GameEngine.prototype.startNewGame = function()
   // Initialize systems
   this.systemManager.getSystem(SystemType.World).initialize();
   this.systemManager.getSystem(SystemType.Group).initialize();
-  this.systemManager.getSystem(SystemType.Dwelling).initialize();
+  this.systemManager.getSystem(SystemType.Shop).initialize();
   this.systemManager.getSystem(SystemType.Order).initialize();
   this.systemManager.getSystem(SystemType.Resource).initialize();
+  this.systemManager.getSystem(SystemType.Loyalty).initialize();
   
   this.startWaitingOnPlayer();
 };

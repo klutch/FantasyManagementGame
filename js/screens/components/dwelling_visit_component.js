@@ -7,7 +7,7 @@ var DwellingVisitComponent = function(screen, event, featureId)
   this.featureId = featureId;
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.resourceSystem = game.systemManager.getSystem(SystemType.Resource);
-  this.dwellingSystem = game.systemManager.getSystem(SystemType.Dwelling);
+  this.loyaltySystem = game.systemManager.getSystem(SystemType.Loyalty);
   this.feature = this.worldSystem.getFeature(this.featureId);
   this.z = 1;
   this.buttons = [];
@@ -126,7 +126,7 @@ DwellingVisitComponent.prototype.buildButtons = function()
                 {
                   // Okay (can only be called if the player has enough of the resource)
                   root.resourceSystem.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
-                  root.dwellingSystem.makeLoyal(root.feature.id);
+                  root.loyaltySystem.makeLoyal(root.feature.id);
                   root.removeChild(root.confirmBox);
                   root.close();
                 },

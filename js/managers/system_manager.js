@@ -1,12 +1,13 @@
 var SystemType = Object.freeze({
   Character: 0,
-  Dwelling: 1,
+  Shop: 1,
   Group: 2,
   Order: 3,
   Raid: 4,
   Resource: 5,
   World: 6,
-  GameEvent: 7
+  GameEvent: 7,
+  Loyalty: 8
 });
 
 var SystemManager = function()

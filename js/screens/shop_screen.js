@@ -29,7 +29,7 @@ ShopScreen.prototype.onRemoveScreen = function()
 
 ShopScreen.prototype.openHirePanel = function(featureId)
 {
-  this.hirePanel = new HireWorkerPanelComponent(this, featureId, {z: 1});
+  this.hirePanel = new HireCharacterPanelComponent(this, featureId, {z: 1});
   this.container.addChild(this.background);
   this.container.addChild(this.hirePanel);
 };

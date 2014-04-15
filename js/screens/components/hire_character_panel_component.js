@@ -1,4 +1,4 @@
-var HireWorkerPanelComponent = function(screen, featureId, options)
+var HireCharacterPanelComponent = function(screen, featureId, options)
 {
   var root = this;
   
@@ -13,9 +13,9 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.resourceSystem = game.systemManager.getSystem(SystemType.Resource);
   this.orderSystem = game.systemManager.getSystem(SystemType.Order);
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
-  this.dwellingSystem = game.systemManager.getSystem(SystemType.Dwelling);
+  this.shopSystem = game.systemManager.getSystem(SystemType.Shop);
   this.feature = this.worldSystem.getFeature(featureId);
-  this.group = this.groupSystem.getGroup(this.feature.workerGroupId);
+  this.group = this.groupSystem.getGroup(this.feature.hireableGroupId);
   this.z = options.z;
   this.availableButtons = [];
   this.buyerButtons = [];
@@ -27,7 +27,7 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   
   // Panels
-  this.buildAvailableWorkersPanel();
+  this.buildAvailablePanel();
   this.buildBuyerPanel();
   
   // Buy button
@@ -47,7 +47,7 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
         if (this.enabled)
         {
           var newGroup = root.groupSystem.createGroup({
-            name: "Workers",
+            name: "New Group",
             playerControlled: true,
             tileI: root.group.tileI,
             tileJ: root.group.tileJ,
@@ -94,9 +94,9 @@ var HireWorkerPanelComponent = function(screen, featureId, options)
   this.addChild(this.cancelButton);
 };
 
-HireWorkerPanelComponent.prototype = new PIXI.DisplayObjectContainer;
+HireCharacterPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
-HireWorkerPanelComponent.prototype.getWorkerText = function(character)
+HireCharacterPanelComponent.prototype.getCharacterText = function(character)
 {
   if (character.isMiner)
   {
@@ -110,10 +110,13 @@ HireWorkerPanelComponent.prototype.getWorkerText = function(character)
   {
     return "Laborer";
   }
-  return "Unknown";
+  else
+  {
+    return character.type;
+  }
 };
 
-HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
+HireCharacterPanelComponent.prototype.buildAvailablePanel = function()
 {
   this.availablePanel = new PanelComponent({
     x: this.centerScreenX - 160,
@@ -131,7 +134,7 @@ HireWorkerPanelComponent.prototype.buildAvailableWorkersPanel = function()
   this.availablePanel.addChild(this.availableTitle);
 };
 
-HireWorkerPanelComponent.prototype.buildBuyerPanel = function()
+HireCharacterPanelComponent.prototype.buildBuyerPanel = function()
 {
   this.buyerPanel = new PanelComponent({
     x: this.centerScreenX + 160,
@@ -149,7 +152,7 @@ HireWorkerPanelComponent.prototype.buildBuyerPanel = function()
   this.buyerPanel.addChild(this.buyerTitle);
 };
 
-HireWorkerPanelComponent.prototype.buildMenus = function()
+HireCharacterPanelComponent.prototype.buildMenus = function()
 {
   var root = this;
   
@@ -160,9 +163,9 @@ HireWorkerPanelComponent.prototype.buildMenus = function()
     var container = new PIXI.DisplayObjectContainer();
     var backgroundButton = PIXI.Sprite.fromImage(game.assetManager.paths.ui.transparent);
     var portrait = new PortraitComponent(character.id, {x: 4, y: 4});
-    var label = new PIXI.BitmapText(this.getWorkerText(character), {font: "16px big_pixelmix", tint: 0xFFFF00});
+    var label = new PIXI.BitmapText(this.getCharacterText(character), {font: "16px big_pixelmix", tint: 0xFFFF00});
     var goldSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.resources[ResourceType.Gold]);
-    var cost = this.dwellingSystem.getWorkerCost(this.featureId, character.id);
+    var cost = this.shopSystem.getCharacterCost(this.featureId, character.id);
     var priceLabel = new PIXI.BitmapText(cost.toString(), {font: "12px big_pixelmix", tint: 0xCCCCCC});
     var onClick = null;
 
@@ -217,7 +220,7 @@ HireWorkerPanelComponent.prototype.buildMenus = function()
   }
 };
 
-HireWorkerPanelComponent.prototype.clearMenus = function()
+HireCharacterPanelComponent.prototype.clearMenus = function()
 {
   for (var i = 0; i < this.availableButtons.length; i++)
   {
@@ -232,21 +235,21 @@ HireWorkerPanelComponent.prototype.clearMenus = function()
   this.buyerButtons.length = 0;
 };
 
-HireWorkerPanelComponent.prototype.moveCharacterToBuyerMenu = function(characterId)
+HireCharacterPanelComponent.prototype.moveCharacterToBuyerMenu = function(characterId)
 {
-  this.totalCost += this.dwellingSystem.getWorkerCost(this.featureId, characterId);
+  this.totalCost += this.shopSystem.getCharacterCost(this.featureId, characterId);
   this.buyingCharacterIds[characterId] = true;
   this.rebuildMenus = true;
 };
 
-HireWorkerPanelComponent.prototype.moveCharacterToAvailableMenu = function(characterId)
+HireCharacterPanelComponent.prototype.moveCharacterToAvailableMenu = function(characterId)
 {
-  this.totalCost -= this.dwellingSystem.getWorkerCost(this.featureId, characterId);
+  this.totalCost -= this.shopSystem.getCharacterCost(this.featureId, characterId);
   delete this.buyingCharacterIds[characterId];
   this.rebuildMenus = true;
 };
 
-HireWorkerPanelComponent.prototype.update = function()
+HireCharacterPanelComponent.prototype.update = function()
 {
   var canAfford = this.totalCost <= this.resourceSystem.resourceQuantities[ResourceType.Gold];
   var size = _.size(this.buyingCharacterIds);
