@@ -1,9 +1,9 @@
-var DwellingVisitComponent = function(screen, notification, featureId)
+var DwellingVisitComponent = function(screen, event, featureId)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.screen = screen;
-  this.notification = notification;
+  this.event = event;
   this.featureId = featureId;
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.resourceSystem = game.systemManager.getSystem(SystemType.Resource);
@@ -129,7 +129,6 @@ DwellingVisitComponent.prototype.buildButtons = function()
                   root.dwellingSystem.makeLoyal(root.feature.id);
                   root.removeChild(root.confirmBox);
                   root.close();
-                  notificationManager.removeNotification(root.notification);
                 },
                 function()
                 {
@@ -201,8 +200,7 @@ DwellingVisitComponent.prototype.buildButtons = function()
 
 DwellingVisitComponent.prototype.close = function()
 {
-  this.screen.closeNotification();
-  notificationManager.removeNotification(this.notification);
+  this.event.isOpen = false;
 };
 
 DwellingVisitComponent.prototype.update = function()

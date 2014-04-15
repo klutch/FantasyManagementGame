@@ -117,11 +117,13 @@ GameEngine.prototype.endRaidProcessing = function()
 GameEngine.prototype.startEventProcessing = function()
 {
   this.state = GameState.EventProcessing;
+  this.screenManager.addScreen(new NotificationScreen());
 };
 
 GameEngine.prototype.endEventProcessing = function()
 {
   this.state = GameState.Idle;
+  this.screenManager.removeScreen(ScreenType.Notification);
 };
 
 GameEngine.prototype.update = function()

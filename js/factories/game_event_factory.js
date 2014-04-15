@@ -2,7 +2,6 @@ var GameEventFactory = {};
 
 GameEventFactory.createWalkEvent = function(groupId, startNode, endNode)
 {
-  console.log("creating walk event");
   var groupSystem = game.systemManager.getSystem(SystemType.Group);
   var worldMap = game.screenManager.screens[ScreenType.WorldMap].worldMap;
   var walkSpeed = 3;  // in pixels
@@ -56,8 +55,6 @@ GameEventFactory.createWalkEvent = function(groupId, startNode, endNode)
 
 GameEventFactory.createEnterFeatureEvent = function(groupId, featureId)
 {
-  console.log("creating enter feature event");
-  
   return new GameEventNode({
     initialize: function()
     {
@@ -73,14 +70,26 @@ GameEventFactory.createEnterFeatureEvent = function(groupId, featureId)
 GameEventFactory.createDwellingVisitEvent = function(groupId, featureId)
 {
   return new GameEventNode({
+    isOpen: true,
     initialize: function()
     {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      this.dwellingVisitComponent = new DwellingVisitComponent(notificationScreen, this, featureId);
+      
+      notificationScreen.showBackground();
+      notificationScreen.container.addChild(this.dwellingVisitComponent);
     },
     isComplete: function()
     {
+      return !this.isOpen;
     },
     onComplete: function()
     {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      notificationScreen.hideBackground();
+      notificationScreen.container.removeChild(this.dwellingVisitComponent);
     }
   });
 };
