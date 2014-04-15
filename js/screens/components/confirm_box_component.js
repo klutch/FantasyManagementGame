@@ -9,7 +9,7 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
   this.screen = screen;
   
   // Background
-  this.background = PIXI.Sprite.fromImage(assetPathManager.assetPaths.ui.black);
+  this.background = PIXI.Sprite.fromImage(game.assetManager.paths.ui.black);
   this.background.position.x = -16;
   this.background.position.y = -16;
   this.background.z = 0;
@@ -42,9 +42,9 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
     {
       x: 100,
       y: 100,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
-      disabledTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[2]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
+      disabledTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[2]),
       centerX: true,
       centerY: true,
       text: "Okay",
@@ -64,8 +64,8 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
     {
       x: 280,
       y: 100,
-      normalTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(assetPathManager.assetPaths.ui.standardButtons[1]),
+      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
+      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
       centerX: true,
       centerY: true,
       text: "Cancel",
