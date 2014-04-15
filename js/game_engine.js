@@ -62,6 +62,7 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.addSystem(new ShopSystem());
   this.systemManager.addSystem(new GameEventSystem());
   this.systemManager.addSystem(new LoyaltySystem());
+  this.systemManager.addSystem(new CombatSystem());
   
   // Create screens
   this.screenManager.addScreen(new WorldMapScreen());
@@ -75,6 +76,7 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.getSystem(SystemType.Order).initialize();
   this.systemManager.getSystem(SystemType.Resource).initialize();
   this.systemManager.getSystem(SystemType.Loyalty).initialize();
+  this.systemManager.getSystem(SystemType.Combat).initialize();
   
   this.startWaitingOnPlayer();
 };

@@ -7,7 +7,8 @@ var SystemType = Object.freeze({
   Resource: 5,
   World: 6,
   GameEvent: 7,
-  Loyalty: 8
+  Loyalty: 8,
+  Combat: 9
 });
 
 var SystemManager = function()
