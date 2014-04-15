@@ -27,6 +27,19 @@ GroupSystem.prototype.initialize = function()
   this.addCharacterToGroup(startingGroup.id, CharacterFactory.createKnight(10).id);
   this.addCharacterToGroup(startingGroup.id, CharacterFactory.createHealer(10).id);
   worldMapScreen.groupMenu.addGroup(startingGroup.id);
+  
+  // Temporary
+  for (var i = 0; i < 5; i++)
+  {
+    var group = this.createGroup({playerControlled: true, featureId: this.worldSystem.world.playerCastleFeatureId});
+    
+    this.addCharacterToGroup(group.id, CharacterFactory.createArcher(10).id);
+    this.addCharacterToGroup(group.id, CharacterFactory.createArcher(10).id);
+    this.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
+    this.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
+    this.addCharacterToGroup(group.id, CharacterFactory.createHealer(10).id);
+    worldMapScreen.groupMenu.addGroup(group.id);
+  }
 };
 
 GroupSystem.prototype.getGroup = function(groupId)
