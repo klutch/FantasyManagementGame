@@ -321,9 +321,10 @@ OrderSystem.prototype.createReturnOrder = function(groupId, options)
         },
         isComplete: function()
         {
-          var feature = root.worldSystem.world.features[this.featureId];
-
-          return feature.containsTile(group.tileI, group.tileJ);
+          var feature = root.worldSystem.getFeature(this.featureId);
+          var result = feature.containsTile(group.tileI, group.tileJ);
+          
+          return result;
         },
         onComplete: function()
         {

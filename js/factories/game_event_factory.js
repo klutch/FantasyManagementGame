@@ -125,11 +125,12 @@ GameEventFactory.createRaidEvent = function(groupId, featureId)
       var worldMap = game.screenManager.screens[ScreenType.WorldMap].worldMap;
       var group = game.systemManager.getSystem(SystemType.Group).getGroup(groupId);
       var feature = game.systemManager.getSystem(SystemType.World).getFeature(group.featureId);
+      var raidSystem = game.systemManager.getSystem(SystemType.Raid);
       
       this.messageBox = new MessageBoxComponent(
         notificationScreen,
         {
-          text: group.name + " has entered the dungeon."
+          message: group.name + " has entered the dungeon."
         });
       
       notificationScreen.showBackground();
@@ -137,6 +138,8 @@ GameEventFactory.createRaidEvent = function(groupId, featureId)
       
       worldMap.camera.targetPosition.x = (feature.tileI + feature.width * 0.5) * TILE_SIZE;
       worldMap.camera.targetPosition.y = (feature.tileJ + feature.height * 0.5) * TILE_SIZE;
+      
+      raidSystem.createRaid(groupId, featureId);
     },
     isComplete: function()
     {

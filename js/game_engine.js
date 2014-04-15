@@ -77,6 +77,7 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.getSystem(SystemType.Resource).initialize();
   this.systemManager.getSystem(SystemType.Loyalty).initialize();
   this.systemManager.getSystem(SystemType.Combat).initialize();
+  this.systemManager.getSystem(SystemType.Raid).initialize();
   
   this.startWaitingOnPlayer();
 };

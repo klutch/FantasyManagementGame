@@ -1,7 +1,7 @@
 var RaidSystem = function()
 {
   this.type = SystemType.Raid;
-  this.raids = [];
+  this.raids = {};
 };
 
 RaidSystem.prototype.initialize = function()
@@ -20,7 +20,7 @@ RaidSystem.prototype.getUnusedId = function()
   return count;
 };
 
-RaidSystem.prototype.createRaid = function(featureId, groupId)
+RaidSystem.prototype.createRaid = function(groupId, featureId)
 {
   var root = this;
   var raid = new Raid(
@@ -40,7 +40,6 @@ RaidSystem.prototype.createRaid = function(featureId, groupId)
         
         if (returnPath != null)
         {
-          game.screenManager.screens[ScreenType.WorldMap].pathPreview.drawPath(returnPath);
           root.orderSystem.createReturnOrder(groupId, returnPath);
         }
         else
