@@ -6,7 +6,6 @@ var OrderSystem = function()
   this.lastTileGridJ = -999999;
   this.hasMouseChangedTiles = false;
   this.settingUpOrder = false;
-  this.doneProcessingOrdersForTurn = true;
 };
 
 OrderSystem.prototype.initialize = function()
@@ -129,95 +128,85 @@ OrderSystem.prototype.endOrderSetup = function()
 
 OrderSystem.prototype.processOrderMovement = function(order)
 {
-  var nextNode = order.path.next;
-  var doesTileExist = this.worldSystem.doesTileExist(nextNode.i, nextNode.j);
-  var nextTile = doesTileExist ? this.worldSystem.getTile(nextNode.i, nextNode.j) : null;
-  var group = this.groupSystem.getGroup(order.groupId);
-  var groupMovementAbility = this.groupSystem.getGroupMovementAbility(order.groupId);
-  var remainingMovement = groupMovementAbility - group.movementUsed;
-  var recalculatePath = false;
+  var isDone = false;
   
-  // Cache the node we're starting at, for use with walk animation
-  order.walkStartNode = order.walkStartNode || order.path;
-  
-  // Determine whether to move, or to perform discovery
-  if (nextNode.unsure)
+  while(!isDone)
   {
-    // Attempt discovery
-    if (remainingMovement >= 20)
+    var nextNode = order.path.next;
+    var doesTileExist = this.worldSystem.doesTileExist(nextNode.i, nextNode.j);
+    var nextTile = doesTileExist ? this.worldSystem.getTile(nextNode.i, nextNode.j) : null;
+    var group = this.groupSystem.getGroup(order.groupId);
+    var groupMovementAbility = this.groupSystem.getGroupMovementAbility(order.groupId);
+    var remainingMovement = groupMovementAbility - group.movementUsed;
+    var recalculatePath = false;
+
+    // Determine whether to move, or to perform discovery
+    if (nextNode.unsure)
     {
-      this.worldSystem.discoverRadius(order.path.i, order.path.j, this.groupSystem.getGroupDiscoveryRadius(order.groupId));
-      group.movementUsed += 20;
-      recalculatePath = true;
-    }
-    else
-    {
-      order.isDoneForThisTurn = true;
-    }
-  }
-  else
-  {
-    // Attempt movement
-    if (nextTile.movementCost <= remainingMovement)
-    {
-      this.groupSystem.moveGroupToTile(group.id, nextTile.i, nextTile.j);
-      group.movementUsed += nextTile.movementCost;
-      order.path = nextNode;
-    }
-    else
-    {
-      order.isDoneForThisTurn = true;
-    }
-  }
-  
-  // Recalculate paths when hitting an unsure node
-  if (recalculatePath)
-  {
-    var tailNode = order.path.getTail();
-    var newPath = game.pathfinderManager.findPath(group.tileI, group.tileJ, tailNode.i, tailNode.j, order.pathfindingOptions);
-    
-    if (newPath != null)
-    {
-      // Cut the current path, and splice it together with the new one
-      this.pathPreview.clearPath(order.path.getHead());
-      order.path.cut();
-      order.path.append(newPath.next);
-      this.pathPreview.drawPath(order.path.getHead());
-    }
-    else
-    {
-      // Cancel order, because there is no path to the target
-      this.cancelOrder(order.id);
-      if (!this.doesGroupHaveOrders(group.id))
+      // Attempt discovery
+      if (remainingMovement >= 20)
       {
-        this.createReturnOrder(group.id, {isDoneForThisTurn: true});
+        this.worldSystem.discoverRadius(order.path.i, order.path.j, this.groupSystem.getGroupDiscoveryRadius(order.groupId));
+        group.movementUsed += 20;
+        recalculatePath = true;
+      }
+      else
+      {
+        isDone = true;
       }
     }
-  }
-  
-  // Check movement used
-  if (group.movementUsed >= groupMovementAbility)
-  {
-    order.isDoneForThisTurn = true;
-  }
-  
-  // Finally, create a walk event
-  if (order.isDoneForThisTurn)
-  {
-    this.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(order.groupId, order.walkStartNode, order.path));
-    delete order.walkStartNode;
-  }
-};
-
-OrderSystem.prototype.resetOrderProcessingStatus = function()
-{
-  _.each(this.groupOrders, function(orders)
+    else
     {
-      _.each(orders, function(order)
+      // Attempt movement
+      if (nextTile.movementCost <= remainingMovement)
+      {
+        this.groupSystem.moveGroupToTile(group.id, nextTile.i, nextTile.j);
+        group.movementUsed += nextTile.movementCost;
+        order.path = nextNode;
+      }
+      else
+      {
+        isDone = true;
+      }
+    }
+
+    // Recalculate paths when hitting an unsure node
+    if (recalculatePath)
+    {
+      var tailNode = order.path.getTail();
+      var newPath = game.pathfinderManager.findPath(group.tileI, group.tileJ, tailNode.i, tailNode.j, order.pathfindingOptions);
+
+      if (newPath != null)
+      {
+        // Cut the current path, and splice it together with the new one
+        this.pathPreview.clearPath(order.path.getHead());
+        order.path.cut();
+        order.path.append(newPath.next);
+        this.pathPreview.drawPath(order.path.getHead());
+      }
+      else
+      {
+        // Cancel order, because there is no path to the target
+        this.cancelOrder(order.id);
+        if (!this.doesGroupHaveOrders(group.id))
         {
-          order.isDoneForThisTurn = false;
-        });
-    });
+          this.createReturnOrder(group.id);
+        }
+      }
+    }
+
+    // Stop if all movement used
+    if (group.movementUsed >= groupMovementAbility)
+    {
+      isDone = true;
+    }
+    
+    // Stop if order is complete
+    if (order.isComplete())
+    {
+      isDone = true;
+    }
+  }
 };
 
 OrderSystem.prototype.doesGroupHaveOrders = function(groupId)
@@ -270,7 +259,10 @@ OrderSystem.prototype.createExploreOrder = function(groupId, tileI, tileJ)
         name: "Explore",
         doWork: function()
         {
+          var walkStart = this.path;
+          
           root.processOrderMovement(this);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(groupId, walkStart, order.path));
         },
         isComplete: function()
         {
@@ -307,7 +299,6 @@ OrderSystem.prototype.createReturnOrder = function(groupId, options)
   var order;
   
   options = options || {};
-  options.isDoneForThisTurn = options.isDoneForThisTurn == undefined ? false : options.isDoneForThisTurn;
   
   if (path != null)
   {
@@ -322,7 +313,10 @@ OrderSystem.prototype.createReturnOrder = function(groupId, options)
         name: "Return to castle",
         doWork: function()
         {
+          var walkStart = this.path;
+          
           root.processOrderMovement(this);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(groupId, walkStart, order.path));
         },
         isComplete: function()
         {
@@ -333,9 +327,9 @@ OrderSystem.prototype.createReturnOrder = function(groupId, options)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
-          root.groupSystem.moveGroupIntoFeature(groupId);
-        },
-        isDoneForThisTurn: options.isDoneForThisTurn
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createEnterFeatureEvent(groupId, this.featureId));
+          //root.groupSystem.moveGroupIntoFeature(groupId);
+        }
       });
     this.addOrder(order);
     this.pathPreview.drawPath(path);
@@ -368,7 +362,10 @@ OrderSystem.prototype.createRaidOrder = function(groupId, featureId)
         name: "Raid",
         doWork: function()
         {
+          var walkStart = this.path;
+          
           root.processOrderMovement(this);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(groupId, walkStart, order.path));
         },
         isComplete: function()
         {
@@ -412,7 +409,10 @@ OrderSystem.prototype.createVisitDwellingOrder = function(groupId, featureId)
         name: "Visit dwelling",
         doWork: function()
         {
+          var walkStart = this.path;
+          
           root.processOrderMovement(this);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(groupId, walkStart, order.path));
         },
         isComplete: function()
         {
@@ -422,9 +422,8 @@ OrderSystem.prototype.createVisitDwellingOrder = function(groupId, featureId)
         {
           root.pathPreview.clearPath(this.path.getHead());
           
-          // Create notification and pause processing
-          notificationManager.createDwellingVisitNotification(featureId);
-          turnManager.pauseProcessing();
+          // Create notification
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createDwellingVisitEvent(groupId, featureId));
           
           // Make dwelling loyal if it is offered freely
           if (feature.isLoyaltyFree)
@@ -435,7 +434,7 @@ OrderSystem.prototype.createVisitDwellingOrder = function(groupId, featureId)
           // Create return order if there are no other orders left
           if (!root.doesGroupHaveOrders(groupId))
           {
-            root.createReturnOrder(groupId, {isDoneForThisTurn: true});
+            root.createReturnOrder(groupId);
           }
         }
       });
@@ -742,41 +741,25 @@ OrderSystem.prototype.updateOrderProcessingState = function()
 {
   var completedOrders = [];
   
-  this.doneProcessingOrdersForTurn = true;
-  
   for (var groupId in this.groupOrders)
   {
     if (this.groupOrders.hasOwnProperty(groupId))
     {
       var currentOrder = this.groupOrders[groupId][0];
       
-      // Do order work (and ensure this order hasn't been flagged as done for this turn already)
-      if (!currentOrder.isDoneForThisTurn)
-      {
-        currentOrder.doWork();
-      }
+      currentOrder.doWork();
       
-      // Check completion status
       if (currentOrder.isComplete())
       {
         this.removeOrder(currentOrder.id);
         currentOrder.onComplete();
       }
-      else if (!currentOrder.isDoneForThisTurn)
-      {
-        this.doneProcessingOrdersForTurn = false;
-      }
     }
   }
   
-  // Check for end of turn
-  if (this.doneProcessingOrdersForTurn && game.state == GameState.OrderProcessing)
-  {
-    game.endOrderProcessing();
-    game.startRaidProcessing();
-    this.groupSystem.resetGroupMovement();
-    this.resetOrderProcessingStatus();
-  }
+  game.endOrderProcessing();
+  game.startRaidProcessing();
+  this.groupSystem.resetGroupMovement();
 };
 
 OrderSystem.prototype.update = function()

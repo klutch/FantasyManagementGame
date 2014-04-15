@@ -79,8 +79,11 @@ var WorldMapScreen = function()
       hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.endTurnButtons[1]),
       onClick: function(e) 
       {
-        game.endWaitingOnPlayer();
-        game.startOrderProcessing();
+        if (game.state == GameState.WaitingOnPlayer)
+        {
+          game.endWaitingOnPlayer();
+          game.startOrderProcessing();
+        }
       },
       tooltipCategory: "worldMapScreen",
       tooltipTag: "endTurnButton",

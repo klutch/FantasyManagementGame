@@ -1,10 +1,12 @@
 var GameEventNode = function(options)
 {
+  options.initialize = options.initialize || function() {};
   options.doWork = options.doWork || function() {};
   options.onComplete = options.onComplete || function() {};
   
   this.next = null;
   this.previous = null;
+  this.isInitialized = false;
   
   for (var key in options)
   {

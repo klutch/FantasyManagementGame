@@ -1,4 +1,4 @@
-var DwellingLoyaltyComponent = function(screen, notification, featureId)
+var DwellingVisitComponent = function(screen, notification, featureId)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
@@ -40,9 +40,9 @@ var DwellingLoyaltyComponent = function(screen, notification, featureId)
   this.buildButtons();
 };
 
-DwellingLoyaltyComponent.prototype = new PIXI.DisplayObjectContainer;
+DwellingVisitComponent.prototype = new PIXI.DisplayObjectContainer;
 
-DwellingLoyaltyComponent.prototype.getGreetingText = function()
+DwellingVisitComponent.prototype.getGreetingText = function()
 {
   if (this.feature.isLoyaltyFree)
   {
@@ -69,7 +69,7 @@ DwellingLoyaltyComponent.prototype.getGreetingText = function()
   }
 };
 
-DwellingLoyaltyComponent.prototype.buildButtons = function()
+DwellingVisitComponent.prototype.buildButtons = function()
 {
   var root = this;
   var addLeaveButton = true;
@@ -199,13 +199,13 @@ DwellingLoyaltyComponent.prototype.buildButtons = function()
   }
 };
 
-DwellingLoyaltyComponent.prototype.close = function()
+DwellingVisitComponent.prototype.close = function()
 {
   this.screen.closeNotification();
   notificationManager.removeNotification(this.notification);
 };
 
-DwellingLoyaltyComponent.prototype.update = function()
+DwellingVisitComponent.prototype.update = function()
 {
   // Update confirm button's okay state, based one whether or not the player has enough to give
   if (this.feature.requiresGift && this.confirmBox != null)

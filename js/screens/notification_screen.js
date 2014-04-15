@@ -3,7 +3,6 @@ var NotificationScreen = function()
   this.type = ScreenType.Notification;
   this.inputEnabled = true;
   this.z = 90;
-  this.dwellingVisitPanel = null;
   
   // Background
   this.background = PIXI.Sprite.fromImage(game.assetManager.paths.ui.black);
@@ -30,30 +29,16 @@ NotificationScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.container);
 };
 
-NotificationScreen.prototype.openNotification = function(notification)
+NotificationScreen.prototype.showBackground = function()
 {
-  if (notification.type == NotificationType.DwellingVisit)
-  {
-    this.dwellingVisitPanel = new DwellingLoyaltyComponent(this, notification, notification.featureId);
-    this.container.addChild(this.background);
-    this.container.addChild(this.dwellingVisitPanel);
-    this.container.children.sort(depthCompare);
-  }
-  
-  notification.open = true;
+  this.container.addChild(this.background);
 };
 
-NotificationScreen.prototype.closeNotification = function()
+NotificationScreen.prototype.hideBackground = function()
 {
-  this.container.removeChild(this.dwellingVisitPanel);
   this.container.removeChild(this.background);
-  this.dwellingVisitPanel = null;
 };
 
 NotificationScreen.prototype.update = function()
 {
-  if (this.dwellingVisitPanel != null)
-  {
-    this.dwellingVisitPanel.update();
-  }
 };

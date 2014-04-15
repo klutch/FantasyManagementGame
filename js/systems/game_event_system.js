@@ -81,6 +81,12 @@ GameEventSystem.prototype.updateEventProcessingState = function()
   }
   else
   {
+    if (!this.currentGameEvent.isInitialized)
+    {
+      this.currentGameEvent.initialize();
+      this.currentGameEvent.isInitialized = true;
+    }
+    
     this.currentGameEvent.doWork();
     
     if (this.currentGameEvent.isComplete())
