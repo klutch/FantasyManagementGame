@@ -329,7 +329,6 @@ OrderSystem.prototype.createReturnOrder = function(groupId, options)
         {
           root.pathPreview.clearPath(this.path.getHead());
           root.gameEventSystem.appendGameEvent(GameEventFactory.createEnterFeatureEvent(groupId, this.featureId));
-          //root.groupSystem.moveGroupIntoFeature(groupId);
         }
       });
     this.addOrder(order);
@@ -375,8 +374,8 @@ OrderSystem.prototype.createRaidOrder = function(groupId, featureId)
         onComplete: function() 
         {
           root.pathPreview.clearPath(this.path.getHead());
-          root.groupSystem.moveGroupIntoFeature(groupId);
-          raidManager.createRaid(featureId, groupId);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createEnterFeatureEvent(groupId, this.featureId));
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createRaidEvent(groupId, this.featureId));
         }
       });
     this.addOrder(order);

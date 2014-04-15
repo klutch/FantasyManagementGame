@@ -128,7 +128,13 @@ var OrderSubMenuComponent = function(screen, contexts, groupId, tileI, tileJ, op
           tooltipCategory: "orderSubMenu",
           tooltipTag: "raidButton",
           tooltipText: "Raid",
-          onClick: function(e) { alert("raid button clicked"); }
+          onClick: function(e)
+          {
+            if (root.orderSystem.createRaidOrder(groupId, tile.featureId))
+            {
+              root.commonOnClick();
+            }
+          }
         });
     }
     

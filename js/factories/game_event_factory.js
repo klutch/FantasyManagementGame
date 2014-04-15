@@ -115,3 +115,39 @@ GameEventFactory.createGatheringVisitEvent = function(groupId, featureId)
     }
   });
 };
+
+GameEventFactory.createRaidEvent = function(groupId, featureId)
+{
+  return new GameEventNode({
+    initialize: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      var worldMap = game.screenManager.screens[ScreenType.WorldMap].worldMap;
+      var group = game.systemManager.getSystem(SystemType.Group).getGroup(groupId);
+      var feature = game.systemManager.getSystem(SystemType.World).getFeature(group.featureId);
+      
+      this.messageBox = new MessageBoxComponent(
+        notificationScreen,
+        {
+          text: group.name + " has entered the dungeon."
+        });
+      
+      notificationScreen.showBackground();
+      notificationScreen.container.addChild(this.messageBox);
+      
+      worldMap.camera.targetPosition.x = (feature.tileI + feature.width * 0.5) * TILE_SIZE;
+      worldMap.camera.targetPosition.y = (feature.tileJ + feature.height * 0.5) * TILE_SIZE;
+    },
+    isComplete: function()
+    {
+      return !this.messageBox.isOpen;
+    },
+    onComplete: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      notificationScreen.hideBackground();
+      notificationScreen.container.removeChild(this.messageBox);
+    }
+  });
+};
