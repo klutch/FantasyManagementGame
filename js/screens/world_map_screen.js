@@ -192,14 +192,17 @@ WorldMapScreen.prototype.setTileSelectorColor = function(tint)
 
 WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
 {
+  var string = "";
+  
   if (this.worldSystem.doesTileExist(tileI, tileJ))
   {
     var tile = this.worldSystem.getTile(tileI, tileJ);
     var feature = tile.featureId == undefined ? null : this.worldSystem.getFeature(tile.featureId);
-    var string = "";
     
     string += "Tile [" + tile.i + ", " + tile.j + "]:\n";
     string += "\ttype: " + tile.type + "\n";
+    string += "\tmovementCost: " + tile.movementCost + "\n";
+    string += "\twalkable: " + tile.walkable + "\n";
     
     if (feature != null)
     {
@@ -222,7 +225,7 @@ WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
   }
   else
   {
-    string += "Tile does not exist.";
+    string = "Tile does not exist.";
   }
   alert(string);
 };

@@ -180,6 +180,7 @@ PathfinderManager.prototype.step = function()
       var neighborKey;
       var isDiagonal;
       var doesTileExist;
+      var terrainMovementCost = 0;
 
       // Skip selected tile
       if (i == selectedNode.i && j == selectedNode.j)
@@ -200,12 +201,14 @@ PathfinderManager.prototype.step = function()
         neighborTile = this.worldSystem.getTile(i, j);
         neighborKey = this.getKey(i, j);
         neighborNode = this.openList[neighborKey] || this.closedList[neighborKey] || new PathNode(i, j);
+        terrainMovementCost = neighborTile.movementCost;
       }
       else
       {
         neighborKey = this.getKey(i, j);
         neighborNode = this.openList[neighborKey] || this.closedList[neighborKey] || new PathNode(i, j);
         neighborNode.unsure = true;
+        terrainMovementCost = MovementCost.Moderate;
       }
       /*
       else
@@ -246,7 +249,7 @@ PathfinderManager.prototype.step = function()
         // Add to open list, and calculate G, H, and parent values
         this.openList[neighborKey] = neighborNode;
         neighborNode.previous = selectedNode;
-        neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10); // TODO: Factor in terrain movement costs
+        neighborNode.g = selectedNode.g + (isDiagonal ? 14 : 10) + terrainMovementCost;
         neighborNode.h = 10 * (Math.abs(i - this.endI) + Math.abs(j - this.endJ));
         
         // Determine additional movement costs due to preferences
@@ -266,7 +269,7 @@ PathfinderManager.prototype.step = function()
       else
       {
         // See if G value to neighbor tile from the selected tile is shorter than its current path
-        var newG = selectedNode.g + (isDiagonal ? 14 : 10);
+        var newG = selectedNode.g + (isDiagonal ? 14 : 10) + terrainMovementCost;;
         
         if (newG < neighborNode.g)
         {

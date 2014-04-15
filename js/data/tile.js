@@ -11,6 +11,14 @@ var TileType = Object.freeze({
   Forest: 9
 });
 
+var MovementCost = Object.freeze({
+  Easiest: 0,
+  Easy: 10,
+  Moderate: 20,
+  Hard: 30,
+  Hardest: 40
+});
+
 var Tile = function(type, biomeType, i, j, walkable, movementCost, elevation, discovered)
 {
   this.type = type;

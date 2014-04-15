@@ -106,6 +106,18 @@ TerrainGenerator.prototype.getTemperatureModifier = function(elevation)
   return 1 - c;
 };
 
+TerrainGenerator.prototype.getMovementCost = function(tileType)
+{
+  if (tileType == TileType.Arid) { return MovementCost.Moderate; }
+  else if (tileType == TileType.Sand) { return MovementCost.Hard; }
+  else if (tileType == TileType.Swamp) { return MovementCost.Hardest; }
+  else if (tileType == TileType.Grassland) { return MovementCost.Easy; }
+  else if (tileType == TileType.Plains) { return MovementCost.Easy; }
+  else if (tileType == TileType.Snow) { return MovementCost.Hard; }
+  else if (tileType == TileType.Road) { return MovementCost.Easiest; }
+  else if (tileType == TileType.Forest) { return MovementCost.Hard; }
+};
+
 TerrainGenerator.prototype.isRiver = function(x, y)
 {
   return this.noise.ridgedPerlin(x * 0.5, y * 0.5) > 0.9;
@@ -161,7 +173,7 @@ TerrainGenerator.prototype.generateTile = function(x, y)
   var elevationRange;
   var biomeType;
   var tileType;
-  var movementCost = 10;
+  var movementCost = 0;
   var walkable = true;
   
   // Get base elevation
@@ -219,6 +231,9 @@ TerrainGenerator.prototype.generateTile = function(x, y)
       }
     }
   }
+  
+  // Determine movement costs
+  movementCost = this.getMovementCost(tileType);
   
   return new Tile(tileType, biomeType, x, y, walkable, movementCost, finalElevation, false);
 };
