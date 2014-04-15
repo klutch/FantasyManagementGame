@@ -214,6 +214,10 @@ WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
         string += "\tisLoyal: " + feature.isLoyal + "\n";
         string += "\thireableGroupId: " + feature.hireableGroupId + "\n";
       }
+      else if (feature.type == FeatureType.Gathering)
+      {
+        string += "\thireableGroupId: " + feature.hireableGroupId + "\n";
+      }
     }
   }
   else

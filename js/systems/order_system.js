@@ -422,17 +422,13 @@ OrderSystem.prototype.createVisitDwellingOrder = function(groupId, featureId)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
-          
-          // Create notification
           root.gameEventSystem.appendGameEvent(GameEventFactory.createDwellingVisitEvent(groupId, featureId));
           
-          // Make dwelling loyal if it is offered freely
           if (feature.isLoyaltyFree)
           {
             root.loyaltySystem.makeLoyal(featureId);
           }
           
-          // Create return order if there are no other orders left
           if (!root.doesGroupHaveOrders(groupId))
           {
             root.createReturnOrder(groupId);
@@ -470,7 +466,10 @@ OrderSystem.prototype.createVisitGatheringOrder = function(groupId, featureId)
         name: "Visit gathering",
         doWork: function()
         {
+          var walkStart = this.path;
+          
           root.processOrderMovement(this);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createWalkEvent(groupId, walkStart, order.path));
         },
         isComplete: function()
         {
@@ -479,6 +478,7 @@ OrderSystem.prototype.createVisitGatheringOrder = function(groupId, featureId)
         onComplete: function()
         {
           root.pathPreview.clearPath(this.path.getHead());
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createGatheringVisitEvent(groupId, featureId));
           
           if (!root.doesGroupHaveOrders(groupId))
           {

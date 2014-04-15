@@ -93,3 +93,25 @@ GameEventFactory.createDwellingVisitEvent = function(groupId, featureId)
     }
   });
 };
+
+GameEventFactory.createGatheringVisitEvent = function(groupId, featureId)
+{
+  var shopScreen = game.screenManager.screens[ScreenType.Shop];
+  var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
+  
+  return new GameEventNode({
+    initialize: function()
+    {
+      worldMapScreen.inputEnabled = false;
+      shopScreen.openHirePanel(featureId);
+    },
+    isComplete: function()
+    {
+      return shopScreen.hirePanel == null;
+    },
+    onComplete: function()
+    {
+      worldMapScreen.inputEnabled = true;
+    }
+  });
+};

@@ -103,6 +103,7 @@ FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
 FeatureFactory.createTavernGathering = function(tileI, tileJ, options)
 {
   var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
   var feature = new Feature(
     worldSystem.getUnusedFeatureId(),
     FeatureType.Gathering,
@@ -111,8 +112,16 @@ FeatureFactory.createTavernGathering = function(tileI, tileJ, options)
     2,
     1);
   
+  var group = groupSystem.createGroup({name: "Adventurers", playerControlled: false});
+  
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createArcher(10).id);
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createArcher(10).id);
+  
   this.copyOptionsToFeature(feature, options);
   feature.gatheringType = GatheringType.Tavern;
+  feature.hireableGroupId = group.id;
   worldSystem.addFeature(feature);
   return feature;
 };
