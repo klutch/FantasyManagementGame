@@ -92,8 +92,8 @@ GameEngine.prototype.startNewGame = function()
   this.screenManager.addScreen(new TooltipScreen());
   
   // Initialize systems
-  this.systemManager.getSystem(SystemType.World).initialize();
   this.systemManager.getSystem(SystemType.Equipment).initialize();
+  this.systemManager.getSystem(SystemType.World).initialize();
   this.systemManager.getSystem(SystemType.Group).initialize();
   this.systemManager.getSystem(SystemType.Shop).initialize();
   this.systemManager.getSystem(SystemType.Order).initialize();
