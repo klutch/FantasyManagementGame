@@ -130,7 +130,7 @@ GameEventFactory.createRaidEvent = function(groupId, featureId)
       this.messageBox = new MessageBoxComponent(
         notificationScreen,
         {
-          message: group.name + " has entered the dungeon."
+          message: group.name + " has entered the\ndungeon."
         });
       
       notificationScreen.showBackground();
@@ -140,6 +140,95 @@ GameEventFactory.createRaidEvent = function(groupId, featureId)
       worldMap.camera.targetPosition.y = (feature.tileJ + feature.height * 0.5) * TILE_SIZE;
       
       raidSystem.createRaid(groupId, featureId);
+    },
+    isComplete: function()
+    {
+      return !this.messageBox.isOpen;
+    },
+    onComplete: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      notificationScreen.hideBackground();
+      notificationScreen.container.removeChild(this.messageBox);
+    }
+  });
+};
+
+GameEventFactory.createRaidVictoryEvent = function(groupId, featureId)
+{
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
+  var orderSystem = game.systemManager.getSystem(SystemType.Order);
+  var group = groupSystem.getGroup(groupId);
+  var feature = game.systemManager.getSystem(SystemType.World).getFeature(featureId);
+  var enemyGroup = groupSystem.getGroup(feature.enemyGroupId);
+  
+  return new GameEventNode({
+    initialize: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      var returnPath = game.pathfinderManager.findPath(
+          group.tileI,
+          group.tileJ,
+          worldSystem.world.playerCastleI,
+          worldSystem.world.playerCastleJ);
+      
+      this.messageBox = new MessageBoxComponent(
+        notificationScreen,
+        {
+          message: group.name + " has defeated\n" + enemyGroup.name + "!",
+          tint: SUCCESS_COLOR
+        });
+      
+      notificationScreen.showBackground();
+      notificationScreen.container.addChild(this.messageBox);
+      
+      if (returnPath != null)
+      {
+        orderSystem.createReturnOrder(groupId, returnPath);
+      }
+      
+      // TODO: Remove enemy group from feature
+      // TODO: Reward player group
+    },
+    isComplete: function()
+    {
+      return !this.messageBox.isOpen;
+    },
+    onComplete: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      notificationScreen.hideBackground();
+      notificationScreen.container.removeChild(this.messageBox);
+    }
+  });
+};
+
+GameEventFactory.createRaidDefeatEvent = function(groupId, featureId)
+{
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
+  var group = groupSystem.getGroup(groupId);
+  var feature = game.systemManager.getSystem(SystemType.World).getFeature(featureId);
+  var enemyGroup = groupSystem.getGroup(feature.enemyGroupId);
+  
+  return new GameEventNode({
+    initialize: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      this.messageBox = new MessageBoxComponent(
+        notificationScreen,
+        {
+          message: enemyGroup.name + " has defeated\n" + group.name + "!",
+          tint: FAILURE_COLOR
+        });
+      
+      notificationScreen.showBackground();
+      notificationScreen.container.addChild(this.messageBox);
+      
+      groupSystem.deleteGroup(groupId);
     },
     isComplete: function()
     {

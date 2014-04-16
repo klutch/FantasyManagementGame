@@ -46,6 +46,8 @@ CombatSystem.prototype.doesAttackerWin = function(attackerGroupId, defenderGroup
 {
   var weightedDifference = this.getWeightedDifference(attackerGroupId, defenderGroupId);
   var weightedUncertainty = this.getWeightedUncertainty(weightedDifference);
+  var attackerOffense = this.getFinalOffense(attackerGroupId, true);
+  var defenderDefense = this.getFinalDefense(defenderGroupId, false);
   var roll = Math.random();
   var attackerWins;
   
@@ -55,8 +57,12 @@ CombatSystem.prototype.doesAttackerWin = function(attackerGroupId, defenderGroup
   }
   else
   {
-    attackerWins = this.getFinalOffense(attackerGroupId, true) > this.getFinalDefense(defenderGroupId, false);
+    attackerWins = attackerOffense > defenderDefense;
   }
+  
+  console.log("Simulating combat: " + attackerOffense + " vs. " + defenderDefense + ". Uncertainty: " + weightedUncertainty);
+  
+  return attackerWins;
 };
 
 CombatSystem.prototype.update = function()

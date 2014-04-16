@@ -86,6 +86,7 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
 FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
 {
   var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
   var feature = new Feature(
     worldSystem.getUnusedFeatureId(),
     FeatureType.Dungeon,
@@ -93,9 +94,15 @@ FeatureFactory.createCaveDungeon = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
+  var group = groupSystem.createGroup({name: "Enemy Group", playerControlled: false});
+  
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
+  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createArcher(10).id);
   
   this.copyOptionsToFeature(feature, options);
   feature.dungeonType = DungeonType.Cave;
+  feature.enemyGroupId = group.id;
   worldSystem.addFeature(feature);
   return feature;
 };

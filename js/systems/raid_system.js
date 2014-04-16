@@ -9,6 +9,8 @@ RaidSystem.prototype.initialize = function()
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.orderSystem = game.systemManager.getSystem(SystemType.Order);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.combatSystem = game.systemManager.getSystem(SystemType.Combat);
+  this.gameEventSystem = game.systemManager.getSystem(SystemType.GameEvent);
 };
 
 RaidSystem.prototype.getUnusedId = function()
@@ -31,20 +33,18 @@ RaidSystem.prototype.createRaid = function(groupId, featureId)
       turnsToComplete: 3,
       onComplete: function()
       {
+        var feature = root.worldSystem.getFeature(featureId);
         var group = root.groupSystem.getGroup(groupId);
-        var returnPath = game.pathfinderManager.findPath(
-          group.tileI,
-          group.tileJ,
-          root.worldSystem.world.playerCastleI,
-          root.worldSystem.world.playerCastleJ);
+        var victory = root.combatSystem.doesAttackerWin(groupId, feature.enemyGroupId);
         
-        if (returnPath != null)
+        // Victory/defeat event
+        if (victory)
         {
-          root.orderSystem.createReturnOrder(groupId, returnPath);
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createRaidVictoryEvent(groupId, featureId));
         }
         else
         {
-          console.error("Couldn't find a return path out of the dungeon.");
+          root.gameEventSystem.appendGameEvent(GameEventFactory.createRaidDefeatEvent(groupId, featureId));
         }
       }
     });

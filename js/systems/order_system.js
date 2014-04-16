@@ -111,6 +111,11 @@ OrderSystem.prototype.cancelOrder = function(orderId)
   this.pathPreview.clearPath(order.path.getHead());
 }
 
+OrderSystem.prototype.cancelAllOrders = function(groupId)
+{
+  delete this.groupOrders[groupId];
+};
+
 OrderSystem.prototype.startOrderSetup = function()
 {
   this.settingUpOrder = true;

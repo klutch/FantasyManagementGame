@@ -9,6 +9,7 @@ var MessageBoxComponent = function(screen, options)
   options.height = options.height || 300;
   options.message = options.message || "No text.";
   options.buttonText = options.buttonText || "Okay";
+  options.tint = options.tint || 0xFFFF00;
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
@@ -28,7 +29,7 @@ var MessageBoxComponent = function(screen, options)
   });
   this.addChild(this.panel);
   
-  this.bitmapText = new PIXI.BitmapText(options.message, {font: "14px big_pixelmix", tint: 0xFFFF00});
+  this.bitmapText = new PIXI.BitmapText(options.message, {font: "14px big_pixelmix", tint: options.tint});
   this.bitmapText.position.x = 16;
   this.bitmapText.position.y = 16;
   this.panel.addChild(this.bitmapText);

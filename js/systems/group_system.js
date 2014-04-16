@@ -167,6 +167,27 @@ GroupSystem.prototype.createGroup = function(options)
   return group;
 };
 
+GroupSystem.prototype.deleteGroup = function(groupId)
+{
+  var orderSystem = game.systemManager.getSystem(SystemType.Order);
+  var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
+  var group = this.getGroup(groupId);
+  
+  if (this.selectedGroupId == groupId)
+  {
+    this.deselectGroup();
+  }
+  
+  if (group.playerControlled)
+  {
+    worldMapScreen.groupMenu.removeGroup(groupId);
+  }
+  
+  orderSystem.cancelAllOrders(groupId);
+  
+  delete this.groups[groupId];
+};
+
 GroupSystem.prototype.selectGroup = function(groupId)
 {
   var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
