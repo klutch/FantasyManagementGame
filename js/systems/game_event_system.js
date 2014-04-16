@@ -76,8 +76,7 @@ GameEventSystem.prototype.updateEventProcessingState = function()
 {
   if (this.currentGameEvent == null)
   {
-    game.endEventProcessing();
-    game.startWaitingOnPlayer();
+    game.switchToNextState();
   }
   else
   {

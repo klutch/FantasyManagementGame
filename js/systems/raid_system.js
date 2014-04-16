@@ -76,8 +76,7 @@ RaidSystem.prototype.updateRaidProcessingState = function()
     delete this.raids[raid.id];
   }
   
-  game.endRaidProcessing();
-  game.startEventProcessing();
+  game.switchToNextState();
 };
 
 RaidSystem.prototype.update = function()

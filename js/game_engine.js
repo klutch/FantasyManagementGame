@@ -8,12 +8,11 @@ var DEFAULT_TILE_SELECTOR_COLOR = 0xCCCCCC;
 var DEBUG_PATHFINDER = false;
 
 var GameState = Object.freeze({
-  Idle: 0,
-  MainMenu: 1,
-  WaitingOnPlayer: 2,
-  OrderProcessing: 3,
-  RaidProcessing: 4,
-  EventProcessing: 5
+  MainMenu: 0,
+  WaitingOnPlayer: 1,
+  OrderProcessing: 2,
+  RaidProcessing: 3,
+  EventProcessing: 4
 });
 
 var GameEngine = function()
@@ -89,7 +88,6 @@ GameEngine.prototype.startWaitingOnPlayer = function()
 
 GameEngine.prototype.endWaitingOnPlayer = function()
 {
-  this.state = GameState.Idle;
 };
 
 GameEngine.prototype.startOrderProcessing = function()
@@ -106,7 +104,6 @@ GameEngine.prototype.startOrderProcessing = function()
 
 GameEngine.prototype.endOrderProcessing = function()
 {
-  this.state = GameState.Idle;
 };
 
 GameEngine.prototype.startRaidProcessing = function()
@@ -116,7 +113,6 @@ GameEngine.prototype.startRaidProcessing = function()
 
 GameEngine.prototype.endRaidProcessing = function()
 {
-  this.state = GameState.Idle;
 };
 
 GameEngine.prototype.startEventProcessing = function()
@@ -127,8 +123,31 @@ GameEngine.prototype.startEventProcessing = function()
 
 GameEngine.prototype.endEventProcessing = function()
 {
-  this.state = GameState.Idle;
   this.screenManager.removeScreen(ScreenType.Notification);
+};
+
+GameEngine.prototype.switchToNextState = function()
+{
+  if (this.state == GameState.WaitingOnPlayer)
+  {
+    this.endWaitingOnPlayer();
+    this.startOrderProcessing();
+  }
+  else if (this.state == GameState.OrderProcessing)
+  {
+    this.endOrderProcessing();
+    this.startEventProcessing();
+  }
+  else if (this.state == GameState.EventProcessing)
+  {
+    this.endEventProcessing();
+    this.startRaidProcessing();
+  }
+  else if (this.state == GameState.RaidProcessing)
+  {
+    this.endRaidProcessing();
+    this.startWaitingOnPlayer();
+  }
 };
 
 GameEngine.prototype.update = function()

@@ -758,9 +758,8 @@ OrderSystem.prototype.updateOrderProcessingState = function()
     }
   }
   
-  game.endOrderProcessing();
-  game.startRaidProcessing();
   this.groupSystem.resetGroupMovement();
+  game.switchToNextState();
 };
 
 OrderSystem.prototype.update = function()

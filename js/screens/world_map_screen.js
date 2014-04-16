@@ -81,8 +81,7 @@ var WorldMapScreen = function()
       {
         if (game.state == GameState.WaitingOnPlayer)
         {
-          game.endWaitingOnPlayer();
-          game.startOrderProcessing();
+          game.switchToNextState();
         }
       },
       tooltipCategory: "worldMapScreen",
