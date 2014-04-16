@@ -1,10 +1,19 @@
 var CharacterFactory = {};
 
+CharacterFactory.createDefaultEquipmentSlots = function(characterId)
+{
+  var equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
+  
+  for (var i = 0 ; i < DEFAULT_EQUIPMENT_SLOT_TYPES.length; i++)
+  {
+    equipmentSystem.createEquipmentSlot(characterId, DEFAULT_EQUIPMENT_SLOT_TYPES[i]);
+  }
+};
+
 CharacterFactory.createArcher = function(powerLevel)
 {
   var characterSystem = game.systemManager.getSystem(SystemType.Character);
-  
-  return characterSystem.createCharacter({
+  var character = characterSystem.createCharacter({
     type: CharacterType.Archer,
     baseOffense: Math.ceil(0.85 * powerLevel),
     baseDefense: 0,
@@ -13,13 +22,16 @@ CharacterFactory.createArcher = function(powerLevel)
     isExplorer: true,
     description: "Archers are heavily focused on offense, but can provide a small amount of support."
   });
+  
+  this.createDefaultEquipmentSlots(character.id);
+  
+  return character;
 };
 
 CharacterFactory.createKnight = function(powerLevel)
 {
   var characterSystem = game.systemManager.getSystem(SystemType.Character);
-  
-  return characterSystem.createCharacter({
+  var character = characterSystem.createCharacter({
     type: CharacterType.Knight,
     baseOffense: Math.ceil(0.5 * powerLevel),
     baseDefense: Math.ceil(0.5 * powerLevel),
@@ -27,13 +39,16 @@ CharacterFactory.createKnight = function(powerLevel)
     movementAbility: 140,
     description: "Knights are trained equally in both offense and defense."
   });
+  
+  this.createDefaultEquipmentSlots(character.id);
+  
+  return character;
 };
 
 CharacterFactory.createHealer = function(powerLevel)
 {
   var characterSystem = game.systemManager.getSystem(SystemType.Character);
-  
-  return characterSystem.createCharacter({
+  var character = characterSystem.createCharacter({
     type: CharacterType.Healer,
     baseOffense: 0,
     baseDefense: 0,
@@ -41,6 +56,10 @@ CharacterFactory.createHealer = function(powerLevel)
     movementAbility: 160,
     description: "Healers are trained to support their team."
   });
+  
+  this.createDefaultEquipmentSlots(character.id);
+  
+  return character;
 };
 
 CharacterFactory.createMinerWorker = function()

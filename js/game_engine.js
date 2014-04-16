@@ -7,6 +7,26 @@ var SUPPORT_COLOR = 0x8fd82c;
 var SUCCESS_COLOR = 0x62c813;
 var FAILURE_COLOR = 0xc83113;
 var DEFAULT_TILE_SELECTOR_COLOR = 0xCCCCCC;
+var DEFAULT_EQUIPMENT_SLOT_TYPES = [
+  EquipmentSlotType.Head,
+  EquipmentSlotType.Arm,
+  EquipmentSlotType.Arm,
+  EquipmentSlotType.Forearm,
+  EquipmentSlotType.Forearm,
+  EquipmentSlotType.Hand,
+  EquipmentSlotType.Hand,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Legs,
+  EquipmentSlotType.Feet,
+  EquipmentSlotType.Torso,
+  EquipmentSlotType.Waist,
+  EquipmentSlotType.Neck,
+  EquipmentSlotType.Primary,
+  EquipmentSlotType.Secondary
+];
 var DEBUG_PATHFINDER = false;
 
 var GameState = Object.freeze({
@@ -64,6 +84,7 @@ GameEngine.prototype.startNewGame = function()
   this.systemManager.addSystem(new GameEventSystem());
   this.systemManager.addSystem(new LoyaltySystem());
   this.systemManager.addSystem(new CombatSystem());
+  this.systemManager.addSystem(new EquipmentSystem());
   
   // Create screens
   this.screenManager.addScreen(new WorldMapScreen());
@@ -72,6 +93,7 @@ GameEngine.prototype.startNewGame = function()
   
   // Initialize systems
   this.systemManager.getSystem(SystemType.World).initialize();
+  this.systemManager.getSystem(SystemType.Equipment).initialize();
   this.systemManager.getSystem(SystemType.Group).initialize();
   this.systemManager.getSystem(SystemType.Shop).initialize();
   this.systemManager.getSystem(SystemType.Order).initialize();

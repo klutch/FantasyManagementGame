@@ -30,4 +30,6 @@ var Character = function(id, options)
   
   this.id = id;
   this.isWorker = this.isMiner || this.isLogger || this.isLaborer;
+  this.inventoryItemIds = [];
+  this.equipmentSlotIds = [];
 };

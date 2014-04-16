@@ -4,10 +4,6 @@ var CharacterSystem = function()
   this.type = SystemType.Character;
 };
 
-CharacterSystem.prototype.initialize = function()
-{
-};
-
 CharacterSystem.prototype.getCharacter = function(characterId)
 {
   return this.characters[characterId];
