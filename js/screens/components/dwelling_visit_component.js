@@ -1,13 +1,16 @@
-var DwellingVisitComponent = function(screen, event, featureId)
+var DwellingVisitComponent = function(screen, event, groupId, featureId)
 {
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.screen = screen;
   this.event = event;
+  this.groupId = groupId;
   this.featureId = featureId;
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.resourceSystem = game.systemManager.getSystem(SystemType.Resource);
   this.loyaltySystem = game.systemManager.getSystem(SystemType.Loyalty);
+  this.combatSystem = game.systemManager.getSystem(SystemType.Combat);
+  this.gameEventSystem = game.systemManager.getSystem(SystemType.GameEvent);
   this.feature = this.worldSystem.getFeature(this.featureId);
   this.z = 1;
   this.buttons = [];
@@ -164,7 +167,20 @@ DwellingVisitComponent.prototype.buildButtons = function()
         {
           if (root.inputEnabled)
           {
-            console.log("subjugate");
+            if (root.combatSystem.doesAttackerWin(root.groupId, root.feature.defenderGroupId))
+            {
+              root.gameEventSystem.insertGameEventAfter(
+                root.event.getIndex(),
+                GameEventFactory.createSubjugationVictoryEvent(root.groupId, root.featureId));
+              root.loyaltySystem.makeLoyal(root.featureId);
+            }
+            else
+            {
+              root.gameEventSystem.insertGameEventAfter(
+                root.event.getIndex(),
+                GameEventFactory.createSubjugationDefeatEvent(root.groupId, root.featureId));
+            }
+            root.close();
           }
         }
       });

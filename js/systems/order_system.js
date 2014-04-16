@@ -113,6 +113,12 @@ OrderSystem.prototype.cancelOrder = function(orderId)
 
 OrderSystem.prototype.cancelAllOrders = function(groupId)
 {
+  _.each(this.groupOrders[groupId], function(order)
+    {
+      this.pathPreview.clearPath(order.path.getHead());
+    },
+    this);
+  
   delete this.groupOrders[groupId];
 };
 

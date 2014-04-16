@@ -75,7 +75,7 @@ GameEventFactory.createDwellingVisitEvent = function(groupId, featureId)
     {
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
-      this.dwellingVisitComponent = new DwellingVisitComponent(notificationScreen, this, featureId);
+      this.dwellingVisitComponent = new DwellingVisitComponent(notificationScreen, this, groupId, featureId);
       
       notificationScreen.showBackground();
       notificationScreen.container.addChild(this.dwellingVisitComponent);
@@ -222,6 +222,87 @@ GameEventFactory.createRaidDefeatEvent = function(groupId, featureId)
         notificationScreen,
         {
           message: enemyGroup.name + " has defeated\n" + group.name + "!",
+          tint: FAILURE_COLOR
+        });
+      
+      notificationScreen.showBackground();
+      notificationScreen.container.addChild(this.messageBox);
+      
+      groupSystem.deleteGroup(groupId);
+    },
+    isComplete: function()
+    {
+      return !this.messageBox.isOpen;
+    },
+    onComplete: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      notificationScreen.hideBackground();
+      notificationScreen.container.removeChild(this.messageBox);
+    }
+  });
+};
+
+GameEventFactory.createSubjugationVictoryEvent = function(groupId, featureId)
+{
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
+  var orderSystem = game.systemManager.getSystem(SystemType.Order);
+  var group = groupSystem.getGroup(groupId);
+  var feature = game.systemManager.getSystem(SystemType.World).getFeature(featureId);
+  var defenderGroup = groupSystem.getGroup(feature.defenderGroupId);
+  
+  return new GameEventNode({
+    initialize: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      this.messageBox = new MessageBoxComponent(
+        notificationScreen,
+        {
+          message: group.name + " has subjugated\n" +
+            defenderGroup.name + "! You may now hire\n" +
+            "workers from here.",
+          tint: SUCCESS_COLOR
+        });
+      
+      notificationScreen.showBackground();
+      notificationScreen.container.addChild(this.messageBox);
+    },
+    isComplete: function()
+    {
+      return !this.messageBox.isOpen;
+    },
+    onComplete: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      notificationScreen.hideBackground();
+      notificationScreen.container.removeChild(this.messageBox);
+    }
+  });
+};
+
+GameEventFactory.createSubjugationDefeatEvent = function(groupId, featureId)
+{
+  var worldSystem = game.systemManager.getSystem(SystemType.World);
+  var groupSystem = game.systemManager.getSystem(SystemType.Group);
+  var orderSystem = game.systemManager.getSystem(SystemType.Order);
+  var group = groupSystem.getGroup(groupId);
+  var feature = game.systemManager.getSystem(SystemType.World).getFeature(featureId);
+  var defenderGroup = groupSystem.getGroup(feature.defenderGroupId);
+  
+  return new GameEventNode({
+    initialize: function()
+    {
+      var notificationScreen = game.screenManager.screens[ScreenType.Notification];
+      
+      this.messageBox = new MessageBoxComponent(
+        notificationScreen,
+        {
+          message: group.name + "'s subjugation\n" +
+            "attempt has been repelled by " + defenderGroup.name + "!\n",
           tint: FAILURE_COLOR
         });
       

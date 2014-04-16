@@ -173,17 +173,26 @@ GroupSystem.prototype.deleteGroup = function(groupId)
   var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   var group = this.getGroup(groupId);
   
+  // Deselect group if selected
   if (this.selectedGroupId == groupId)
   {
     this.deselectGroup();
   }
   
+  // Remove group from player's group menu
   if (group.playerControlled)
   {
     worldMapScreen.groupMenu.removeGroup(groupId);
   }
   
+  // Cancel all of a group's orders
   orderSystem.cancelAllOrders(groupId);
+  
+  // Remove group from world map
+  if (!group.isInFeature())
+  {
+    worldMapScreen.worldGroups.hideGroup(groupId);
+  }
   
   delete this.groups[groupId];
 };

@@ -38,19 +38,27 @@ FeatureFactory.createTownDwelling = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
-  var group = groupSystem.createGroup({name: "Available Workers", playerControlled: false});
+  var workerGroup = groupSystem.createGroup({name: "Available Workers", playerControlled: false});
+  var defenderGroup = groupSystem.createGroup({name: "Town Guards", playerControlled: false});
   
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createMinerWorker().id);
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createMinerWorker().id);
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createLaborerWorker().id);
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createLaborerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
-  group.tileI = feature.tileI;
-  group.tileJ = feature.tileJ;
+  workerGroup.tileI = feature.tileI;
+  workerGroup.tileJ = feature.tileJ;
+  
+  groupSystem.addCharacterToGroup(defenderGroup.id, CharacterFactory.createKnight(10).id);
+  groupSystem.addCharacterToGroup(defenderGroup.id, CharacterFactory.createHealer(10).id);
+  
+  defenderGroup.tileI = feature.tileI;
+  defenderGroup.tileJ = feature.tileJ;
   
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Town;
-  feature.hireableGroupId = group.id;
+  feature.hireableGroupId = workerGroup.id;
+  feature.defenderGroupId = defenderGroup.id;
   worldSystem.addFeature(feature);
   return feature;
 };
@@ -66,19 +74,27 @@ FeatureFactory.createGroveDwelling = function(tileI, tileJ, options)
     tileJ,
     2,
     2);
-  var group = groupSystem.createGroup({name: "Available Workers", playerControlled: false});
+  var workerGroup = groupSystem.createGroup({name: "Available Workers", playerControlled: false});
+  var defenderGroup = groupSystem.createGroup({name: "Town Guards", playerControlled: false});
   
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createMinerWorker().id);
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createLoggerWorker().id);
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createLoggerWorker().id);
-  groupSystem.addCharacterToGroup(group.id, CharacterFactory.createLaborerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createMinerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLoggerWorker().id);
+  groupSystem.addCharacterToGroup(workerGroup.id, CharacterFactory.createLaborerWorker().id);
   
-  group.tileI = feature.tileI;
-  group.tileJ = feature.tileJ;
+  workerGroup.tileI = feature.tileI;
+  workerGroup.tileJ = feature.tileJ;
+  
+  groupSystem.addCharacterToGroup(defenderGroup.id, CharacterFactory.createKnight(10).id);
+  groupSystem.addCharacterToGroup(defenderGroup.id, CharacterFactory.createHealer(10).id);
+  
+  defenderGroup.tileI = feature.tileI;
+  defenderGroup.tileJ = feature.tileJ;
   
   this.copyOptionsToFeature(feature, options);
   feature.dwellingType = DwellingType.Grove;
-  feature.hireableGroupId = group.id;
+  feature.hireableGroupId = workerGroup.id;
+  feature.defenderGroupId = defenderGroup.id;
   worldSystem.addFeature(feature);
   return feature;
 };
