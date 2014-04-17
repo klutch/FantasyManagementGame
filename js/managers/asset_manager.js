@@ -202,6 +202,32 @@ var AssetManager = function()
     "img/ui/panel_side_3.png"
   ];
   this.paths.ui.panelBg = ["img/ui/panel_bg.png"];
+  this.paths.ui.resizableButtonCorners = [
+    "img/ui/resizable_button_corner_0.png",
+    "img/ui/resizable_button_corner_1.png",
+    "img/ui/resizable_button_corner_2.png",
+    "img/ui/resizable_button_corner_3.png"
+  ];
+  this.paths.ui.resizableButtonSides = [
+    "img/ui/resizable_button_side_0.png",
+    "img/ui/resizable_button_side_1.png",
+    "img/ui/resizable_button_side_2.png",
+    "img/ui/resizable_button_side_3.png"
+  ];
+  this.paths.ui.resizableButtonBg = ["img/ui/resizable_button_bg.png"];
+  this.paths.ui.resizableButtonCornersOver = [
+    "img/ui/resizable_button_corner_over_0.png",
+    "img/ui/resizable_button_corner_over_1.png",
+    "img/ui/resizable_button_corner_over_2.png",
+    "img/ui/resizable_button_corner_over_3.png"
+  ];
+  this.paths.ui.resizableButtonSidesOver = [
+    "img/ui/resizable_button_side_over_0.png",
+    "img/ui/resizable_button_side_over_1.png",
+    "img/ui/resizable_button_side_over_2.png",
+    "img/ui/resizable_button_side_over_3.png"
+  ];
+  this.paths.ui.resizableButtonBgOver = ["img/ui/resizable_button_bg_over.png"];
   this.paths.ui.black = ["img/ui/black.png"];
   this.paths.ui.logo = ["img/ui/logo.png"];
   this.paths.ui.bigFont = ["fonts/big_pixelmix.fnt"];

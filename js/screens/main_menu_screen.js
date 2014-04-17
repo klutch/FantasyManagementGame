@@ -19,6 +19,21 @@ var MainMenuScreen = function()
   this.logoSprite.position.y = -100;
   
   // Buttons
+  this.newGameButton = new ResizableButtonComponent(
+    this,
+    {
+      x: 0,
+      y: 0,
+      text: "Start new game",
+      centerX: true,
+      centerY: true,
+      onClick: function(e)
+      {
+        game.closeMainMenu();
+        game.startNewGame();
+      }
+    });
+  /*
   this.newGameButton = new ButtonComponent(
     this,
     {
@@ -34,7 +49,7 @@ var MainMenuScreen = function()
           game.closeMainMenu();
           game.startNewGame();
         }
-    });
+    });*/
   
   this.container.addChild(this.logoSprite);
   this.container.addChild(this.newGameButton);
@@ -54,4 +69,5 @@ MainMenuScreen.prototype.onRemoveScreen = function()
 
 MainMenuScreen.prototype.update = function()
 {
+  this.newGameButton.update();
 };
