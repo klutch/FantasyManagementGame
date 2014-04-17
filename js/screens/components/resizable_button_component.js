@@ -193,7 +193,6 @@ ResizableButtonComponent.prototype.setTextures = function(isMouseOver)
     {
       this.addChild(this.overSprites[i]);
     }
-    this.children.sort(depthCompare);
   }
   else
   {
@@ -205,8 +204,8 @@ ResizableButtonComponent.prototype.setTextures = function(isMouseOver)
     {
       this.addChild(this.normalSprites[i]);
     }
-    this.children.sort(depthCompare);
   }
+  this.children.sort(depthCompare);
 };
 
 ResizableButtonComponent.prototype.onMouseOver = function()

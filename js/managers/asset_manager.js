@@ -228,6 +228,16 @@ var AssetManager = function()
     "img/ui/resizable_button_side_over_3.png"
   ];
   this.paths.ui.resizableButtonBgOver = ["img/ui/resizable_button_bg_over.png"];
+  this.paths.ui.scrollUpButtons = [
+    "img/ui/scroll_up_arrow.png",
+    "img/ui/scroll_up_arrow_over.png"
+  ];
+  this.paths.ui.scrollDownButtons = [
+    "img/ui/scroll_down_arrow.png",
+    "img/ui/scroll_down_arrow_over.png"
+  ];
+  this.paths.ui.scrollbar = ["img/ui/scrollbar.png"];
+  this.paths.ui.scrollbarDot = ["img/ui/scrollbar_dot.png"];
   this.paths.ui.black = ["img/ui/black.png"];
   this.paths.ui.logo = ["img/ui/logo.png"];
   this.paths.ui.bigFont = ["fonts/big_pixelmix.fnt"];
