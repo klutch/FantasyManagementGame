@@ -241,6 +241,7 @@ ResizableButtonComponent.prototype.update = function()
   
   if (this.isMouseOver && clicked)
   {
+    document.body.style.cursor = "auto";
     this.onClick();
   }
 };

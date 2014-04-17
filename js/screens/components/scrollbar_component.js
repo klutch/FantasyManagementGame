@@ -14,9 +14,10 @@ var ScrollbarComponent = function(screen, options)
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.screen = screen;
+  this.z = options.z;
   
   this.scrollbar = PIXI.Sprite.fromImage(game.assetManager.paths.ui.scrollbar);
-  this.scrollbar.position.x = options.x - 2;
+  this.scrollbar.position.x = options.x - 4;
   this.scrollbar.position.y = options.y;
   this.scrollbar.height = options.scrollHeight;
   this.addChild(this.scrollbar);
