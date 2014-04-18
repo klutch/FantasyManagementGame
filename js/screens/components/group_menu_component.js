@@ -27,7 +27,12 @@ var GroupMenuComponent = function(screen, options)
       centerY: true,
       normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
       hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
-      text: "Manage Groups"
+      text: "Manage Groups",
+      onClick: function(e)
+      {
+        game.screenManager.addScreen(new GroupManagementScreen());
+        screen.inputEnabled = false;
+      }
     });
   this.addChild(this.manageGroupsButton);
   

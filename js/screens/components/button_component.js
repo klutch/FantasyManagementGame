@@ -32,30 +32,38 @@ var ButtonComponent = function(screen, options)
   if (options.text != null)
   {
     this.bitmapText = new PIXI.BitmapText(options.text, {font: "12px big_pixelmix", tint: 0xCCCCCC});
+    this.bitmapText.position.x -= Math.floor(this.bitmapText.textWidth * 0.5);
+    this.bitmapText.position.y -= Math.floor(this.bitmapText.textHeight * 0.5);
     this.addChild(this.bitmapText);
   }
   
   // Centering
-  if (this.bitmapText != null)
+  if (options.centerX)
   {
-    if (options.centerX)
-    {
-      this.bitmapText.position.x -= Math.floor(this.bitmapText.textWidth * 0.5);
-    }
-    if (options.centerY)
-    {
-      this.bitmapText.position.y -= Math.floor(this.bitmapText.textHeight * 0.5);
-    }
-  }
-  if (this.textureSprite != null)
-  {
-    if (options.centerX)
+    if (this.textureSprite != null)
     {
       this.textureSprite.position.x -= Math.floor(this.textureSprite.width * 0.5);
     }
-    if (options.centerY)
+  }
+  else
+  {
+    if (this.bitmapText != null)
+    {
+      this.bitmapText.position.x += Math.floor(this.normalTexture.width * 0.5);
+    }
+  }
+  if (options.centerY)
+  {
+    if (this.textureSprite != null)
     {
       this.textureSprite.position.y -= Math.floor(this.textureSprite.height * 0.5);
+    }
+  }
+  else
+  {
+    if (this.bitmapText != null)
+    {
+      this.bitmapText.position.y += Math.floor(this.normalTexture.height * 0.5);
     }
   }
   

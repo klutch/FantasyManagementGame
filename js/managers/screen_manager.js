@@ -5,7 +5,8 @@ var ScreenType = Object.freeze({
   Tooltip: 3,
   ViewOrders: 4,
   Notification: 5,
-  Shop: 6
+  Shop: 6,
+  GroupManagement: 7
 });
 
 var ScreenManager = function()

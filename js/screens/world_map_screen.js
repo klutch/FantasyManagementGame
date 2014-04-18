@@ -4,7 +4,7 @@ var WorldMapScreen = function()
   
   this.type = ScreenType.WorldMap;
   this.inputEnabled = true;
-  this.z = 80;
+  this.z = 10;
   this.isGroupMenuOpen = false;
   this.selectedGroupPanel = null;
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
