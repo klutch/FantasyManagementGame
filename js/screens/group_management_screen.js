@@ -103,7 +103,7 @@ GroupManagementScreen.prototype.buildGroupRows = function()
     },
     this);
   
-  this.groupRowsContainer.minScrollY = -this.groupRows.length * 90 + containerHeight;
+  this.groupRowsContainer.minScrollY = -this.groupRows.length * 90 + containerHeight + 16;
   this.groupRowsContainer.maxScrollY = 16;
   
   this.scrollbar = new ScrollbarComponent(
