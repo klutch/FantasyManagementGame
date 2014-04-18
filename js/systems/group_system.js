@@ -29,7 +29,7 @@ GroupSystem.prototype.initialize = function()
   worldMapScreen.groupMenu.addGroup(startingGroup.id);
   
   // Temporary
-  for (var i = 0; i < 5; i++)
+  for (var i = 0; i < 15; i++)
   {
     var group = this.createGroup({playerControlled: true, featureId: this.worldSystem.world.playerCastleFeatureId});
     

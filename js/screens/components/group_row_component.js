@@ -24,7 +24,7 @@ var GroupRowComponent = function(screen, groupId, options)
   this.portraits = [];
   this.buildPortraits();
   
-  this.divider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), options.width, 4);
+  this.divider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), options.width - 32, 4);
   this.divider.position.y = 80;
   this.addChild(this.divider);
 };

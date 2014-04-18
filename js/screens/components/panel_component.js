@@ -1,3 +1,8 @@
+var PanelType = Object.freeze({
+  Normal: 0,
+  Dark: 1
+});
+
 var PanelComponent = function(options)
 {
   this.base = PIXI.DisplayObjectContainer;
@@ -10,12 +15,40 @@ var PanelComponent = function(options)
   options.height = options.height || 320;
   options.centerX = options.centerX || false;
   options.centerY = options.centerY || false;
+  options.type = options.type || PanelType.Normal;
   
   this.width = options.width;
   this.height = options.height;
   this.position.x = options.centerX ? options.x - Math.floor(this.width * 0.5) : options.x;
   this.position.y = options.centerY ? options.y - Math.floor(this.height * 0.5) : options.y;
   this.z = options.z;
+  this.type = options.type;
+  
+  this.assetPaths = [];
+  if (this.type == PanelType.Normal)
+  {
+    this.assetPaths.push(game.assetManager.paths.ui.panelCorners[0]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelCorners[1]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelCorners[2]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelCorners[3]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelSides[0]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelSides[1]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelSides[2]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelSides[3]);
+    this.assetPaths.push(game.assetManager.paths.ui.panelBg);
+  }
+  else
+  {
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelCorners[0]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelCorners[1]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelCorners[2]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelCorners[3]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelSides[0]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelSides[1]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelSides[2]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelSides[3]);
+    this.assetPaths.push(game.assetManager.paths.ui.darkPanelBg);
+  }
   
   this.buildPanel();
 };
@@ -24,15 +57,15 @@ PanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
 PanelComponent.prototype.buildPanel = function()
 {
-  var topLeft = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelCorners[0]));
-  var topRight = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelCorners[1]));
-  var bottomRight = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelCorners[2]));
-  var bottomLeft = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelCorners[3]));
-  var top = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelSides[0]));
-  var right = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelSides[1]));
-  var bottom = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelSides[2]));
-  var left = new PIXI.Sprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelSides[3]));
-  var bg = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.panelBg));
+  var topLeft = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[0]));
+  var topRight = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[1]));
+  var bottomRight = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[2]));
+  var bottomLeft = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[3]));
+  var top = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[4]));
+  var right = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[5]));
+  var bottom = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[6]));
+  var left = new PIXI.Sprite(PIXI.Texture.fromImage(this.assetPaths[7]));
+  var bg = new PIXI.TilingSprite(PIXI.Texture.fromImage(this.assetPaths[8]));
   
   // Background
   bg.position.x = left.width;

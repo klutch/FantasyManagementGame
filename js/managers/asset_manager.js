@@ -202,6 +202,19 @@ var AssetManager = function()
     "img/ui/panel_side_3.png"
   ];
   this.paths.ui.panelBg = ["img/ui/panel_bg.png"];
+  this.paths.ui.darkPanelCorners = [
+    "img/ui/dark_panel_corner_0.png",
+    "img/ui/dark_panel_corner_1.png",
+    "img/ui/dark_panel_corner_2.png",
+    "img/ui/dark_panel_corner_3.png"
+  ];
+  this.paths.ui.darkPanelSides = [
+    "img/ui/dark_panel_side_0.png",
+    "img/ui/dark_panel_side_1.png",
+    "img/ui/dark_panel_side_2.png",
+    "img/ui/dark_panel_side_3.png"
+  ];
+  this.paths.ui.darkPanelBg = ["img/ui/dark_panel_bg.png"];
   this.paths.ui.resizableButtonCorners = [
     "img/ui/resizable_button_corner_0.png",
     "img/ui/resizable_button_corner_1.png",
