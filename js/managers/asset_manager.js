@@ -268,6 +268,7 @@ var AssetManager = function()
   ];
   this.paths.ui.transparent = ["img/ui/transparent.png"];
   this.paths.ui.divider = ["img/ui/divider.png"];
+  this.paths.ui.longDivider = ["img/ui/long_divider.png"];
   this.paths.ui.groupNameButtons = [
     "img/ui/group_name.png",
     "img/ui/group_name_over.png"

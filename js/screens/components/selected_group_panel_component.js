@@ -127,7 +127,7 @@ SelectedGroupPanelComponent.prototype.update = function()
   // Escape key -- Deselect group
   if (this.screen.inputEnabled && game.inputManager.simpleKey(KeyCode.Escape))
   {
-    this.characterSystem.deselectGroup();
+    this.groupSystem.deselectGroup();
   }
   
   // Modify move button
