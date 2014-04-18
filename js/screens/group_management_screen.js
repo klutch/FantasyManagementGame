@@ -145,7 +145,7 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
       x: x,
       y: 48,
       width: this.panel.width - (x + 32),
-      height: 260
+      height: 264
     });
   this.panel.addChild(this.barracksGroup);
 };

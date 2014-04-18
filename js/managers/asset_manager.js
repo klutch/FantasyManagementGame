@@ -353,6 +353,7 @@ var AssetManager = function()
   this.paths.ui.portraits[CharacterType.Archer] = ["img/ui/portraits/archer.png"];
   this.paths.ui.portraits[CharacterType.Knight] = ["img/ui/portraits/knight.png"];
   this.paths.ui.portraits[CharacterType.Healer] = ["img/ui/portraits/healer.png"];
+  this.paths.ui.portraits.empty = ["img/ui/portraits/empty.png"];
 };
 
 AssetManager.prototype.preload = function(onComplete)

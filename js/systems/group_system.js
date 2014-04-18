@@ -28,7 +28,7 @@ GroupSystem.prototype.initialize = function()
   this.addCharacterToGroup(startingGroup.id, CharacterFactory.createHealer(10).id);
   worldMapScreen.groupMenu.addGroup(startingGroup.id);
   
-  // Temporary
+  // Temporary groups
   for (var i = 0; i < 15; i++)
   {
     var group = this.createGroup({playerControlled: true, featureId: this.worldSystem.world.playerCastleFeatureId});
@@ -40,11 +40,26 @@ GroupSystem.prototype.initialize = function()
     this.addCharacterToGroup(group.id, CharacterFactory.createHealer(10).id);
     worldMapScreen.groupMenu.addGroup(group.id);
   }
+  
+  // Temporary characters in barracks
+  for (var i = 0; i < 40; i++)
+  {
+    var powerLevel = Math.floor(50 * Math.random());
+    
+    this.addCharacterToGroup(this.barracksGroup.id, CharacterFactory.createKnight(powerLevel).id); 
+  }
 };
 
 GroupSystem.prototype.getGroup = function(groupId)
 {
-  return this.groups[groupId];
+  if (groupId == -1)
+  {
+    return this.barracksGroup;
+  }
+  else
+  {
+    return this.groups[groupId];
+  }
 };
 
 GroupSystem.prototype.getPlayerControlledGroups = function()
