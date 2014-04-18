@@ -8,10 +8,10 @@ var BarracksPanelComponent = function(screen, options)
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.barracksGroup = this.groupSystem.barracksGroup;
   this.portraits = [];
-  this.emptyPortraits = [];
   
   this.panel = new PanelComponent({
     x: options.x,
@@ -22,45 +22,65 @@ var BarracksPanelComponent = function(screen, options)
   });
   this.addChild(this.panel);
   
+  this.portraitContainer = new PIXI.DisplayObjectContainer();
+  this.panel.addChild(this.portraitContainer);
+  
   this.buildCharacterIcons();
 };
 
 BarracksPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
+BarracksPanelComponent.prototype.clearCharacterIcons = function()
+{
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.portraitContainer.removeChild(this.portraits[i]);
+  }
+  this.panel.removeChild(this.scrollbar);
+  this.scrollbar = null;
+};
+
 BarracksPanelComponent.prototype.buildCharacterIcons = function()
 {
-  var characterCount = 0;
   var spacingX = 40;
   var spacingY = 58;
-  var numRowX = Math.floor((this.panel.width - 32) / spacingX);
-  var numRowY = Math.floor((this.panel.height - 32) / spacingY);
+  var containerWidth = this.panel.width - 32;
+  var containerHeight = this.panel.height - 32;
+  var numRowX = Math.floor(containerWidth / spacingX) - 1;
+  var totalContentHeight = 0;
   
-  for (var j = 0; j < numRowY; j++)
+  for (var i = 0; i < this.barracksGroup.characterIds.length; i++)
   {
-    for (var i = 0; i < numRowX; i++)
-    {
-      var x = 16 + i * spacingX;
-      var y = 16 + j * spacingY;
-      
-      if (characterCount < this.barracksGroup.characterIds.length)
-      {
-        var portrait = new PortraitComponent(this.barracksGroup.characterIds[characterCount], {x: x, y: y});
+    var x = 16 + Math.floor(i % numRowX) * spacingX;
+    var y = 16 + Math.floor(i / numRowX) * spacingY;
+    var portrait = new PortraitComponent(this.barracksGroup.characterIds[i], {x: x, y: y});
         
-        this.panel.addChild(portrait);
-        this.portraits.push(portrait);
-      }
-      else
-      {
-        var sprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits.empty);
-        
-        sprite.position.x = x;
-        sprite.position.y = y;
-        
-        this.panel.addChild(sprite);
-        this.emptyPortraits.push(sprite);
-      }
-      
-      characterCount++;
-    }
+    this.portraitContainer.addChild(portrait);
+    this.portraits.push(portrait);
   }
+  
+  totalContentHeight = Math.floor(this.barracksGroup.characterIds.length / numRowX) * spacingY;
+  
+  this.portraitContainer.minScrollY = totalContentHeight < containerHeight ? 0 : -totalContentHeight + containerHeight;
+  this.portraitContainer.maxScrollY = 0;
+  
+  this.scrollbar = new ScrollbarComponent(
+    this.screen,
+    {
+      x: this.panel.width - 16,
+      y: 16,
+      height: this.panel.height - 32,
+      scrollAmount: spacingY,
+      maskX: 0,
+      maskY: 16,
+      maskWidth: this.panel.width - 32,
+      maskHeight: this.panel.height - 32,
+      component: this.portraitContainer
+    });
+  this.panel.addChild(this.scrollbar);
+};
+
+BarracksPanelComponent.prototype.update = function()
+{
+  this.scrollbar.update();
 };

@@ -17,6 +17,7 @@ var ScrollbarComponent = function(screen, options)
   this.screen = screen;
   this.z = options.z;
   this.scrollAmount = options.scrollAmount;
+  this.scrollRectangle = new PIXI.Rectangle(options.maskX, options.maskY, options.maskWidth, options.maskHeight);
   
   this.scrollbar = PIXI.Sprite.fromImage(game.assetManager.paths.ui.scrollbar);
   this.scrollbar.position.x = options.x - 4;
@@ -87,5 +88,20 @@ ScrollbarComponent.prototype.scrollDown = function(amount)
 
 ScrollbarComponent.prototype.update = function(amount)
 {
+  if (this.screen.inputEnabled)
+  {
+    if (this.scrollRectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y))
+    {
+      if (game.inputManager.mouseWheelDelta > 0)
+      {
+        this.scrollUp(this.scrollAmount);
+      }
+      else if (game.inputManager.mouseWheelDelta < 0)
+      {
+        this.scrollDown(this.scrollAmount);
+      }
+    }
+  }
+  
   this.component.position.y += (this.component.targetScrollY - this.component.position.y) / 8;
 };

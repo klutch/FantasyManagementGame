@@ -85,12 +85,10 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   var containerWidth = 500;
   var groupRowHeight = 90;
   var totalGroupRowHeight = 0;
-  var containerHeight = (Math.floor(this.panel.height / groupRowHeight) - 1) * groupRowHeight - 2;
+  var containerHeight = (Math.floor(this.panel.height / groupRowHeight) - 1) * groupRowHeight;
   
   this.groupRows = [];
   this.groupRowsContainer = new PIXI.DisplayObjectContainer();
-  this.groupRowsContainer.x = 16;
-  this.groupRowsContainer.y = 16;
   this.groupRowsContainer.width = containerWidth;
   this.panel.addChild(this.groupRowsContainer);
   
@@ -100,8 +98,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
         this,
         group.id,
         {
-          x: 0,
-          y: this.groupRows.length * groupRowHeight,
+          x: 16,
+          y: 16 + this.groupRows.length * groupRowHeight,
           width: containerWidth
         });
       this.groupRows.push(groupRow);
@@ -111,8 +109,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   
   totalGroupRowHeight = this.groupRows.length * groupRowHeight;
   
-  this.groupRowsContainer.minScrollY = totalGroupRowHeight < containerHeight ? 16 : -totalGroupRowHeight + containerHeight + 16;
-  this.groupRowsContainer.maxScrollY = 16;
+  this.groupRowsContainer.minScrollY = totalGroupRowHeight < containerHeight ? 0 : -totalGroupRowHeight + containerHeight + 0;
+  this.groupRowsContainer.maxScrollY = 0;
   
   this.scrollbar = new ScrollbarComponent(
     this,
@@ -122,7 +120,7 @@ GroupManagementScreen.prototype.buildGroupRows = function()
       height: containerHeight,
       scrollAmount: groupRowHeight,
       maskX: 0,
-      maskY: 18,
+      maskY: 0,
       maskWidth: containerWidth,
       maskHeight: containerHeight,
       component: this.groupRowsContainer
@@ -139,7 +137,7 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
   this.barracksTitle.position.y = 16;
   this.panel.addChild(this.barracksTitle);
   
-  this.barracksGroup = new BarracksPanelComponent(
+  this.barracksPanel = new BarracksPanelComponent(
     this,
     {
       x: x,
@@ -147,10 +145,11 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
       width: this.panel.width - (x + 32),
       height: 264
     });
-  this.panel.addChild(this.barracksGroup);
+  this.panel.addChild(this.barracksPanel);
 };
 
 GroupManagementScreen.prototype.update = function()
 {
   this.scrollbar.update();
+  this.barracksPanel.update();
 };

@@ -18,7 +18,13 @@ GroupSystem.prototype.initialize = function()
   worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
   
   // Create a special barracks group
-  this.barracksGroup = new Group(-1, {name: "Barracks", featureId: this.worldSystem.world.playerCastleFeatureId});
+  this.barracksGroup = new Group(
+    -1,
+    {
+      name: "Barracks",
+      featureId: this.worldSystem.world.playerCastleFeatureId,
+      capacity: MAX_BARRACKS_CAPACITY
+    });
   
   // Create starting group
   this.addCharacterToGroup(startingGroup.id, CharacterFactory.createArcher(10).id);

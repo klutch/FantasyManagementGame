@@ -7,6 +7,7 @@ var Group = function(id, options)
   options.featureId = options.featureId == null ? -1 : options.featureId;
   options.name = options.name || "Group " + id;
   options.playerControlled = options.playerControlled == undefined ? true : options.playerControlled;
+  options.capacity = options.capacity || MAX_GROUP_CAPACITY;
   
   this.id = id;
   this.characterIds = options.characterIds;
