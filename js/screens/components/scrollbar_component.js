@@ -17,7 +17,12 @@ var ScrollbarComponent = function(screen, options)
   this.screen = screen;
   this.z = options.z;
   this.scrollAmount = options.scrollAmount;
-  this.scrollRectangle = new PIXI.Rectangle(options.maskX, options.maskY, options.maskWidth, options.maskHeight);
+  this.scrollRectangle = null;
+  this.hackyCounter = 0;  // Have to wait for the 2nd update call to get the world transform :(
+  this.maskX = options.maskX;
+  this.maskY = options.maskY;
+  this.maskWidth = options.maskWidth;
+  this.maskHeight = options.maskHeight;
   
   this.scrollbar = PIXI.Sprite.fromImage(game.assetManager.paths.ui.scrollbar);
   this.scrollbar.position.x = options.x - 4;
@@ -88,9 +93,18 @@ ScrollbarComponent.prototype.scrollDown = function(amount)
 
 ScrollbarComponent.prototype.update = function(amount)
 {
+  if (this.hackyCounter == 1)
+  {
+    this.scrollRectangle = new PIXI.Rectangle(
+      this.component.worldTransform.tx + this.maskX,
+      this.component.worldTransform.ty + this.maskY,
+      this.maskWidth,
+      this.maskHeight);
+  }
+  
   if (this.screen.inputEnabled)
   {
-    if (this.scrollRectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y))
+    if (this.scrollRectangle != null && this.scrollRectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y))
     {
       if (game.inputManager.mouseWheelDelta > 0)
       {
@@ -104,4 +118,6 @@ ScrollbarComponent.prototype.update = function(amount)
   }
   
   this.component.position.y += (this.component.targetScrollY - this.component.position.y) / 8;
+  
+  this.hackyCounter++;
 };

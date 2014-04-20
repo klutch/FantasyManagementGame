@@ -17,6 +17,7 @@ var InputManager = function()
   document.onkeyup = function(e) { e = e || window.event; root.onKeyUp(e.keyCode); };
   canvas.mousewheel(function(e) { root.mouseWheelDelta = e.deltaY; });
   canvas.click(function(e) { root.leftButton = true; });
+  canvas.touchstart = canvas.click;
 }
 
 InputManager.prototype.onKeyDown = function(keyCode)
