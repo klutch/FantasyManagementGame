@@ -90,6 +90,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   this.groupRows = [];
   this.groupRowsContainer = new PIXI.DisplayObjectContainer();
   this.groupRowsContainer.width = containerWidth;
+  this.groupRowsContainer.position.x = 16;
+  this.groupRowsContainer.position.y = 16;
   this.panel.addChild(this.groupRowsContainer);
   
   _.each(this.groupSystem.getPlayerControlledGroups(), function(group)
@@ -98,8 +100,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
         this,
         group.id,
         {
-          x: 16,
-          y: 16 + this.groupRows.length * groupRowHeight,
+          x: 0,
+          y: this.groupRows.length * groupRowHeight,
           width: containerWidth
         });
       this.groupRows.push(groupRow);
@@ -109,8 +111,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   
   totalGroupRowHeight = this.groupRows.length * groupRowHeight;
   
-  this.groupRowsContainer.minScrollY = totalGroupRowHeight < containerHeight ? 0 : -totalGroupRowHeight + containerHeight + 0;
-  this.groupRowsContainer.maxScrollY = 0;
+  this.groupRowsContainer.minScrollY = totalGroupRowHeight < containerHeight ? 16 : -totalGroupRowHeight + containerHeight + 16;
+  this.groupRowsContainer.maxScrollY = 16;
   
   this.scrollbar = new ScrollbarComponent(
     this,
@@ -119,8 +121,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
       y: 32,
       height: containerHeight,
       scrollAmount: groupRowHeight,
-      maskX: 0,
-      maskY: 0,
+      maskX: 16,
+      maskY: 16,
       maskWidth: containerWidth,
       maskHeight: containerHeight,
       component: this.groupRowsContainer

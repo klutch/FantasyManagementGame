@@ -96,8 +96,8 @@ ScrollbarComponent.prototype.update = function(amount)
   if (this.hackyCounter == 1)
   {
     this.scrollRectangle = new PIXI.Rectangle(
-      this.component.worldTransform.tx + this.maskX,
-      this.component.worldTransform.ty + this.maskY,
+      this.component.worldTransform.tx,
+      this.component.worldTransform.ty,
       this.maskWidth,
       this.maskHeight);
   }
