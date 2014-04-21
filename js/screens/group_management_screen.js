@@ -83,7 +83,7 @@ GroupManagementScreen.prototype.onRemoveScreen = function()
 GroupManagementScreen.prototype.buildGroupRows = function()
 {
   var containerWidth = 500;
-  var groupRowHeight = 90;
+  var groupRowHeight = 92;
   var totalGroupRowHeight = 0;
   var containerHeight = (Math.floor(this.panel.height / groupRowHeight) - 1) * groupRowHeight;
   
@@ -102,7 +102,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
         {
           x: 0,
           y: this.groupRows.length * groupRowHeight,
-          width: containerWidth
+          width: containerWidth,
+          height: groupRowHeight
         });
       this.groupRows.push(groupRow);
       this.groupRowsContainer.addChild(groupRow);
@@ -154,4 +155,9 @@ GroupManagementScreen.prototype.update = function()
 {
   this.scrollbar.update();
   this.barracksPanel.update();
+  
+  _.each(this.groupRows, function(groupRow)
+    {
+      groupRow.update();
+    });
 };

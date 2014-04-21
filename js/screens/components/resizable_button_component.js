@@ -7,7 +7,7 @@ var ResizableButtonComponent = function(screen, options)
   options.height = options.height || 48;
   options.centerX = options.centerX || false;
   options.centerY = options.centerY || false;
-  options.enabled = options.enabled || true;
+  options.enabled = options.enabled == undefined ? true : options.enabled;
   options.onClick = options.onClick || function(e) { };
   options.normalTextStyle = options.normalTextStyle || {font: "12px big_pixelmix", tint: 0xCCCCCC};
   options.overTextStyle = options.overTextStyle || {font: "12px big_pixelmix", tint: 0xFFF568};
@@ -22,12 +22,10 @@ var ResizableButtonComponent = function(screen, options)
   
   this.position.x = options.centerX ? options.x - Math.floor(this.width * 0.5) : options.x;
   this.position.y = options.centerY ? options.y - Math.floor(this.height * 0.5) : options.y;
-  this.rectangle = new PIXI.Rectangle(this.position.x, this.position.y, this.width, this.height);
-  this.rectangle.x += Math.floor(game.containerWidth * 0.5);
-  this.rectangle.y += Math.floor(game.containerHeight * 0.5);
   this.onClick = options.onClick;
   this.isMouseOver = false;
   this.z = options.z;
+  this.rectangle = new PIXI.Rectangle(0, 0, this.width, this.height);
   
   this.normalSprites = [];
   this.overSprites = [];
@@ -227,9 +225,14 @@ ResizableButtonComponent.prototype.onMouseOut = function()
 ResizableButtonComponent.prototype.update = function()
 {
   var mousePosition = game.inputManager.mousePosition;
-  var rectContainsMouse = this.rectangle.contains(mousePosition.x, mousePosition.y);
+  var rectContainsMouse = false;
   var clicked = game.inputManager.leftButton && !game.inputManager.leftButtonHandled && !game.inputManager.leftButtonHandled;
   
+  this.rectangle.x = this.worldTransform.tx;
+  this.rectangle.y = this.worldTransform.ty;
+  
+  rectContainsMouse = this.rectangle.contains(mousePosition.x, mousePosition.y)
+
   if (!this.isMouseOver && rectContainsMouse)
   {
     this.onMouseOver();
@@ -238,7 +241,7 @@ ResizableButtonComponent.prototype.update = function()
   {
     this.onMouseOut();
   }
-  
+
   if (this.isMouseOver && clicked)
   {
     document.body.style.cursor = "auto";
