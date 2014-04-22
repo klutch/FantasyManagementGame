@@ -76,7 +76,16 @@ GroupRowComponent.prototype.buildPortraits = function()
       this.group.characterIds[i],
       {
         x: this.portraits.length * 40,
-        y: 18
+        y: 18,
+        normalTint: 0xFFFFFF,
+        disabledTint: 0x999999,
+        onClick: function(e) 
+        {
+          if (this.enabled)
+          {
+            
+          }
+        }
       });
     this.portraits.push(portrait);
     this.addChild(portrait);
@@ -130,7 +139,7 @@ GroupRowComponent.prototype.disable = function()
   this.title.setStyle(this.disabledTextStyle);
   for (var i = 0; i < this.portraits.length; i++)
   {
-    this.portraits[i].portraitSprite.tint = 0x999999;
+    this.portraits[i].setEnabled(false);
   }
   this.renameButton.setEnabled(false);
   this.disbandButton.setEnabled(false);
@@ -142,7 +151,7 @@ GroupRowComponent.prototype.enable = function()
   this.title.setStyle(this.enabledTextStyle);
   for (var i = 0; i < this.portraits.length; i++)
   {
-    this.portraits[i].portraitSprite.tint = 0xFFFFFF;
+    this.portraits[i].setEnabled(true);
   }
   this.renameButton.setEnabled(true);
   this.disbandButton.setEnabled(true);
@@ -154,6 +163,11 @@ GroupRowComponent.prototype.update = function()
   
   this.renameButton.update();
   this.disbandButton.update();
+  
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.portraits[i].update();
+  }
   
   this.hackyCounter++;
 };
