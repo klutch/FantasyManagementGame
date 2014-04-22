@@ -74,7 +74,7 @@ ScrollbarComponent.prototype.attachComponent = function(component, x, y, width, 
   this.component.mask = mask;
   this.component.minScrollY = this.component.minScrollY == undefined ? 0 : this.component.minScrollY;
   this.component.maxScrollY = this.component.maxScrollY == undefined ? 0 : this.component.maxScrollY;
-  this.component.targetScrollY = Math.max(Math.min(this.component.maxScrollY, y), this.component.minScrollY);
+  this.setTargetScrollY(y);
   
   this.maskX = x;
   this.maskY = y;
@@ -84,12 +84,17 @@ ScrollbarComponent.prototype.attachComponent = function(component, x, y, width, 
 
 ScrollbarComponent.prototype.scrollUp = function(amount)
 {
-  this.component.targetScrollY = Math.min(this.component.targetScrollY + amount, this.component.maxScrollY);
+  this.setTargetScrollY(this.component.targetScrollY + amount);
 };
 
 ScrollbarComponent.prototype.scrollDown = function(amount)
 {
-  this.component.targetScrollY = Math.max(this.component.targetScrollY - amount, this.component.minScrollY);
+  this.setTargetScrollY(this.component.targetScrollY - amount);
+};
+
+ScrollbarComponent.prototype.setTargetScrollY = function(y)
+{
+  this.component.targetScrollY = Math.max(Math.min(this.component.maxScrollY, y), this.component.minScrollY);
 };
 
 ScrollbarComponent.prototype.update = function(amount)

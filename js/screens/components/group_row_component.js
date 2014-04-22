@@ -84,8 +84,26 @@ var GroupRowComponent = function(screen, groupId, options)
 
 GroupRowComponent.prototype = new PIXI.DisplayObjectContainer;
 
+GroupRowComponent.prototype.rebuildPortraits = function()
+{
+  this.clearPortraits();
+  this.buildPortraits();
+};
+
+GroupRowComponent.prototype.clearPortraits = function()
+{
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.removeChild(this.portraits[i]);
+  }
+  
+  this.portraits.length = 0;
+};
+
 GroupRowComponent.prototype.buildPortraits = function()
 {
+  var root = this;
+  
   for (var i = 0; i < this.group.characterIds.length; i++)
   {
     var portrait = new PortraitComponent(
@@ -100,7 +118,10 @@ GroupRowComponent.prototype.buildPortraits = function()
         {
           if (this.enabled)
           {
-            
+            root.groupSystem.removeCharacterFromGroup(root.groupId, this.characterId);
+            root.groupSystem.addCharacterToGroup(root.groupSystem.barracksGroup.id, this.characterId);
+            root.screen.barracksPanel.rebuildPortraits();
+            root.rebuildPortraits();
           }
         }
       });
@@ -209,16 +230,16 @@ GroupRowComponent.prototype.enable = function()
 
 GroupRowComponent.prototype.update = function()
 {
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.portraits[i].update();
+  }
+  
   this.determineSelectionStatus();
   this.determineEnabledStatus();
   
   this.renameButton.update();
   this.disbandButton.update();
-  
-  for (var i = 0; i < this.portraits.length; i++)
-  {
-    this.portraits[i].update();
-  }
   
   this.hackyCounter++;
 };

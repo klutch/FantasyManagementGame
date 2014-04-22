@@ -30,6 +30,15 @@ var BarracksPanelComponent = function(screen, options)
 
 BarracksPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
+BarracksPanelComponent.prototype.rebuildPortraits = function()
+{
+  var currentScrollY = this.portraitContainer.targetScrollY;
+  
+  this.clearCharacterIcons();
+  this.buildCharacterIcons();
+  this.scrollbar.setTargetScrollY(currentScrollY);
+};
+
 BarracksPanelComponent.prototype.clearCharacterIcons = function()
 {
   for (var i = 0; i < this.portraits.length; i++)
@@ -38,6 +47,7 @@ BarracksPanelComponent.prototype.clearCharacterIcons = function()
   }
   this.panel.removeChild(this.scrollbar);
   this.scrollbar = null;
+  this.portraits.length = 0;
 };
 
 BarracksPanelComponent.prototype.buildCharacterIcons = function()
@@ -59,7 +69,7 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
     this.portraits.push(portrait);
   }
   
-  totalContentHeight = Math.floor(this.barracksGroup.characterIds.length / numRowX) * spacingY;
+  totalContentHeight = (Math.floor(this.barracksGroup.characterIds.length / numRowX) + 1) * spacingY;
   
   this.portraitContainer.minScrollY = totalContentHeight < containerHeight ? 0 : -totalContentHeight + containerHeight;
   this.portraitContainer.maxScrollY = 0;
