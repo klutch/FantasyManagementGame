@@ -132,6 +132,8 @@ GroupRowComponent.prototype.disable = function()
   {
     this.portraits[i].portraitSprite.tint = 0x999999;
   }
+  this.renameButton.setEnabled(false);
+  this.disbandButton.setEnabled(false);
 };
 
 GroupRowComponent.prototype.enable = function()
@@ -142,6 +144,8 @@ GroupRowComponent.prototype.enable = function()
   {
     this.portraits[i].portraitSprite.tint = 0xFFFFFF;
   }
+  this.renameButton.setEnabled(true);
+  this.disbandButton.setEnabled(true);
 };
 
 GroupRowComponent.prototype.update = function()

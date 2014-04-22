@@ -40,6 +40,7 @@ var ResizableButtonComponent = function(screen, options)
   
   this.normalTextStyle = options.normalTextStyle;
   this.overTextStyle = options.overTextStyle;
+  this.disabledTextStyle = options.disabledTextStyle;
   
   this.bitmapText = new PIXI.BitmapText(options.text, this.normalTextStyle);
   this.bitmapText.position.x -= Math.floor(this.bitmapText.textWidth * 0.5);
@@ -226,10 +227,11 @@ ResizableButtonComponent.prototype.onMouseOut = function()
   document.body.style.cursor = "auto";
 };
 
-ResizableButtonComponent.setEnabled = function(value)
+ResizableButtonComponent.prototype.setEnabled = function(value)
 {
   this.enabled = value;
   this.setInputState(this.enabled ? ButtonInputState.Normal : ButtonInputState.Disabled);
+  this.bitmapText.setStyle(this.enabled ? this.normalTextStyle : this.disabledTextStyle);
 };
 
 ResizableButtonComponent.prototype.update = function()
