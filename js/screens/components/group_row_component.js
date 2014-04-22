@@ -12,6 +12,7 @@ var GroupRowComponent = function(screen, groupId, options)
   this.groupId = groupId;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.group = this.groupSystem.getGroup(groupId);
   this.width = options.width;
   this.hackyCounter = 0;
@@ -97,10 +98,16 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
 {
   var top = this.scrollbar.maskY;
   var bottom = this.scrollbar.maskY + this.scrollbar.maskHeight;
+  var isInCastle = this.group.featureId == this.worldSystem.world.playerCastleFeatureId;
   
   if (this.hackyCounter < 1)
   {
     return;
+  }
+  
+  if (!isInCastle && this.enabled)
+  {
+    this.disable();
   }
   
   if (this.worldTransform.ty < top && this.enabled)
@@ -111,7 +118,7 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
   {
     this.disable();
   }
-  else if (this.worldTransform.ty < bottom && this.worldTransform.ty > top && !this.enabled)
+  else if (this.worldTransform.ty < bottom && this.worldTransform.ty > top && !this.enabled && isInCastle)
   {
     this.enable();
   }
@@ -119,18 +126,22 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
 
 GroupRowComponent.prototype.disable = function()
 {
-  var group = this.groupSystem.getGroup(this.groupId);
-  
   this.enabled = false;
   this.title.setStyle(this.disabledTextStyle);
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.portraits[i].portraitSprite.tint = 0x999999;
+  }
 };
 
 GroupRowComponent.prototype.enable = function()
 {
-  var group = this.groupSystem.getGroup(this.groupId);
-  
   this.enabled = true;
   this.title.setStyle(this.enabledTextStyle);
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.portraits[i].portraitSprite.tint = 0xFFFFFF;
+  }
 };
 
 GroupRowComponent.prototype.update = function()

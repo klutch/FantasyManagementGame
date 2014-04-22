@@ -241,6 +241,19 @@ var AssetManager = function()
     "img/ui/resizable_button_side_over_3.png"
   ];
   this.paths.ui.resizableButtonBgOver = ["img/ui/resizable_button_bg_over.png"];
+  this.paths.ui.resizableButtonCornersDisabled = [
+    "img/ui/resizable_button_corner_disabled_0.png",
+    "img/ui/resizable_button_corner_disabled_1.png",
+    "img/ui/resizable_button_corner_disabled_2.png",
+    "img/ui/resizable_button_corner_disabled_3.png"
+  ];
+  this.paths.ui.resizableButtonSidesDisabled = [
+    "img/ui/resizable_button_side_disabled_0.png",
+    "img/ui/resizable_button_side_disabled_1.png",
+    "img/ui/resizable_button_side_disabled_2.png",
+    "img/ui/resizable_button_side_disabled_3.png"
+  ];
+  this.paths.ui.resizableButtonBgDisabled = ["img/ui/resizable_button_bg_disabled.png"];
   this.paths.ui.scrollUpButtons = [
     "img/ui/scroll_up_arrow.png",
     "img/ui/scroll_up_arrow_over.png"
