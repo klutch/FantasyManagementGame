@@ -69,7 +69,7 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
     this.portraits.push(portrait);
   }
   
-  totalContentHeight = (Math.floor(this.barracksGroup.characterIds.length / numRowX) + 1) * spacingY;
+  totalContentHeight = Math.ceil(this.barracksGroup.characterIds.length / numRowX) * spacingY;
   
   this.portraitContainer.minScrollY = totalContentHeight < containerHeight ? 0 : -totalContentHeight + containerHeight;
   this.portraitContainer.maxScrollY = 0;
