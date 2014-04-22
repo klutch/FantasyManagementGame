@@ -15,11 +15,14 @@ var GroupRowComponent = function(screen, groupId, options)
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.group = this.groupSystem.getGroup(groupId);
   this.width = options.width;
+  this.height = options.height;
   this.hackyCounter = 0;
   this.enabled = true;
+  this.selected = false;
   this.scrollbar = options.scrollbar;
   this.enabledTextStyle = {font: "14px big_pixelmix", tint: 0xFFFFFF};
   this.disabledTextStyle = {font: "14px big_pixelmix", tint: 0x999999};
+  this.rectangle = new PIXI.Rectangle(0, 0, this.width, this.height);
   
   this.position.x = options.x;
   this.position.y = options.y;
@@ -27,10 +30,12 @@ var GroupRowComponent = function(screen, groupId, options)
   this.title = new PIXI.BitmapText(this.group.name, this.enabledTextStyle);
   this.title.position.x = 2;
   this.title.position.y = 0;
+  this.title.z = 1;
   this.addChild(this.title);
   
   this.statText = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0x999999});
   this.statText.position.y = 2;
+  this.statText.z = 1;
   this.addChild(this.statText);
   this.rebuildStatText();
   
@@ -40,8 +45,9 @@ var GroupRowComponent = function(screen, groupId, options)
   this.renameButton = new ResizableButtonComponent(
     this.screen,
     {
-      x: options.width - 150,
+      x: options.width - 152,
       y: 20,
+      z: 1,
       width: 120,
       height: 28,
       text: "Rename"
@@ -51,8 +57,9 @@ var GroupRowComponent = function(screen, groupId, options)
   this.disbandButton = new ResizableButtonComponent(
     this.screen,
     {
-      x: options.width - 150,
+      x: options.width - 152,
       y: 50,
+      z: 1,
       width: 120,
       height: 28,
       text: "Disband"
@@ -61,7 +68,16 @@ var GroupRowComponent = function(screen, groupId, options)
   
   this.divider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), options.width - 32, 4);
   this.divider.position.y = options.height - 10;
+  this.divider.z = 1;
   this.addChild(this.divider);
+  
+  this.selectionSprite = PIXI.Sprite.fromImage(game.assetManager.paths.tiles.white);
+  this.selectionSprite.tint = 0xFFFF00;
+  this.selectionSprite.position.y = -6;
+  this.selectionSprite.width = options.width - 32;
+  this.selectionSprite.height = options.height;
+  this.selectionSprite.alpha = 0.25;
+  this.selectionSprite.z = -1;
   
   this.disable();
 };
@@ -77,6 +93,7 @@ GroupRowComponent.prototype.buildPortraits = function()
       {
         x: this.portraits.length * 40,
         y: 18,
+        z: 1,
         normalTint: 0xFFFFFF,
         disabledTint: 0x999999,
         onClick: function(e) 
@@ -133,6 +150,39 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
   }
 };
 
+GroupRowComponent.prototype.determineSelectionStatus = function()
+{
+  if (this.hackyCounter > 1)
+  {
+    var isMouseInRect;
+    var click = game.inputManager.singleLeftButton();
+    
+    this.rectangle.x = this.worldTransform.tx;
+    this.rectangle.y = this.worldTransform.ty;
+    
+    isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y)
+    
+    if (isMouseInRect && click && !this.selected)
+    {
+      this.screen.deselectGroupRow();
+      this.screen.selectGroupRow(this);
+    }
+  }
+};
+
+GroupRowComponent.prototype.setSelect = function(value)
+{
+  if (value)
+  {
+    this.addChild(this.selectionSprite);
+  }
+  else
+  {
+    this.removeChild(this.selectionSprite);
+  }
+  this.children.sort(depthCompare);
+};
+
 GroupRowComponent.prototype.disable = function()
 {
   this.enabled = false;
@@ -159,6 +209,7 @@ GroupRowComponent.prototype.enable = function()
 
 GroupRowComponent.prototype.update = function()
 {
+  this.determineSelectionStatus();
   this.determineEnabledStatus();
   
   this.renameButton.update();

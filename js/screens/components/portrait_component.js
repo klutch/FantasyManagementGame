@@ -15,6 +15,7 @@ var PortraitComponent = function(characterId, options)
   this.character = this.characterSystem.getCharacter(characterId);
   this.position.x = options.x;
   this.position.y = options.y;
+  this.z = options.z;
   this.hackyCounter = 0;
   this.normalTint = options.normalTint;
   this.disabledTint = options.disabledTint;

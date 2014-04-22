@@ -4,6 +4,7 @@ var GroupManagementScreen = function()
   this.inputEnabled = true;
   this.z = 80;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.selectedGroupRow = null;
   
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
@@ -147,6 +148,20 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
       height: 206
     });
   this.panel.addChild(this.barracksPanel);
+};
+
+GroupManagementScreen.prototype.deselectGroupRow = function()
+{
+  if (this.selectedGroupRow != null)
+  {
+    this.selectedGroupRow.setSelect(false);
+  }
+};
+
+GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
+{
+  this.selectedGroupRow = groupRow;
+  this.selectedGroupRow.setSelect(true);
 };
 
 GroupManagementScreen.prototype.update = function()

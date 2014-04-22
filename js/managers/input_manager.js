@@ -41,6 +41,11 @@ InputManager.prototype.simpleKey = function(keyCode)
   return false;
 };
 
+InputManager.prototype.singleLeftButton = function()
+{
+  return !this.leftButtonHandled && this.leftButton && !this.leftButtonLastFrame;
+};
+
 InputManager.prototype.update = function()
 {
   this.mousePosition = game.stage.getMousePosition();
