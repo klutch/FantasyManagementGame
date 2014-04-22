@@ -92,7 +92,15 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   this.groupRowsContainer.width = containerWidth;
   this.groupRowsContainer.position.x = 16;
   this.groupRowsContainer.position.y = 16;
-  this.panel.addChild(this.groupRowsContainer);
+  
+  this.scrollbar = new ScrollbarComponent(
+    this,
+    {
+      x: containerWidth,
+      y: 32,
+      height: containerHeight,
+      scrollAmount: groupRowHeight
+    });
   
   _.each(this.groupSystem.getPlayerControlledGroups(), function(group)
     {
@@ -103,7 +111,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
           x: 0,
           y: this.groupRows.length * groupRowHeight,
           width: containerWidth,
-          height: groupRowHeight
+          height: groupRowHeight,
+          scrollbar: this.scrollbar
         });
       this.groupRows.push(groupRow);
       this.groupRowsContainer.addChild(groupRow);
@@ -115,19 +124,8 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   this.groupRowsContainer.minScrollY = totalGroupRowHeight < containerHeight ? 16 : -totalGroupRowHeight + containerHeight + 16;
   this.groupRowsContainer.maxScrollY = 16;
   
-  this.scrollbar = new ScrollbarComponent(
-    this,
-    {
-      x: containerWidth,
-      y: 32,
-      height: containerHeight,
-      scrollAmount: groupRowHeight,
-      maskX: 16,
-      maskY: 16,
-      maskWidth: containerWidth,
-      maskHeight: containerHeight,
-      component: this.groupRowsContainer
-    });
+  this.scrollbar.attachComponent(this.groupRowsContainer, 16, 16, containerWidth, containerHeight);
+  this.panel.addChild(this.groupRowsContainer);
   this.panel.addChild(this.scrollbar);
 };
 

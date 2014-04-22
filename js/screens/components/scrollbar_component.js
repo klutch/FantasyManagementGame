@@ -19,10 +19,6 @@ var ScrollbarComponent = function(screen, options)
   this.scrollAmount = options.scrollAmount;
   this.scrollRectangle = null;
   this.hackyCounter = 0;  // Have to wait for the 2nd update call to get the world transform :(
-  this.maskX = options.maskX;
-  this.maskY = options.maskY;
-  this.maskWidth = options.maskWidth;
-  this.maskHeight = options.maskHeight;
   
   this.scrollbar = PIXI.Sprite.fromImage(game.assetManager.paths.ui.scrollbar);
   this.scrollbar.position.x = options.x - 4;
@@ -79,6 +75,11 @@ ScrollbarComponent.prototype.attachComponent = function(component, x, y, width, 
   this.component.minScrollY = this.component.minScrollY == undefined ? 0 : this.component.minScrollY;
   this.component.maxScrollY = this.component.maxScrollY == undefined ? 0 : this.component.maxScrollY;
   this.component.targetScrollY = Math.max(Math.min(this.component.maxScrollY, y), this.component.minScrollY);
+  
+  this.maskX = x;
+  this.maskY = y;
+  this.maskWidth = width;
+  this.maskHeight = height;
 };
 
 ScrollbarComponent.prototype.scrollUp = function(amount)

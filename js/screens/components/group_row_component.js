@@ -14,11 +14,16 @@ var GroupRowComponent = function(screen, groupId, options)
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.group = this.groupSystem.getGroup(groupId);
   this.width = options.width;
+  this.hackyCounter = 0;
+  this.enabled = true;
+  this.scrollbar = options.scrollbar;
+  this.enabledTextStyle = {font: "14px big_pixelmix", tint: 0xFFFFFF};
+  this.disabledTextStyle = {font: "14px big_pixelmix", tint: 0x999999};
   
   this.position.x = options.x;
   this.position.y = options.y;
   
-  this.title = new PIXI.BitmapText(this.group.name, {font: "14px big_pixelmix", tint: 0xCCCCCC});
+  this.title = new PIXI.BitmapText(this.group.name, this.enabledTextStyle);
   this.title.position.x = 2;
   this.title.position.y = 0;
   this.addChild(this.title);
@@ -56,6 +61,8 @@ var GroupRowComponent = function(screen, groupId, options)
   this.divider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), options.width - 32, 4);
   this.divider.position.y = options.height - 10;
   this.addChild(this.divider);
+  
+  this.disable();
 };
 
 GroupRowComponent.prototype = new PIXI.DisplayObjectContainer;
@@ -86,8 +93,52 @@ GroupRowComponent.prototype.rebuildStatText = function()
   this.statText.position.x = this.width - (this.statText.textWidth + 32);
 };
 
+GroupRowComponent.prototype.determineEnabledStatus = function()
+{
+  var top = this.scrollbar.maskY;
+  var bottom = this.scrollbar.maskY + this.scrollbar.maskHeight;
+  
+  if (this.hackyCounter < 1)
+  {
+    return;
+  }
+  
+  if (this.worldTransform.ty < top && this.enabled)
+  {
+    this.disable();
+  }
+  else if (this.worldTransform.ty > bottom && this.enabled)
+  {
+    this.disable();
+  }
+  else if (this.worldTransform.ty < bottom && this.worldTransform.ty > top && !this.enabled)
+  {
+    this.enable();
+  }
+};
+
+GroupRowComponent.prototype.disable = function()
+{
+  var group = this.groupSystem.getGroup(this.groupId);
+  
+  this.enabled = false;
+  this.title.setStyle(this.disabledTextStyle);
+};
+
+GroupRowComponent.prototype.enable = function()
+{
+  var group = this.groupSystem.getGroup(this.groupId);
+  
+  this.enabled = true;
+  this.title.setStyle(this.enabledTextStyle);
+};
+
 GroupRowComponent.prototype.update = function()
 {
+  this.determineEnabledStatus();
+  
   this.renameButton.update();
   this.disbandButton.update();
+  
+  this.hackyCounter++;
 };
