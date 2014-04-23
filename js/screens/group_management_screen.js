@@ -132,10 +132,10 @@ GroupManagementScreen.prototype.buildGroupRows = function()
 
 GroupManagementScreen.prototype.buildBarracksPanel = function()
 {
-  var x = this.groupRowsContainer.width + 32;
+  var x = this.groupRowsContainer.width + 16;
   
   this.barracksTitle = new PIXI.BitmapText("Barracks", {font: "20px big_pixelmix", tint: 0xFFFF00});
-  this.barracksTitle.position.x = x;
+  this.barracksTitle.position.x = x + 2;
   this.barracksTitle.position.y = 16;
   this.panel.addChild(this.barracksTitle);
   
@@ -144,7 +144,7 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
     {
       x: x,
       y: 48,
-      width: this.panel.width - (x + 32),
+      width: this.panel.width - (x + 16),
       height: 206
     });
   this.panel.addChild(this.barracksPanel);

@@ -12,6 +12,7 @@ var BarracksPanelComponent = function(screen, options)
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.barracksGroup = this.groupSystem.barracksGroup;
   this.portraits = [];
+  this.scrollAmount = 58;
   
   this.panel = new PanelComponent({
     x: options.x,
@@ -24,6 +25,21 @@ var BarracksPanelComponent = function(screen, options)
   
   this.portraitContainer = new PIXI.DisplayObjectContainer();
   this.panel.addChild(this.portraitContainer);
+  
+  this.scrollbar = new ScrollbarComponent(
+    this.screen,
+    {
+      x: this.panel.width - 16,
+      y: 16,
+      height: this.panel.height - 32,
+      scrollAmount: this.scrollAmount,
+      maskX: 0,
+      maskY: 16,
+      maskWidth: this.panel.width - 32,
+      maskHeight: this.panel.height - 32,
+      component: this.portraitContainer
+    });
+  this.panel.addChild(this.scrollbar);
   
   this.buildCharacterIcons();
 };
@@ -45,8 +61,6 @@ BarracksPanelComponent.prototype.clearCharacterIcons = function()
   {
     this.portraitContainer.removeChild(this.portraits[i]);
   }
-  this.panel.removeChild(this.scrollbar);
-  this.scrollbar = null;
   this.portraits.length = 0;
 };
 
@@ -73,21 +87,6 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
   
   this.portraitContainer.minScrollY = totalContentHeight < containerHeight ? 0 : -totalContentHeight + containerHeight;
   this.portraitContainer.maxScrollY = 0;
-  
-  this.scrollbar = new ScrollbarComponent(
-    this.screen,
-    {
-      x: this.panel.width - 16,
-      y: 16,
-      height: this.panel.height - 32,
-      scrollAmount: spacingY,
-      maskX: 0,
-      maskY: 16,
-      maskWidth: this.panel.width - 32,
-      maskHeight: this.panel.height - 32,
-      component: this.portraitContainer
-    });
-  this.panel.addChild(this.scrollbar);
 };
 
 BarracksPanelComponent.prototype.update = function()

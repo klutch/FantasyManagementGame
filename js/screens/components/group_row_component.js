@@ -16,7 +16,6 @@ var GroupRowComponent = function(screen, groupId, options)
   this.group = this.groupSystem.getGroup(groupId);
   this.width = options.width;
   this.height = options.height;
-  this.hackyCounter = 0;
   this.enabled = true;
   this.selected = false;
   this.scrollbar = options.scrollbar;
@@ -147,11 +146,6 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
   var bottom = this.scrollbar.maskY + this.scrollbar.maskHeight;
   var isInCastle = this.group.featureId == this.worldSystem.world.playerCastleFeatureId;
   
-  if (this.hackyCounter < 1)
-  {
-    return;
-  }
-  
   if (!isInCastle && this.enabled)
   {
     this.disable();
@@ -173,16 +167,16 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
 
 GroupRowComponent.prototype.determineSelectionStatus = function()
 {
-  if (this.hackyCounter > 1)
+  if (this.enabled)
   {
     var isMouseInRect;
     var click = game.inputManager.singleLeftButton();
-    
+
     this.rectangle.x = this.worldTransform.tx;
     this.rectangle.y = this.worldTransform.ty;
-    
+
     isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y)
-    
+
     if (isMouseInRect && click && !this.selected)
     {
       this.screen.deselectGroupRow();
@@ -240,6 +234,4 @@ GroupRowComponent.prototype.update = function()
   
   this.renameButton.update();
   this.disbandButton.update();
-  
-  this.hackyCounter++;
 };
