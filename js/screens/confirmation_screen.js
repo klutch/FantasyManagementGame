@@ -1,9 +1,10 @@
-var ShopScreen = function()
+var ConfirmationScreen = function()
 {
-  this.type = ScreenType.Shop;
+  this.type = ScreenType.Confirmation;
   this.inputEnabled = true;
-  this.z = 40;
-  this.hirePanel = null;
+  this.z = 90;
+  this.confirmBox = null;
+  
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
   
@@ -17,31 +18,32 @@ var ShopScreen = function()
   this.background.alpha = 0.5;
 };
 
-ShopScreen.prototype.onAddScreen = function()
+ConfirmationScreen.prototype.onAddScreen = function()
 {
   game.stage.addChild(this.container);
+  game.stage.children.sort(depthCompare);
 };
 
-ShopScreen.prototype.onRemoveScreen = function()
+ConfirmationScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.container);
 };
 
-ShopScreen.prototype.openHirePanel = function(featureId)
+ConfirmationScreen.prototype.openConfirmation = function(confirmBox)
 {
-  this.hirePanel = new HireCharacterPanelComponent(this, featureId, {z: 1});
+  this.confirmBox = confirmBox;
   this.container.addChild(this.background);
-  this.container.addChild(this.hirePanel);
+  this.container.addChild(this.confirmBox);
+  this.container.children.sort(depthCompare);
 };
 
-ShopScreen.prototype.closeHirePanel = function()
+ConfirmationScreen.prototype.closeConfirmation = function()
 {
   this.container.removeChild(this.background);
-  this.container.removeChild(this.hirePanel);
-  this.hirePanel = null;
+  this.container.removeChild(this.confirmBox);
+  this.confirmBox = null;
 };
 
-ShopScreen.prototype.update = function()
+ConfirmationScreen.prototype.update = function()
 {
-  if (this.hirePanel != null) { this.hirePanel.update(); }
 };

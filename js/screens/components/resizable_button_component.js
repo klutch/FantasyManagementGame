@@ -236,7 +236,7 @@ ResizableButtonComponent.prototype.setEnabled = function(value)
 
 ResizableButtonComponent.prototype.update = function()
 {
-  if (this.enabled)
+  if (this.screen.inputEnabled && this.enabled)
   {
     var mousePosition = game.inputManager.mousePosition;
     var rectContainsMouse = false;

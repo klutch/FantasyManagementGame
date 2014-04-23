@@ -2,7 +2,7 @@ var GroupManagementScreen = function()
 {
   this.type = ScreenType.GroupManagement;
   this.inputEnabled = true;
-  this.z = 80;
+  this.z = 50;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.selectedGroupRow = null;
   
@@ -63,6 +63,27 @@ var GroupManagementScreen = function()
     });
   this.panel.addChild(this.createButton);
   
+  this.groupRows = [];
+  this.groupRowHeight = 92;
+  this.groupRowsContainer = new PIXI.DisplayObjectContainer();
+  this.groupRowsContainer.width = 500;
+  this.groupRowsContainer.height = (Math.floor(this.panel.height / this.groupRowHeight) - 1) * this.groupRowHeight;
+  this.groupRowsContainer.position.x = 16;
+  this.groupRowsContainer.position.y = 16;
+  
+  this.groupRowsScrollbar = new ScrollbarComponent(
+    this,
+    {
+      x: this.groupRowsContainer.width,
+      y: 32,
+      height: this.groupRowsContainer.height,
+      scrollAmount: this.groupRowHeight
+    });
+  
+  this.groupRowsScrollbar.attachComponent(this.groupRowsContainer, 16, 16, this.groupRowsContainer.width, this.groupRowsContainer.height);
+  this.panel.addChild(this.groupRowsContainer);
+  this.panel.addChild(this.groupRowsScrollbar);
+  
   this.buildGroupRows();
   
   this.buildBarracksPanel();
@@ -93,27 +114,29 @@ GroupManagementScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.container);
 };
 
+GroupManagementScreen.prototype.rebuildGroupRows = function()
+{
+  var currentTargetScrollY = this.groupRowsContainer.targetScrollY;
+  
+  this.clearGroupRows();
+  this.buildGroupRows();
+  
+  this.groupRowsScrollbar.setTargetScrollY(currentTargetScrollY);
+};
+
+GroupManagementScreen.prototype.clearGroupRows = function()
+{
+  for (var i = 0; i < this.groupRows.length; i++)
+  {
+    this.groupRowsContainer.removeChild(this.groupRows[i]);
+  }
+  
+  this.groupRows.length = 0;
+};
+
 GroupManagementScreen.prototype.buildGroupRows = function()
 {
-  var containerWidth = 500;
-  var groupRowHeight = 92;
-  var totalGroupRowHeight = 0;
-  var containerHeight = (Math.floor(this.panel.height / groupRowHeight) - 1) * groupRowHeight;
-  
-  this.groupRows = [];
-  this.groupRowsContainer = new PIXI.DisplayObjectContainer();
-  this.groupRowsContainer.width = containerWidth;
-  this.groupRowsContainer.position.x = 16;
-  this.groupRowsContainer.position.y = 16;
-  
-  this.scrollbar = new ScrollbarComponent(
-    this,
-    {
-      x: containerWidth,
-      y: 32,
-      height: containerHeight,
-      scrollAmount: groupRowHeight
-    });
+  var totalContentHeight = 0;
   
   _.each(this.groupSystem.getPlayerControlledGroups(), function(group)
     {
@@ -122,24 +145,20 @@ GroupManagementScreen.prototype.buildGroupRows = function()
         group.id,
         {
           x: 0,
-          y: this.groupRows.length * groupRowHeight,
-          width: containerWidth,
-          height: groupRowHeight,
-          scrollbar: this.scrollbar
+          y: this.groupRows.length * this.groupRowHeight,
+          width: this.groupRowsContainer.width,
+          height: this.groupRowHeight,
+          scrollbar: this.groupRowsScrollbar
         });
       this.groupRows.push(groupRow);
       this.groupRowsContainer.addChild(groupRow);
     },
     this);
   
-  totalGroupRowHeight = this.groupRows.length * groupRowHeight;
+  totalContentHeight = this.groupRows.length * this.groupRowHeight;
   
-  this.groupRowsContainer.minScrollY = totalGroupRowHeight < containerHeight ? 16 : -totalGroupRowHeight + containerHeight + 16;
+  this.groupRowsContainer.minScrollY = totalContentHeight < this.groupRowsContainer.height ? 16 : -totalContentHeight + this.groupRowsContainer.height + 16;
   this.groupRowsContainer.maxScrollY = 16;
-  
-  this.scrollbar.attachComponent(this.groupRowsContainer, 16, 16, containerWidth, containerHeight);
-  this.panel.addChild(this.groupRowsContainer);
-  this.panel.addChild(this.scrollbar);
 };
 
 GroupManagementScreen.prototype.buildBarracksPanel = function()
@@ -176,6 +195,13 @@ GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
   this.selectedGroupRow.setSelect(true);
 };
 
+GroupManagementScreen.prototype.disbandGroup = function(groupId)
+{
+  this.groupSystem.disbandGroup(groupId);
+  this.barracksPanel.rebuildPortraits();
+  this.rebuildGroupRows();
+};
+
 GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, characterId)
 {
   var groupRow = this.getGroupRowComponent(groupId);
@@ -200,7 +226,7 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
 
 GroupManagementScreen.prototype.update = function()
 {
-  this.scrollbar.update();
+  this.groupRowsScrollbar.update();
   this.barracksPanel.update();
   
   _.each(this.groupRows, function(groupRow)

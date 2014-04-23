@@ -2,7 +2,7 @@ var NotificationScreen = function()
 {
   this.type = ScreenType.Notification;
   this.inputEnabled = true;
-  this.z = 90;
+  this.z = 50;
   
   // Background
   this.background = PIXI.Sprite.fromImage(game.assetManager.paths.ui.black);

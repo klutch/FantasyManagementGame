@@ -4,7 +4,7 @@ var ViewOrdersScreen = function(groupId)
   
   this.type = ScreenType.ViewOrders;
   this.inputEnabled = true;
-  this.z = 90;
+  this.z = 20;
   this.groupId = groupId;
   this.orderSystem = game.systemManager.getSystem(SystemType.Order);
   this.orders = this.orderSystem.groupOrders[this.groupId];

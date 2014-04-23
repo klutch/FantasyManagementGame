@@ -92,6 +92,7 @@ GameEngine.prototype.startNewGame = function()
   this.screenManager.addScreen(new WorldMapScreen());
   this.screenManager.addScreen(new ShopScreen());
   this.screenManager.addScreen(new TooltipScreen());
+  this.screenManager.addScreen(new ConfirmationScreen());
   
   // Initialize systems
   this.systemManager.getSystem(SystemType.Equipment).initialize();

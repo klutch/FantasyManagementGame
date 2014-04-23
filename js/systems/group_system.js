@@ -218,6 +218,20 @@ GroupSystem.prototype.deleteGroup = function(groupId)
   delete this.groups[groupId];
 };
 
+GroupSystem.prototype.disbandGroup = function(groupId)
+{
+  var group = this.getGroup(groupId);
+  
+  // Move characters to barracks group
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    this.addCharacterToGroup(this.barracksGroup.id, group.characterIds[i]);
+  }
+  
+  // Delete group
+  this.deleteGroup(group.id);
+};
+
 GroupSystem.prototype.selectGroup = function(groupId)
 {
   var worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];

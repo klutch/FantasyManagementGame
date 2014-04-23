@@ -1,5 +1,7 @@
 var GroupRowComponent = function(screen, groupId, options)
 {
+  var root = this;
+  
   options = options || {};
   options.x = options.x || 0;
   options.y = options.y || 0;
@@ -13,6 +15,8 @@ var GroupRowComponent = function(screen, groupId, options)
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
+  this.groupId = groupId;
   this.group = this.groupSystem.getGroup(groupId);
   this.width = options.width;
   this.height = options.height;
@@ -61,7 +65,15 @@ var GroupRowComponent = function(screen, groupId, options)
       z: 1,
       width: 120,
       height: 28,
-      text: "Disband"
+      text: "Disband",
+      onClick: function(e)
+      {
+        if (root.screen.inputEnabled)
+        {
+          root.openDisbandConfirmBox();
+          game.inputManager.leftButtonHandled = true;
+        }
+      }
     });
   this.addChild(this.disbandButton);
   
@@ -82,6 +94,37 @@ var GroupRowComponent = function(screen, groupId, options)
 };
 
 GroupRowComponent.prototype = new PIXI.DisplayObjectContainer;
+
+GroupRowComponent.prototype.openDisbandConfirmBox = function()
+{
+  var root = this;
+  
+  this.screen.inputEnabled = false;
+  this.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
+    this.confirmationScreen,
+    "Are you sure you want to disband\nthis group?",
+    function()
+    {
+      root.screen.disbandGroup(root.groupId);
+      root.closeDisbandConfirmBox();
+    },
+    function()
+    {
+      root.closeDisbandConfirmBox();
+    },
+    {
+      x: Math.floor(game.containerWidth * 0.5),
+      y: Math.floor(game.containerHeight * 0.5),
+      z: 10
+    }));
+};
+
+GroupRowComponent.prototype.closeDisbandConfirmBox = function()
+{
+  this.confirmationScreen.closeConfirmation();
+  this.disbandConfirmBox = null;
+  this.screen.inputEnabled = true;
+};
 
 GroupRowComponent.prototype.rebuildPortraits = function()
 {
@@ -164,7 +207,7 @@ GroupRowComponent.prototype.determineEnabledStatus = function()
 
 GroupRowComponent.prototype.determineSelectionStatus = function()
 {
-  if (this.enabled)
+  if (this.screen.inputEnabled && this.enabled)
   {
     var isMouseInRect;
     var click = game.inputManager.singleLeftButton();
@@ -226,9 +269,9 @@ GroupRowComponent.prototype.update = function()
     this.portraits[i].update();
   }
   
-  this.determineSelectionStatus();
-  this.determineEnabledStatus();
-  
   this.renameButton.update();
   this.disbandButton.update();
+  
+  this.determineSelectionStatus();
+  this.determineEnabledStatus();
 };
