@@ -7,7 +7,7 @@ var TextfieldComponent = function(screen, options)
   options.y = options.y || Math.floor(game.containerHeight * 0.5);
   options.width = options.width || 80;
   options.height = options.height || 32;
-  options.defaultText = options.defaultText || "";
+  options.defaultValue = options.defaultValue || "";
   
   this.width = options.width;
   this.height = options.height;
@@ -15,7 +15,7 @@ var TextfieldComponent = function(screen, options)
   this.textInput.type = "text";
   this.textInput.name = "generic_text_input";
   this.textInput.id = "textfield_component";
-  this.textInput.value = options.defaultText;
+  this.textInput.value = options.defaultValue;
   this.textInput.style.position = "absolute";
   this.textInput.style.left = (options.centerX ? Math.floor(options.x - options.width * 0.5) : options.x).toString() + "px";
   this.textInput.style.top = (options.centerY ? Math.floor(options.y - options.height * 0.5) : options.y).toString() + "px";
@@ -40,6 +40,11 @@ TextfieldComponent.prototype.show = function()
 {
   document.getElementById("container").appendChild(this.textInput);
   this.textInput.focus();
+  
+  if (this.textInput.value.length > 0)
+  {
+    this.textInput.select();
+  }
 };
 
 TextfieldComponent.prototype.hide = function()

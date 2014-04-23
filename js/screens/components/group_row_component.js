@@ -16,7 +16,6 @@ var GroupRowComponent = function(screen, groupId, options)
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
-  this.groupId = groupId;
   this.group = this.groupSystem.getGroup(groupId);
   this.width = options.width;
   this.height = options.height;
@@ -53,7 +52,12 @@ var GroupRowComponent = function(screen, groupId, options)
       z: 1,
       width: 120,
       height: 28,
-      text: "Rename"
+      text: "Rename",
+      onClick: function(e)
+      {
+        root.openRenameConfirmBox();
+        game.inputManager.leftButtonHandled = true;
+      }
     });
   this.addChild(this.renameButton);
   
@@ -68,11 +72,8 @@ var GroupRowComponent = function(screen, groupId, options)
       text: "Disband",
       onClick: function(e)
       {
-        if (root.screen.inputEnabled)
-        {
-          root.openDisbandConfirmBox();
-          game.inputManager.leftButtonHandled = true;
-        }
+        root.openDisbandConfirmBox();
+        game.inputManager.leftButtonHandled = true;
       }
     });
   this.addChild(this.disbandButton);
@@ -106,11 +107,13 @@ GroupRowComponent.prototype.openDisbandConfirmBox = function()
     function()
     {
       root.screen.disbandGroup(root.groupId);
-      root.closeDisbandConfirmBox();
+      root.confirmationScreen.closeConfirmation();
+      root.screen.inputEnabled = true;
     },
     function()
     {
-      root.closeDisbandConfirmBox();
+      root.confirmationScreen.closeConfirmation();
+      root.screen.inputEnabled = true;
     },
     {
       x: Math.floor(game.containerWidth * 0.5),
@@ -119,11 +122,33 @@ GroupRowComponent.prototype.openDisbandConfirmBox = function()
     }));
 };
 
-GroupRowComponent.prototype.closeDisbandConfirmBox = function()
+GroupRowComponent.prototype.openRenameConfirmBox = function()
 {
-  this.confirmationScreen.closeConfirmation();
-  this.disbandConfirmBox = null;
-  this.screen.inputEnabled = true;
+  var root = this;
+  
+  this.screen.inputEnabled = false;
+  this.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
+    this.confirmationScreen,
+    "Rename group:",
+    function(text)
+    {
+      root.group.name = text;
+      root.title.setText(text);
+      root.confirmationScreen.closeConfirmation();
+      root.screen.inputEnabled = true;
+    },
+    function()
+    {
+      root.confirmationScreen.closeConfirmation();
+      root.screen.inputEnabled = true;
+    },
+    {
+      x: Math.floor(game.containerWidth * 0.5),
+      y: Math.floor(game.containerHeight * 0.5),
+      z: 10,
+      showTextfield: true,
+      defaultTextfieldValue: root.group.name
+    }));
 };
 
 GroupRowComponent.prototype.rebuildPortraits = function()

@@ -43,7 +43,8 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
         x: this.panel.x + 16,
         y: this.panel.y + root.bitmapText.textHeight + 32,
         width: this.panel.width - 40,
-        height: 32
+        height: 32,
+        defaultValue: options.defaultTextfieldValue
       });
     this.textfield.show();
   }
