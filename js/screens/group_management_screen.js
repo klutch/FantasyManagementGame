@@ -85,6 +85,7 @@ var GroupManagementScreen = function()
   this.panel.addChild(this.groupRowsScrollbar);
   
   this.buildGroupRows();
+  this.groupRowsScrollbar.setTargetScrollY(this.groupRowsContainer.maxScrollY);
   
   this.buildBarracksPanel();
   
