@@ -69,14 +69,9 @@ var GroupManagementScreen = function()
           "Name of new group",
           function(text)
           {
-            root.groupSystem.createGroup({
-              name: text.length == 0 ? "New Group" : text,
-              playerControlled: true,
-              featureId: root.worldSystem.world.playerCastleFeatureId
-            });
+            root.createGroup(text);
             root.inputEnabled = true;
             root.confirmationScreen.closeConfirmation();
-            root.rebuildGroupRows();
           },
           function()
           {
@@ -224,6 +219,19 @@ GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
 {
   this.selectedGroupRow = groupRow;
   this.selectedGroupRow.setSelect(true);
+};
+
+GroupManagementScreen.prototype.createGroup = function(text)
+{
+  var worldScreen = game.screenManager.screens[ScreenType.WorldMap];
+  var group = this.groupSystem.createGroup({
+    name: text.length == 0 ? "New Group" : text,
+    playerControlled: true,
+    featureId: this.worldSystem.world.playerCastleFeatureId
+  });
+  
+  worldScreen.groupMenu.addGroup(group.id);
+  this.rebuildGroupRows();
 };
 
 GroupManagementScreen.prototype.disbandGroup = function(groupId)

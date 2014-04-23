@@ -1315,6 +1315,7 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
     }
     else
     {
+      console.trace();
         throw new Error('Supplied index does not exist in the child list, or the supplied DisplayObject must be a child of the caller');
     }
 };
