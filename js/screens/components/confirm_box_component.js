@@ -99,3 +99,23 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
 };
 
 ConfirmBoxComponent.prototype = new PIXI.DisplayObjectContainer;
+
+ConfirmBoxComponent.prototype.update = function()
+{
+  if (this.textfield != null)
+  {
+    if (this.okayButton.enabled && this.textfield.getText().length == 0)
+    {
+      this.okayButton.setEnabled(false);
+    }
+    else if (!this.okayButton.enabled && this.textfield.getText().length > 0)
+    {
+      this.okayButton.setEnabled(true);
+    }
+    
+    if (this.okayButton.enabled && this.textfield.submitted)
+    {
+      this.okayButton.onClick(this.textfield.getText());
+    }
+  }
+};

@@ -46,4 +46,8 @@ ConfirmationScreen.prototype.closeConfirmation = function()
 
 ConfirmationScreen.prototype.update = function()
 {
+  if (this.confirmBox != null)
+  {
+    this.confirmBox.update();
+  }
 };
