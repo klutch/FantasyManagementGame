@@ -117,10 +117,7 @@ GroupRowComponent.prototype.buildPortraits = function()
         {
           if (this.enabled)
           {
-            root.groupSystem.removeCharacterFromGroup(root.groupId, this.characterId);
-            root.groupSystem.addCharacterToGroup(root.groupSystem.barracksGroup.id, this.characterId);
-            root.screen.barracksPanel.rebuildPortraits();
-            root.rebuildPortraits();
+            root.screen.moveCharacterToBarracks(root.groupId, this.characterId);
           }
         }
       });

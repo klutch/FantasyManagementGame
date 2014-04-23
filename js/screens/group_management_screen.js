@@ -70,6 +70,18 @@ var GroupManagementScreen = function()
   this.container.children.sort(depthCompare);
 };
 
+GroupManagementScreen.prototype.getGroupRowComponent = function(groupId)
+{
+  for (var i = 0; i < this.groupRows.length; i++)
+  {
+    if (this.groupRows[i].groupId == groupId)
+    {
+      return this.groupRows[i];
+    }
+  }
+  return null;
+};
+
 GroupManagementScreen.prototype.onAddScreen = function()
 {
   game.stage.addChild(this.container);
@@ -162,6 +174,26 @@ GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
 {
   this.selectedGroupRow = groupRow;
   this.selectedGroupRow.setSelect(true);
+};
+
+GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, characterId)
+{
+  var groupRow = this.getGroupRowComponent(groupId);
+  
+  this.groupSystem.removeCharacterFromGroup(groupId, characterId);
+  this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
+  this.barracksPanel.rebuildPortraits();
+  groupRow.rebuildPortraits();
+};
+
+GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, characterId)
+{
+  var groupRow = this.getGroupRowComponent(groupId);
+  
+  this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, characterId);
+  this.groupSystem.addCharacterToGroup(groupId, characterId);
+  this.barracksPanel.rebuildPortraits();
+  groupRow.rebuildPortraits();
 };
 
 GroupManagementScreen.prototype.update = function()

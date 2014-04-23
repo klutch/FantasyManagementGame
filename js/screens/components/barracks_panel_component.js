@@ -66,6 +66,7 @@ BarracksPanelComponent.prototype.clearCharacterIcons = function()
 
 BarracksPanelComponent.prototype.buildCharacterIcons = function()
 {
+  var root = this;
   var spacingX = 40;
   var spacingY = 58;
   var containerWidth = this.panel.width - 32;
@@ -77,7 +78,28 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
   {
     var x = 16 + Math.floor(i % numRowX) * spacingX;
     var y = 16 + Math.floor(i / numRowX) * spacingY;
-    var portrait = new PortraitComponent(this.barracksGroup.characterIds[i], {x: x, y: y});
+    var portrait = new PortraitComponent(
+      this.barracksGroup.characterIds[i],
+      {
+        x: x,
+        y: y,
+        onClick: function(e)
+        {
+          if (this.enabled)
+          {
+            if (root.screen.selectedGroupRow != null)
+            {
+              var group = root.groupSystem.getGroup(root.screen.selectedGroupRow.groupId);
+              
+              console.log(group.capacity);
+              if (group.characterIds.length < group.capacity)
+              {
+                root.screen.moveCharacterToGroup(group.id, this.characterId);
+              }
+            }
+          }
+        }
+      });
         
     this.portraitContainer.addChild(portrait);
     this.portraits.push(portrait);
@@ -92,4 +114,9 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
 BarracksPanelComponent.prototype.update = function()
 {
   this.scrollbar.update();
+  
+  for (var i = 0; i < this.portraits.length; i++)
+  {
+    this.portraits[i].update();
+  }
 };

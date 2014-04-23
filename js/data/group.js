@@ -17,6 +17,7 @@ var Group = function(id, options)
   this.name = options.name;
   this.movementUsed = 0;
   this.playerControlled = options.playerControlled;
+  this.capacity = options.capacity;
   
   if (this.featureId != -1)
   {
