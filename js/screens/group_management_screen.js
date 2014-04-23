@@ -114,6 +114,10 @@ var GroupManagementScreen = function()
   
   this.buildBarracksPanel();
   
+  this.buildGroupInventoryPanel();
+  
+  this.buildCharacterInventoryPanel();
+  
   this.container.children.sort(depthCompare);
 };
 
@@ -205,6 +209,47 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
       height: 206
     });
   this.panel.addChild(this.barracksPanel);
+};
+
+GroupManagementScreen.prototype.buildGroupInventoryPanel = function()
+{
+  var y = this.barracksPanel.panel.y + this.barracksPanel.panel.height + 48;
+  
+  this.groupTitle = new PIXI.BitmapText("Group Inventory", {font: "20px big_pixelmix", tint: 0xFFFF00});
+  this.groupTitle.position.x = this.groupRowsContainer.width + 18;
+  this.groupTitle.position.y = y - 32;
+  this.panel.addChild(this.groupTitle);
+  
+  this.groupInventoryPanel = new GroupInventoryPanelComponent(
+    this,
+    {
+      x: this.barracksPanel.panel.x,
+      y: y,
+      width: 320,
+      height: this.panel.height - (y + 70)
+    });
+  this.panel.addChild(this.groupInventoryPanel);
+};
+
+GroupManagementScreen.prototype.buildCharacterInventoryPanel = function()
+{
+  var x = this.groupInventoryPanel.panel.x + this.groupInventoryPanel.panel.width + 16;
+  var y = this.groupInventoryPanel.panel.y;
+  
+  this.characterTitle = new PIXI.BitmapText("Character Inventory", {font: "20px big_pixelmix", tint: 0xFFFF00});
+  this.characterTitle.position.x = x + 2;
+  this.characterTitle.position.y = y - 32;
+  this.panel.addChild(this.characterTitle);
+  
+  this.characterInventoryPanel = new CharacterInventoryPanelComponent(
+    this,
+    {
+      x: x,
+      y: y,
+      width: this.panel.width - (this.groupInventoryPanel.panel.x + this.groupInventoryPanel.panel.width + 32),
+      height: this.groupInventoryPanel.panel.height
+    });
+  this.panel.addChild(this.characterInventoryPanel);
 };
 
 GroupManagementScreen.prototype.deselectGroupRow = function()
