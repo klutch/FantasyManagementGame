@@ -1,9 +1,13 @@
 var GroupManagementScreen = function()
 {
+  var root = this;
+  
   this.type = ScreenType.GroupManagement;
   this.inputEnabled = true;
   this.z = 50;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
   this.selectedGroupRow = null;
   
   this.container = new PIXI.DisplayObjectContainer();
@@ -59,6 +63,32 @@ var GroupManagementScreen = function()
       hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
       onClick: function(e)
       {
+        root.inputEnabled = false;
+        root.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
+          root.confirmationScreen,
+          "Name of new group",
+          function(text)
+          {
+            root.groupSystem.createGroup({
+              name: text.length == 0 ? "New Group" : text,
+              playerControlled: true,
+              featureId: root.worldSystem.world.playerCastleFeatureId
+            });
+            root.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+            root.rebuildGroupRows();
+          },
+          function()
+          {
+            root.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          {
+            x: Math.floor(game.containerWidth * 0.5),
+            y: Math.floor(game.containerHeight * 0.5),
+            z: 10,
+            showTextfield: true
+          }));
       }
     });
   this.panel.addChild(this.createButton);
