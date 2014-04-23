@@ -71,7 +71,7 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
   var spacingY = 58;
   var containerWidth = this.panel.width - 32;
   var containerHeight = this.panel.height - 32;
-  var numRowX = Math.floor(containerWidth / spacingX);
+  var numRowX = Math.ceil(containerWidth / spacingX) - 2;
   var totalContentHeight = 0;
   
   for (var i = 0; i < this.barracksGroup.characterIds.length; i++)
