@@ -91,7 +91,6 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
             {
               var group = root.groupSystem.getGroup(root.screen.selectedGroupRow.groupId);
               
-              console.log(group.capacity);
               if (group.characterIds.length < group.capacity)
               {
                 root.screen.moveCharacterToGroup(group.id, this.characterId);
