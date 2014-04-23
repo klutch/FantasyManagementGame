@@ -139,8 +139,8 @@ GroupRowComponent.prototype.rebuildStatText = function()
 
 GroupRowComponent.prototype.determineEnabledStatus = function()
 {
-  var top = this.scrollbar.maskY;
-  var bottom = this.scrollbar.maskY + this.scrollbar.maskHeight;
+  var top = this.scrollbar.worldTransform.ty + this.scrollbar.maskY - this.height * 0.5;
+  var bottom = top + this.scrollbar.maskHeight;
   var isInCastle = this.group.featureId == this.worldSystem.world.playerCastleFeatureId;
   
   if (!isInCastle && this.enabled)

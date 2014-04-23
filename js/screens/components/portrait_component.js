@@ -16,7 +16,6 @@ var PortraitComponent = function(characterId, options)
   this.position.x = options.x;
   this.position.y = options.y;
   this.z = options.z;
-  this.hackyCounter = 0;
   this.normalTint = options.normalTint;
   this.disabledTint = options.disabledTint;
   this.onClick = options.onClick;
@@ -25,7 +24,10 @@ var PortraitComponent = function(characterId, options)
   this.portraitSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits[this.character.type]);
   this.addChild(this.portraitSprite);
   
-  this.rectangle = new PIXI.Rectangle(0, 0, this.portraitSprite.width, this.portraitSprite.height);
+  this.width = this.portraitSprite.width;
+  this.height = this.portraitSprite.height;
+  
+  this.rectangle = new PIXI.Rectangle(0, 0, this.width, this.height);
   
   this.setEnabled(options.enabled);
 };
@@ -53,15 +55,15 @@ PortraitComponent.prototype.onMouseOut = function()
 
 PortraitComponent.prototype.update = function()
 {
-  if (this.hackyCounter > 1)
+  if (this.enabled)
   {
     var isMouseInRect;
-    
+
     this.rectangle.x = this.worldTransform.tx;
     this.rectangle.y = this.worldTransform.ty;
-    
+
     isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
-    
+
     if (!this.isMouseOver && isMouseInRect)
     {
       this.onMouseOver();
@@ -70,13 +72,11 @@ PortraitComponent.prototype.update = function()
     {
       this.onMouseOut();
     }
-    
+
     if (isMouseInRect && game.inputManager.singleLeftButton())
     {
       game.inputManager.leftButtonHandled = true;
       this.onClick();
     }
   }
-  
-  this.hackyCounter++;
 };

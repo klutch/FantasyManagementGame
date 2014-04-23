@@ -110,12 +110,32 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
   this.portraitContainer.maxScrollY = 0;
 };
 
+BarracksPanelComponent.prototype.determinePortraitEnabledStatus = function(portrait)
+{
+  var top = this.scrollbar.worldTransform.ty + this.scrollbar.maskY - portrait.height * 0.5;
+  var bottom = top + this.scrollbar.maskHeight;
+  
+  if (portrait.worldTransform.ty < top && portrait.enabled)
+  {
+    portrait.setEnabled(false);
+  }
+  else if (portrait.worldTransform.ty > bottom && portrait.enabled)
+  {
+    portrait.setEnabled(false);
+  }
+  else if (portrait.worldTransform.ty < bottom && portrait.worldTransform.ty > top && !portrait.enabled)
+  {
+    portrait.setEnabled(true);
+  }
+};
+
 BarracksPanelComponent.prototype.update = function()
 {
   this.scrollbar.update();
   
   for (var i = 0; i < this.portraits.length; i++)
   {
+    this.determinePortraitEnabledStatus(this.portraits[i]);
     this.portraits[i].update();
   }
 };
