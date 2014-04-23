@@ -8,6 +8,7 @@ var EquipmentSystem = function()
 EquipmentSystem.prototype.initialize = function()
 {
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
 };
 
 EquipmentSystem.prototype.getUnusedItemId = function()
@@ -68,6 +69,24 @@ EquipmentSystem.prototype.getFirstEmptySlotIndex = function(characterId, slotTyp
   }
 };
 
+EquipmentSystem.prototype.getGroupInventory = function(groupId)
+{
+  var itemIds = [];
+  var group = this.groupSystem.getGroup(groupId);
+  
+  for (var i = 0; i < group.characterIds.length; i++)
+  {
+    var character = this.characterSystem.getCharacter(group.characterIds[i]);
+    
+    for (var j = 0; j < character.inventoryItemIds.length; j++)
+    {
+      itemIds.push(character.inventoryItemIds[j]);
+    }
+  }
+  
+  return itemIds;
+};
+
 EquipmentSystem.prototype.addItem = function(item)
 {
   this.items[item.id] = item;
@@ -76,14 +95,6 @@ EquipmentSystem.prototype.addItem = function(item)
 EquipmentSystem.prototype.removeItem = function(itemId)
 {
   delete this.items[itemId];
-};
-
-EquipmentSystem.prototype.createInventory = function()
-{
-  var inventory = new Inventory(this.getUnusedInventoryId());
-  
-  this.inventories[inventory.id] = inventory;
-  return inventory;
 };
 
 EquipmentSystem.prototype.createEquipmentSlot = function(characterId, type)

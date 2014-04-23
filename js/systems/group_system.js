@@ -13,6 +13,7 @@ GroupSystem.prototype.initialize = function()
   
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
+  this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
   
   startingGroup = this.createGroup({name: "Starting Group", featureId: this.worldSystem.world.playerCastleFeatureId});
   worldMapScreen = game.screenManager.screens[ScreenType.WorldMap];
@@ -45,6 +46,14 @@ GroupSystem.prototype.initialize = function()
     this.addCharacterToGroup(group.id, CharacterFactory.createKnight(10).id);
     this.addCharacterToGroup(group.id, CharacterFactory.createHealer(10).id);
     worldMapScreen.groupMenu.addGroup(group.id);
+    
+    // Give characters an item
+    for (var j = 0; j < group.characterIds.length; j++)
+    {
+      var item = ItemFactory.createLeatherHat();
+      this.equipmentSystem.addItem(item);
+      this.equipmentSystem.addItemToInventory(item.id, group.characterIds[j]);
+    }
   }
   
   // Temporary characters in barracks

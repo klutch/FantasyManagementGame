@@ -367,6 +367,10 @@ var AssetManager = function()
   this.paths.ui.portraits[CharacterType.Knight] = ["img/ui/portraits/knight.png"];
   this.paths.ui.portraits[CharacterType.Healer] = ["img/ui/portraits/healer.png"];
   this.paths.ui.portraits.empty = ["img/ui/portraits/empty.png"];
+  
+  // Items
+  this.paths.items = {};
+  this.paths.items[ItemSpriteType.Default] = ["img/items/default.png"];
 };
 
 AssetManager.prototype.preload = function(onComplete)

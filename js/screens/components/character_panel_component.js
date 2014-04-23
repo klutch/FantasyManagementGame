@@ -1,4 +1,4 @@
-var CharacterInventoryPanelComponent = function(screen, options)
+var CharacterPanelComponent = function(screen, options)
 {
   var root = this;
   
@@ -22,4 +22,4 @@ var CharacterInventoryPanelComponent = function(screen, options)
   this.addChild(this.panel);
 };
 
-CharacterInventoryPanelComponent.prototype = new PIXI.DisplayObjectContainer;
+CharacterPanelComponent.prototype = new PIXI.DisplayObjectContainer;

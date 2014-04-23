@@ -1,3 +1,7 @@
+var ItemSpriteType = Object.freeze({
+  Default: 0
+});
+
 var Item = function(id, options)
 {
   options = options || {};
@@ -6,6 +10,7 @@ var Item = function(id, options)
   options.support = options.support || 0;
   options.movementBonus = options.movementBonus || 0;
   options.isEquippable = options.isEquippable || false;
+  options.spriteType = options.spriteType || ItemSpriteType.Default;
   
   for (var key in options)
   {

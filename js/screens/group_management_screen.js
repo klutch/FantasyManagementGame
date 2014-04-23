@@ -116,7 +116,7 @@ var GroupManagementScreen = function()
   
   this.buildGroupInventoryPanel();
   
-  this.buildCharacterInventoryPanel();
+  this.buildCharacterPanel();
   
   this.container.children.sort(depthCompare);
 };
@@ -231,17 +231,17 @@ GroupManagementScreen.prototype.buildGroupInventoryPanel = function()
   this.panel.addChild(this.groupInventoryPanel);
 };
 
-GroupManagementScreen.prototype.buildCharacterInventoryPanel = function()
+GroupManagementScreen.prototype.buildCharacterPanel = function()
 {
   var x = this.groupInventoryPanel.panel.x + this.groupInventoryPanel.panel.width + 16;
   var y = this.groupInventoryPanel.panel.y;
   
-  this.characterTitle = new PIXI.BitmapText("Character Inventory", {font: "20px big_pixelmix", tint: 0xFFFF00});
+  this.characterTitle = new PIXI.BitmapText("Character", {font: "20px big_pixelmix", tint: 0xFFFF00});
   this.characterTitle.position.x = x + 2;
   this.characterTitle.position.y = y - 32;
   this.panel.addChild(this.characterTitle);
   
-  this.characterInventoryPanel = new CharacterInventoryPanelComponent(
+  this.characterPanel = new CharacterPanelComponent(
     this,
     {
       x: x,
@@ -249,7 +249,7 @@ GroupManagementScreen.prototype.buildCharacterInventoryPanel = function()
       width: this.panel.width - (this.groupInventoryPanel.panel.x + this.groupInventoryPanel.panel.width + 32),
       height: this.groupInventoryPanel.panel.height
     });
-  this.panel.addChild(this.characterInventoryPanel);
+  this.panel.addChild(this.characterPanel);
 };
 
 GroupManagementScreen.prototype.deselectGroupRow = function()
@@ -264,6 +264,7 @@ GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
 {
   this.selectedGroupRow = groupRow;
   this.selectedGroupRow.setSelect(true);
+  this.groupInventoryPanel.select(groupRow.groupId);
 };
 
 GroupManagementScreen.prototype.createGroup = function(text)
@@ -312,6 +313,7 @@ GroupManagementScreen.prototype.update = function()
 {
   this.groupRowsScrollbar.update();
   this.barracksPanel.update();
+  this.groupInventoryPanel.update();
   
   _.each(this.groupRows, function(groupRow)
     {
