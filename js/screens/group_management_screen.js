@@ -184,6 +184,7 @@ GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, char
   this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
   this.barracksPanel.rebuildPortraits();
   groupRow.rebuildPortraits();
+  groupRow.rebuildStatText();
 };
 
 GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, characterId)
@@ -194,6 +195,7 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   this.groupSystem.addCharacterToGroup(groupId, characterId);
   this.barracksPanel.rebuildPortraits();
   groupRow.rebuildPortraits();
+  groupRow.rebuildStatText();
 };
 
 GroupManagementScreen.prototype.update = function()
