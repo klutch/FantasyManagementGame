@@ -11,10 +11,11 @@ var DwellingVisitComponent = function(screen, event, groupId, featureId)
   this.loyaltySystem = game.systemManager.getSystem(SystemType.Loyalty);
   this.combatSystem = game.systemManager.getSystem(SystemType.Combat);
   this.gameEventSystem = game.systemManager.getSystem(SystemType.GameEvent);
+  this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
+  this.worldScreen = game.screenManager.screens[ScreenType.WorldMap];
   this.feature = this.worldSystem.getFeature(this.featureId);
   this.z = 1;
   this.buttons = [];
-  this.inputEnabled = true;
   this.confirmBox = null;
   
   // Panel
@@ -93,10 +94,7 @@ DwellingVisitComponent.prototype.buildButtons = function()
         centerY: true,
         onClick: function(e) 
         {
-          if (root.inputEnabled)
-          {
-            root.close();
-          }
+          root.close();
         }
       });
     this.panel.addChild(doneButton);
@@ -120,32 +118,34 @@ DwellingVisitComponent.prototype.buildButtons = function()
           centerY: true,
           onClick: function(e) 
           {
-            if (root.inputEnabled)
-            {
-              root.confirmBox = new ConfirmBoxComponent(
-                root.screen,
-                "Give a gift of " + root.feature.giftAmountRequired + " " + root.feature.giftResourceType + "?",
-                function()
-                {
-                  // Okay (can only be called if the player has enough of the resource)
-                  root.resourceSystem.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
-                  root.loyaltySystem.makeLoyal(root.feature.id);
-                  root.removeChild(root.confirmBox);
-                  root.close();
-                },
-                function()
-                {
-                  // Cancel
-                  root.removeChild(root.confirmBox);
-                  root.inputEnabled = true;
-                },
-                {
-                  x: Math.floor(game.containerWidth * 0.5),
-                  y: Math.floor(game.containerHeight * 0.5)
-                });
-              root.addChild(root.confirmBox);
-              root.inputEnabled = false;
-            }
+            root.screen.inputEnabled = false;
+            root.worldScreen.inputEnabled = false;
+            root.confirmBox = new ConfirmBoxComponent(
+              root.confirmationScreen,
+              "Give a gift of " + root.feature.giftAmountRequired + " " + root.feature.giftResourceType + "?",
+              function()
+              {
+                // Okay (can only be called if the player has enough of the resource)
+                root.resourceSystem.decreaseQuantity(root.feature.giftResourceType, root.feature.giftAmountRequired);
+                root.loyaltySystem.makeLoyal(root.feature.id);
+                root.confirmationScreen.closeConfirmation();
+                root.screen.inputEnabled = true;
+                root.worldScreen.inputEnabled = true;
+                root.close();
+              },
+              function()
+              {
+                // Cancel
+                root.confirmationScreen.closeConfirmation();
+                root.screen.inputEnabled = true;
+                root.worldScreen.inputEnabled = true;
+              },
+              {
+                x: Math.floor(game.containerWidth * 0.5),
+                y: Math.floor(game.containerHeight * 0.5),
+                z: 10
+              });
+            root.confirmationScreen.openConfirmation(root.confirmBox);
           }
         });
       this.panel.addChild(giftButton);
@@ -165,23 +165,20 @@ DwellingVisitComponent.prototype.buildButtons = function()
         centerY: true,
         onClick: function(e) 
         {
-          if (root.inputEnabled)
+          if (root.combatSystem.doesAttackerWin(root.groupId, root.feature.defenderGroupId))
           {
-            if (root.combatSystem.doesAttackerWin(root.groupId, root.feature.defenderGroupId))
-            {
-              root.gameEventSystem.insertGameEventAfter(
-                root.event.getIndex(),
-                GameEventFactory.createSubjugationVictoryEvent(root.groupId, root.featureId));
-              root.loyaltySystem.makeLoyal(root.featureId);
-            }
-            else
-            {
-              root.gameEventSystem.insertGameEventAfter(
-                root.event.getIndex(),
-                GameEventFactory.createSubjugationDefeatEvent(root.groupId, root.featureId));
-            }
-            root.close();
+            root.gameEventSystem.insertGameEventAfter(
+              root.event.getIndex(),
+              GameEventFactory.createSubjugationVictoryEvent(root.groupId, root.featureId));
+            root.loyaltySystem.makeLoyal(root.featureId);
           }
+          else
+          {
+            root.gameEventSystem.insertGameEventAfter(
+              root.event.getIndex(),
+              GameEventFactory.createSubjugationDefeatEvent(root.groupId, root.featureId));
+          }
+          root.close();
         }
       });
     this.panel.addChild(subjugateButton);
@@ -203,10 +200,7 @@ DwellingVisitComponent.prototype.buildButtons = function()
         centerY: true,
         onClick: function(e) 
         {
-          if (root.inputEnabled)
-          {
-            root.close();
-          }
+          root.close();
         }
       });
     this.panel.addChild(leaveButton);
