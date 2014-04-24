@@ -32,14 +32,9 @@ var GroupManagementScreen = function()
   this.container.addChild(this.panel);
   
   this.buildBottomButtons();
-  
   this.buildBarracksPanel();
-  
   this.buildGroupRowsContainer();
-  
-  //this.buildGroupInventoryPanel();
-  
-  //this.buildCharacterPanel();
+  this.buildGroupOverview();
   
   this.container.children.sort(depthCompare);
 };
@@ -147,7 +142,6 @@ GroupManagementScreen.prototype.buildGroupRowsContainer = function()
   this.groupRowHeight = 92;
   this.groupRowsContainer = new PIXI.DisplayObjectContainer();
   this.groupRowsContainer.width = 360;
-  //this.groupRowsContainer.height = (Math.floor((this.panel.height - 80) / this.groupRowHeight)) * this.groupRowHeight;
   this.groupRowsContainer.height = this.panel.height - 32;
   this.groupRowsContainer.position.x = this.barracksPanel.panel.width + 32;
   this.groupRowsContainer.position.y = 16;
@@ -167,6 +161,21 @@ GroupManagementScreen.prototype.buildGroupRowsContainer = function()
   
   this.buildGroupRows();
   this.groupRowsScrollbar.setTargetScrollY(this.groupRowsContainer.maxScrollY);
+};
+
+GroupManagementScreen.prototype.buildGroupOverview = function()
+{
+  var x = this.groupRowsContainer.position.x + this.groupRowsContainer.width + 16;
+  
+  this.groupOverview = new GroupOverviewComponent(
+    this,
+    {
+      x: x,
+      y: 16,
+      width: this.panel.width - (x + 16),
+      height: this.panel.height - 32
+    });
+  this.panel.addChild(this.groupOverview);
 };
 
 GroupManagementScreen.prototype.rebuildGroupRows = function()
@@ -223,53 +232,10 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   this.groupRowsContainer.maxScrollY = 16;
 };
 
-/*
-GroupManagementScreen.prototype.buildGroupInventoryPanel = function()
-{
-  var y = this.barracksPanel.panel.y + this.barracksPanel.panel.height + 48;
-  
-  this.groupTitle = new PIXI.BitmapText("Group Inventory", {font: "20px big_pixelmix", tint: 0xFFFF00});
-  this.groupTitle.position.x = this.groupRowsContainer.width + 18;
-  this.groupTitle.position.y = y - 32;
-  this.panel.addChild(this.groupTitle);
-  
-  this.groupInventoryPanel = new GroupInventoryPanelComponent(
-    this,
-    {
-      x: this.barracksPanel.panel.x,
-      y: y,
-      width: 320,
-      height: this.panel.height - (y + 70)
-    });
-  this.panel.addChild(this.groupInventoryPanel);
-};
-
-GroupManagementScreen.prototype.buildCharacterPanel = function()
-{
-  var x = this.groupInventoryPanel.panel.x + this.groupInventoryPanel.panel.width + 16;
-  var y = this.groupInventoryPanel.panel.y;
-  
-  this.characterTitle = new PIXI.BitmapText("Character", {font: "20px big_pixelmix", tint: 0xFFFF00});
-  this.characterTitle.position.x = x + 2;
-  this.characterTitle.position.y = y - 32;
-  this.panel.addChild(this.characterTitle);
-  
-  this.characterPanel = new CharacterPanelComponent(
-    this,
-    {
-      x: x,
-      y: y,
-      width: this.panel.width - (this.groupInventoryPanel.panel.x + this.groupInventoryPanel.panel.width + 32),
-      height: this.groupInventoryPanel.panel.height
-    });
-  this.panel.addChild(this.characterPanel);
-};*/
-
 GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
 {
   this.selectedGroupRow = groupRow;
   this.selectedGroupRow.setSelect(true);
-  //this.groupInventoryPanel.selectGroup(groupRow.groupId);
 };
 
 GroupManagementScreen.prototype.deselectGroupRow = function()
@@ -280,11 +246,6 @@ GroupManagementScreen.prototype.deselectGroupRow = function()
     
     this.selectedGroupRow.setSelect(false);
     this.selectedGroupRow = null;
-    
-    /*if (groupId == this.groupInventoryPanel.groupId)
-    {
-      this.groupInventoryPanel.deselectGroup();
-    }*/
   }
 };
 
@@ -320,7 +281,6 @@ GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, char
   this.groupSystem.removeCharacterFromGroup(groupId, characterId);
   this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
   this.barracksPanel.rebuildPortraits();
-  //this.groupInventoryPanel.rebuildGroupInventory();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -332,7 +292,6 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, characterId);
   this.groupSystem.addCharacterToGroup(groupId, characterId);
   this.barracksPanel.rebuildPortraits();
-  //this.groupInventoryPanel.rebuildGroupInventory();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -343,7 +302,6 @@ GroupManagementScreen.prototype.update = function()
   this.barracksPanel.update();
   this.createButton.update();
   this.doneButton.update();
-  //this.groupInventoryPanel.update();
   
   _.each(this.groupRows, function(groupRow)
     {
