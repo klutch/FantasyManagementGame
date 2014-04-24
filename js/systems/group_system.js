@@ -286,7 +286,7 @@ GroupSystem.prototype.getGroupTile = function(groupId)
 
 GroupSystem.prototype.getGroupMovementAbility = function(groupId)
 {
-  var group = this.groups[groupId];
+  var group = this.getGroup(groupId);
   var lowestMovementAbility = 999;
   
   for (var i = 0; i < group.characterIds.length; i++)

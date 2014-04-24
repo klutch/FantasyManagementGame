@@ -36,6 +36,8 @@ var GroupManagementScreen = function()
   this.buildGroupRowsContainer();
   this.buildGroupOverview();
   
+  this.selectGroupRow(this.groupRows[0].groupId);
+  
   this.container.children.sort(depthCompare);
 };
 
@@ -223,11 +225,6 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   
   this.groupRowsContainer.minScrollY = totalContentHeight < this.groupRowsContainer.height ? 16 : -totalContentHeight + this.groupRowsContainer.height + 16;
   this.groupRowsContainer.maxScrollY = 16;
-  
-  if (this.selectedGroupId == -1)
-  {
-    this.selectGroupRow(this.groupRows[0].groupId);
-  }
 };
 
 GroupManagementScreen.prototype.selectGroupRow = function(groupId)
@@ -239,6 +236,7 @@ GroupManagementScreen.prototype.selectGroupRow = function(groupId)
   
   this.getGroupRow(groupId).setSelect(true);
   this.selectedGroupId = groupId;
+  this.groupOverview.selectGroup(groupId);
 };
 
 GroupManagementScreen.prototype.createGroup = function(text)
