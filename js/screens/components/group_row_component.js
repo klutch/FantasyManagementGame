@@ -244,8 +244,7 @@ GroupRowComponent.prototype.determineSelectionStatus = function()
 
     if (isMouseInRect && click && !this.selected)
     {
-      this.screen.deselectGroupRow();
-      this.screen.selectGroupRow(this);
+      this.screen.selectGroupRow(this.groupId);
     }
   }
 };

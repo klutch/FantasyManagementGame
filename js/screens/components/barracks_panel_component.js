@@ -87,14 +87,11 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
         {
           if (this.enabled)
           {
-            if (root.screen.selectedGroupRow != null)
+            var group = root.groupSystem.getGroup(root.screen.selectedGroupId);
+
+            if (group.characterIds.length < group.capacity)
             {
-              var group = root.groupSystem.getGroup(root.screen.selectedGroupRow.groupId);
-              
-              if (group.characterIds.length < group.capacity)
-              {
-                root.screen.moveCharacterToGroup(group.id, this.characterId);
-              }
+              root.screen.moveCharacterToGroup(group.id, this.characterId);
             }
           }
         }

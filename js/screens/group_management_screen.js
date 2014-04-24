@@ -8,7 +8,7 @@ var GroupManagementScreen = function()
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
-  this.selectedGroupRow = null;
+  this.selectedGroupId = -1;
   
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
@@ -39,7 +39,7 @@ var GroupManagementScreen = function()
   this.container.children.sort(depthCompare);
 };
 
-GroupManagementScreen.prototype.getGroupRowComponent = function(groupId)
+GroupManagementScreen.prototype.getGroupRow = function(groupId)
 {
   for (var i = 0; i < this.groupRows.length; i++)
   {
@@ -181,16 +181,9 @@ GroupManagementScreen.prototype.buildGroupOverview = function()
 GroupManagementScreen.prototype.rebuildGroupRows = function()
 {
   var currentTargetScrollY = this.groupRowsContainer.targetScrollY;
-  var selectedGroupId = this.selectedGroupRow == null ? -1 : this.selectedGroupRow.groupId;
   
-  this.deselectGroupRow();
   this.clearGroupRows();
   this.buildGroupRows();
-  
-  if (selectedGroupId != -1)
-  {
-    this.selectGroupRow(this.getGroupRowComponent(selectedGroupId));
-  }
   
   this.groupRowsScrollbar.setTargetScrollY(currentTargetScrollY);
 };
@@ -230,23 +223,22 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   
   this.groupRowsContainer.minScrollY = totalContentHeight < this.groupRowsContainer.height ? 16 : -totalContentHeight + this.groupRowsContainer.height + 16;
   this.groupRowsContainer.maxScrollY = 16;
-};
-
-GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
-{
-  this.selectedGroupRow = groupRow;
-  this.selectedGroupRow.setSelect(true);
-};
-
-GroupManagementScreen.prototype.deselectGroupRow = function()
-{
-  if (this.selectedGroupRow != null)
+  
+  if (this.selectedGroupId == -1)
   {
-    var groupId = this.selectedGroupRow.groupId;
-    
-    this.selectedGroupRow.setSelect(false);
-    this.selectedGroupRow = null;
+    this.selectGroupRow(this.groupRows[0].groupId);
   }
+};
+
+GroupManagementScreen.prototype.selectGroupRow = function(groupId)
+{
+  if (this.selectedGroupId != -1)
+  {
+    this.getGroupRow(this.selectedGroupId).setSelect(false);
+  }
+  
+  this.getGroupRow(groupId).setSelect(true);
+  this.selectedGroupId = groupId;
 };
 
 GroupManagementScreen.prototype.createGroup = function(text)
@@ -264,11 +256,6 @@ GroupManagementScreen.prototype.createGroup = function(text)
 
 GroupManagementScreen.prototype.disbandGroup = function(groupId)
 {
-  if (this.selectedGroupRow != null && this.selectedGroupRow.groupId == groupId)
-  {
-    this.deselectGroupRow();
-  }
-  
   this.groupSystem.disbandGroup(groupId);
   this.barracksPanel.rebuildPortraits();
   this.rebuildGroupRows();
@@ -276,7 +263,7 @@ GroupManagementScreen.prototype.disbandGroup = function(groupId)
 
 GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, characterId)
 {
-  var groupRow = this.getGroupRowComponent(groupId);
+  var groupRow = this.getGroupRow(groupId);
   
   this.groupSystem.removeCharacterFromGroup(groupId, characterId);
   this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
@@ -287,7 +274,7 @@ GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, char
 
 GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, characterId)
 {
-  var groupRow = this.getGroupRowComponent(groupId);
+  var groupRow = this.getGroupRow(groupId);
   
   this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, characterId);
   this.groupSystem.addCharacterToGroup(groupId, characterId);
