@@ -8,6 +8,7 @@ var GroupOverviewComponent = function(screen, options)
   this.base();
   this.screen = screen;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
   this.initialized = false;
   this.contentHeight = 0;
   
@@ -31,6 +32,11 @@ GroupOverviewComponent.prototype = new PIXI.DisplayObjectContainer;
 GroupOverviewComponent.prototype.selectGroup = function(groupId)
 {
   this.groupId = groupId;
+  this.rebuild();
+};
+
+GroupOverviewComponent.prototype.rebuild = function()
+{
   this.clearOverview();
   this.buildOverview();
 };
@@ -43,21 +49,74 @@ GroupOverviewComponent.prototype.clearOverview = function()
   }
   
   this.overviewContainer.removeChild(this.groupTitle);
+  this.overviewContainer.removeChild(this.renameButton);
+  this.overviewContainer.removeChild(this.disbandButton);
   this.overviewContainer.removeChild(this.titleDivider);
+  this.overviewContainer.removeChild(this.offenseText);
+  this.overviewContainer.removeChild(this.defenseText);
+  this.overviewContainer.removeChild(this.supportText);
+  this.overviewContainer.removeChild(this.movementText);
   
   this.contentHeight = 0;
 };
 
 GroupOverviewComponent.prototype.buildOverview = function()
 {
+  var root = this;
   var statTextStyle = {font: "12px big_pixelmix", tint: 0xCCCCCC};
   var statTextSpacing = 4;
   
   this.group = this.groupSystem.getGroup(this.groupId);
   
   this.groupTitle = new PIXI.BitmapText(this.group.name, {font: "20px big_pixelmix", tint: 0xFFFF00});
+  this.groupTitle.position.x = 2;
   this.overviewContainer.addChild(this.groupTitle);
-  this.contentHeight += this.groupTitle.textHeight + 8;
+  this.contentHeight = this.groupTitle.textHeight + 10;
+  
+  this.renameButton = new ResizableButtonComponent(
+    this.screen,
+    {
+      x: 0,
+      y: this.contentHeight,
+      height: 28,
+      text: "Rename",
+      onClick: function()
+      {
+        root.screen.inputEnabled = false;
+        root.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
+          root.confirmationScreen,
+          "Rename group",
+          function(text)
+          {
+            root.screen.renameGroup(root.group.id, text);
+            root.screen.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          function()
+          {
+            root.screen.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          {
+            x: Math.floor(game.containerWidth * 0.5),
+            y: Math.floor(game.containerHeight * 0.5),
+            showTextfield: true,
+            defaultTextfieldValue: root.group.name
+          }));
+      }
+    });
+  this.overviewContainer.addChild(this.renameButton);
+  
+  this.disbandButton = new ResizableButtonComponent(
+    this.screen,
+    {
+      x: this.renameButton.width + 8,
+      y: this.contentHeight,
+      height: 28,
+      text: "Disband"
+    });
+  this.overviewContainer.addChild(this.disbandButton);
+  this.contentHeight = this.disbandButton.position.y + this.disbandButton.height + 8;
   
   this.titleDivider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), this.panel.width - 32, 4);
   this.titleDivider.position.y = this.contentHeight;
@@ -89,4 +148,6 @@ GroupOverviewComponent.prototype.buildOverview = function()
 
 GroupOverviewComponent.prototype.update = function()
 {
+  this.renameButton.update();
+  this.disbandButton.update();
 };

@@ -252,6 +252,20 @@ GroupManagementScreen.prototype.createGroup = function(text)
   this.rebuildGroupRows();
 };
 
+GroupManagementScreen.prototype.renameGroup = function(groupId, name)
+{
+  var group = this.groupSystem.getGroup(groupId);
+  var groupRow = this.getGroupRow(groupId);
+  
+  group.name = name;
+  groupRow.title.setText(name);
+  
+  if (this.selectedGroupId == groupId)
+  {
+    this.groupOverview.rebuild();
+  }
+};
+
 GroupManagementScreen.prototype.disbandGroup = function(groupId)
 {
   this.groupSystem.disbandGroup(groupId);
@@ -285,6 +299,7 @@ GroupManagementScreen.prototype.update = function()
 {
   this.groupRowsScrollbar.update();
   this.barracksPanel.update();
+  this.groupOverview.update();
   this.createButton.update();
   this.doneButton.update();
   

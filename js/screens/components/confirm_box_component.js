@@ -6,6 +6,7 @@ var ConfirmBoxComponent = function(screen, text, onOkay, onCancel, options)
   options = options || {};
   options.x = options.x || 0;
   options.y = options.y || 0;
+  options.z = options.z || 10;
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
