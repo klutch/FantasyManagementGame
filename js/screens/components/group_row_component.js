@@ -43,7 +43,7 @@ var GroupRowComponent = function(screen, groupId, options)
   
   this.portraits = [];
   this.buildPortraits();
-  
+  /*
   this.renameButton = new ResizableButtonComponent(
     this.screen,
     {
@@ -77,7 +77,7 @@ var GroupRowComponent = function(screen, groupId, options)
       }
     });
   this.addChild(this.disbandButton);
-  
+  */
   this.divider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), options.width - 32, 4);
   this.divider.position.y = options.height - 10;
   this.divider.z = 1;
@@ -271,8 +271,8 @@ GroupRowComponent.prototype.disable = function()
   {
     this.portraits[i].setEnabled(false);
   }
-  this.renameButton.setEnabled(false);
-  this.disbandButton.setEnabled(false);
+  //this.renameButton.setEnabled(false);
+  //this.disbandButton.setEnabled(false);
 };
 
 GroupRowComponent.prototype.enable = function()
@@ -283,8 +283,8 @@ GroupRowComponent.prototype.enable = function()
   {
     this.portraits[i].setEnabled(true);
   }
-  this.renameButton.setEnabled(true);
-  this.disbandButton.setEnabled(true);
+  //this.renameButton.setEnabled(true);
+  //this.disbandButton.setEnabled(true);
 };
 
 GroupRowComponent.prototype.update = function()
@@ -294,8 +294,8 @@ GroupRowComponent.prototype.update = function()
     this.portraits[i].update();
   }
   
-  this.renameButton.update();
-  this.disbandButton.update();
+  //this.renameButton.update();
+  //this.disbandButton.update();
   
   this.determineSelectionStatus();
   this.determineEnabledStatus();

@@ -24,99 +24,22 @@ var GroupManagementScreen = function()
   
   this.panel = new PanelComponent({
     x: 16,
-    y: 40,
+    y: 16,
     z: 1,
     width: game.containerWidth - 32,
-    height: game.containerHeight - (40 + 16)
+    height: game.containerHeight - 64
   });
   this.container.addChild(this.panel);
   
-  this.title = new PIXI.BitmapText("Group Management", {font: "20px big_pixelmix", tint: 0xFFFF00});
-  this.title.position.x = 32;
-  this.title.position.y = 12;
-  this.title.z = 1;
-  this.container.addChild(this.title);
-  
-  this.doneButton = new ButtonComponent(
-    this,
-    {
-      x: this.panel.width - 178,
-      y: this.panel.height - 54,
-      text: "Done",
-      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
-      onClick: function(e)
-      {
-        game.screenManager.removeScreen(ScreenType.GroupManagement);
-        game.screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
-      }
-    });
-  this.panel.addChild(this.doneButton);
-  
-  this.createButton = new ButtonComponent(
-    this,
-    {
-      x: 16,
-      y: this.panel.height - 54,
-      text: "Create Group",
-      normalTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[0]),
-      hoverTexture: PIXI.Texture.fromImage(game.assetManager.paths.ui.standardButtons[1]),
-      onClick: function(e)
-      {
-        root.inputEnabled = false;
-        root.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
-          root.confirmationScreen,
-          "Name of new group",
-          function(text)
-          {
-            root.createGroup(text);
-            root.inputEnabled = true;
-            root.confirmationScreen.closeConfirmation();
-          },
-          function()
-          {
-            root.inputEnabled = true;
-            root.confirmationScreen.closeConfirmation();
-          },
-          {
-            x: Math.floor(game.containerWidth * 0.5),
-            y: Math.floor(game.containerHeight * 0.5),
-            z: 10,
-            showTextfield: true
-          }));
-      }
-    });
-  this.panel.addChild(this.createButton);
-  
-  this.groupRows = [];
-  this.groupRowHeight = 92;
-  this.groupRowsContainer = new PIXI.DisplayObjectContainer();
-  this.groupRowsContainer.width = 500;
-  this.groupRowsContainer.height = (Math.floor(this.panel.height / this.groupRowHeight) - 1) * this.groupRowHeight;
-  this.groupRowsContainer.position.x = 16;
-  this.groupRowsContainer.position.y = 16;
-  
-  this.groupRowsScrollbar = new ScrollbarComponent(
-    this,
-    {
-      x: this.groupRowsContainer.width,
-      y: 32,
-      height: this.groupRowsContainer.height,
-      scrollAmount: this.groupRowHeight
-    });
-  
-  this.groupRowsScrollbar.attachComponent(this.groupRowsContainer, 16, 16, this.groupRowsContainer.width, this.groupRowsContainer.height);
-  this.panel.addChild(this.groupRowsContainer);
-  this.panel.addChild(this.groupRowsScrollbar);
-  
-  this.buildGroupRows();
-  this.groupRowsScrollbar.setTargetScrollY(this.groupRowsContainer.maxScrollY);
+  this.buildBottomButtons();
   
   this.buildBarracksPanel();
   
-  this.buildGroupInventoryPanel();
+  this.buildGroupRowsContainer();
   
-  this.buildCharacterPanel();
+  //this.buildGroupInventoryPanel();
+  
+  //this.buildCharacterPanel();
   
   this.container.children.sort(depthCompare);
 };
@@ -142,6 +65,108 @@ GroupManagementScreen.prototype.onAddScreen = function()
 GroupManagementScreen.prototype.onRemoveScreen = function()
 {
   game.stage.removeChild(this.container);
+};
+
+GroupManagementScreen.prototype.buildBottomButtons = function()
+{
+  var root = this;
+  var totalWidth = 0;
+  
+  this.buttonsContainer = new PIXI.DisplayObjectContainer();
+  this.buttonsContainer.position.y = this.panel.height + 4;
+  this.panel.addChild(this.buttonsContainer);
+  
+  this.createButton = new ResizableButtonComponent(
+    this,
+    {
+      x: 0,
+      y: 0,
+      text: "Create Group",
+      onClick: function(e)
+      {
+        root.inputEnabled = false;
+        root.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
+          root.confirmationScreen,
+          "Name of new group",
+          function(text)
+          {
+            root.createGroup(text);
+            root.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          function()
+          {
+            root.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          {
+            x: Math.floor(game.containerWidth * 0.5),
+            y: Math.floor(game.containerHeight * 0.5),
+            z: 10,
+            showTextfield: true
+          }));
+      }
+    });
+  this.buttonsContainer.addChild(this.createButton);
+  totalWidth += this.createButton.width + 16;
+  
+  this.doneButton = new ResizableButtonComponent(
+    this,
+    {
+      x: totalWidth,
+      y: 0,
+      text: "Done",
+      onClick: function(e)
+      {
+        game.screenManager.removeScreen(ScreenType.GroupManagement);
+        game.screenManager.screens[ScreenType.WorldMap].inputEnabled = true;
+      }
+    });
+  this.buttonsContainer.addChild(this.doneButton);
+  totalWidth += this.doneButton.width;
+  
+  this.buttonsContainer.position.x = this.panel.width - totalWidth;
+};
+
+GroupManagementScreen.prototype.buildBarracksPanel = function()
+{
+  this.barracksPanel = new BarracksPanelComponent(
+    this,
+    {
+      x: 16,
+      y: 16,
+      width: 360,
+      height: this.panel.height - 32
+    });
+  this.panel.addChild(this.barracksPanel);
+};
+
+GroupManagementScreen.prototype.buildGroupRowsContainer = function()
+{
+  this.groupRows = [];
+  this.groupRowHeight = 92;
+  this.groupRowsContainer = new PIXI.DisplayObjectContainer();
+  this.groupRowsContainer.width = 360;
+  //this.groupRowsContainer.height = (Math.floor((this.panel.height - 80) / this.groupRowHeight)) * this.groupRowHeight;
+  this.groupRowsContainer.height = this.panel.height - 32;
+  this.groupRowsContainer.position.x = this.barracksPanel.panel.width + 32;
+  this.groupRowsContainer.position.y = 16;
+  
+  this.groupRowsScrollbar = new ScrollbarComponent(
+    this,
+    {
+      x: this.groupRowsContainer.x + this.groupRowsContainer.width,
+      y: 32,
+      height: this.panel.height - 64,
+      scrollAmount: this.groupRowHeight
+    });
+  
+  this.groupRowsScrollbar.attachComponent(this.groupRowsContainer, this.groupRowsContainer.x, 16, this.groupRowsContainer.width, this.groupRowsContainer.height);
+  this.panel.addChild(this.groupRowsContainer);
+  this.panel.addChild(this.groupRowsScrollbar);
+  
+  this.buildGroupRows();
+  this.groupRowsScrollbar.setTargetScrollY(this.groupRowsContainer.maxScrollY);
 };
 
 GroupManagementScreen.prototype.rebuildGroupRows = function()
@@ -198,26 +223,7 @@ GroupManagementScreen.prototype.buildGroupRows = function()
   this.groupRowsContainer.maxScrollY = 16;
 };
 
-GroupManagementScreen.prototype.buildBarracksPanel = function()
-{
-  var x = this.groupRowsContainer.width + 16;
-  
-  this.barracksTitle = new PIXI.BitmapText("Barracks", {font: "20px big_pixelmix", tint: 0xFFFF00});
-  this.barracksTitle.position.x = x + 2;
-  this.barracksTitle.position.y = 16;
-  this.panel.addChild(this.barracksTitle);
-  
-  this.barracksPanel = new BarracksPanelComponent(
-    this,
-    {
-      x: x,
-      y: 48,
-      width: this.panel.width - (x + 16),
-      height: 206
-    });
-  this.panel.addChild(this.barracksPanel);
-};
-
+/*
 GroupManagementScreen.prototype.buildGroupInventoryPanel = function()
 {
   var y = this.barracksPanel.panel.y + this.barracksPanel.panel.height + 48;
@@ -257,13 +263,13 @@ GroupManagementScreen.prototype.buildCharacterPanel = function()
       height: this.groupInventoryPanel.panel.height
     });
   this.panel.addChild(this.characterPanel);
-};
+};*/
 
 GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
 {
   this.selectedGroupRow = groupRow;
   this.selectedGroupRow.setSelect(true);
-  this.groupInventoryPanel.selectGroup(groupRow.groupId);
+  //this.groupInventoryPanel.selectGroup(groupRow.groupId);
 };
 
 GroupManagementScreen.prototype.deselectGroupRow = function()
@@ -275,10 +281,10 @@ GroupManagementScreen.prototype.deselectGroupRow = function()
     this.selectedGroupRow.setSelect(false);
     this.selectedGroupRow = null;
     
-    if (groupId == this.groupInventoryPanel.groupId)
+    /*if (groupId == this.groupInventoryPanel.groupId)
     {
       this.groupInventoryPanel.deselectGroup();
-    }
+    }*/
   }
 };
 
@@ -314,7 +320,7 @@ GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, char
   this.groupSystem.removeCharacterFromGroup(groupId, characterId);
   this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
   this.barracksPanel.rebuildPortraits();
-  this.groupInventoryPanel.rebuildGroupInventory();
+  //this.groupInventoryPanel.rebuildGroupInventory();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -326,7 +332,7 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, characterId);
   this.groupSystem.addCharacterToGroup(groupId, characterId);
   this.barracksPanel.rebuildPortraits();
-  this.groupInventoryPanel.rebuildGroupInventory();
+  //this.groupInventoryPanel.rebuildGroupInventory();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -335,7 +341,9 @@ GroupManagementScreen.prototype.update = function()
 {
   this.groupRowsScrollbar.update();
   this.barracksPanel.update();
-  this.groupInventoryPanel.update();
+  this.createButton.update();
+  this.doneButton.update();
+  //this.groupInventoryPanel.update();
   
   _.each(this.groupRows, function(groupRow)
     {

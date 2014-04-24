@@ -9,8 +9,8 @@ var ResizableButtonComponent = function(screen, options)
   options = options || {};
   options.x = options.x || 0;
   options.y = options.y || 0;
-  options.width = options.width || 200;
-  options.height = options.height || 48;
+  //options.width = options.width || 200; Use text width if no width is supplied
+  options.height = options.height || 38;
   options.centerX = options.centerX || false;
   options.centerY = options.centerY || false;
   options.enabled = options.enabled == undefined ? true : options.enabled;
@@ -23,16 +23,10 @@ var ResizableButtonComponent = function(screen, options)
   this.base();
   this.screen = screen;
   
-  this.width = options.width;
-  this.height = options.height;
-  this.enabled = options.enabled;
-  
-  this.position.x = options.centerX ? options.x - Math.floor(this.width * 0.5) : options.x;
-  this.position.y = options.centerY ? options.y - Math.floor(this.height * 0.5) : options.y;
   this.onClick = options.onClick;
   this.z = options.z;
   this.isMouseOver = false;
-  this.rectangle = new PIXI.Rectangle(0, 0, this.width, this.height);
+  this.enabled = options.enabled;
   
   this.normalSprites = [];
   this.overSprites = [];
@@ -45,10 +39,17 @@ var ResizableButtonComponent = function(screen, options)
   this.bitmapText = new PIXI.BitmapText(options.text, this.normalTextStyle);
   this.bitmapText.position.x -= Math.floor(this.bitmapText.textWidth * 0.5);
   this.bitmapText.position.y -= Math.floor(this.bitmapText.textHeight * 0.5);
+  this.width = options.width || Math.ceil(this.bitmapText.textWidth + 32);
+  this.height = options.height;
   this.bitmapText.position.x += Math.floor(this.width * 0.5);
   this.bitmapText.position.y += Math.floor(this.height * 0.5);
   this.bitmapText.z = 5;
   this.addChild(this.bitmapText);
+  
+  this.rectangle = new PIXI.Rectangle(0, 0, this.width, this.height);
+  
+  this.position.x = options.centerX ? options.x - Math.floor(this.width * 0.5) : options.x;
+  this.position.y = options.centerY ? options.y - Math.floor(this.height * 0.5) : options.y;
   
   this.buildSprites(
     this.normalSprites,
