@@ -268,9 +268,16 @@ GroupManagementScreen.prototype.renameGroup = function(groupId, name)
 
 GroupManagementScreen.prototype.disbandGroup = function(groupId)
 {
+  var oldIndex = this.groupRows.indexOf(this.getGroupRow(groupId));
+  var newIndex;
+  
   this.groupSystem.disbandGroup(groupId);
   this.barracksPanel.rebuildPortraits();
+  this.selectedGroupId = -1;
   this.rebuildGroupRows();
+  
+  newIndex = Math.min(oldIndex, this.groupRows.length - 1);
+  this.selectGroupRow(this.groupRows[newIndex].groupId);
 };
 
 GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, characterId)

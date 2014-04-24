@@ -113,7 +113,29 @@ GroupOverviewComponent.prototype.buildOverview = function()
       x: this.renameButton.width + 8,
       y: this.contentHeight,
       height: 28,
-      text: "Disband"
+      text: "Disband",
+      onClick: function()
+      {
+        root.screen.inputEnabled = false;
+        root.confirmationScreen.openConfirmation(new ConfirmBoxComponent(
+          root.confirmationScreen,
+          "Are you sure you want to disband\nthis group?",
+          function()
+          {
+            root.screen.disbandGroup(root.group.id);
+            root.screen.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          function()
+          {
+            root.screen.inputEnabled = true;
+            root.confirmationScreen.closeConfirmation();
+          },
+          {
+            x: Math.floor(game.containerWidth * 0.5),
+            y: Math.floor(game.containerHeight * 0.5)
+          }));
+      }
     });
   this.overviewContainer.addChild(this.disbandButton);
   this.contentHeight = this.disbandButton.position.y + this.disbandButton.height + 8;
