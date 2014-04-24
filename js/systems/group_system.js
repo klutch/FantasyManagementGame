@@ -50,9 +50,12 @@ GroupSystem.prototype.initialize = function()
     // Give characters an item
     for (var j = 0; j < group.characterIds.length; j++)
     {
-      var item = ItemFactory.createLeatherHat();
-      this.equipmentSystem.addItem(item);
-      this.equipmentSystem.addItemToInventory(item.id, group.characterIds[j]);
+      for (var k = 0; k < 5; k++)
+      {
+        var item = ItemFactory.createLeatherHat();
+        this.equipmentSystem.addItem(item);
+        this.equipmentSystem.addItemToInventory(item.id, group.characterIds[j]);
+      }
     }
   }
   
