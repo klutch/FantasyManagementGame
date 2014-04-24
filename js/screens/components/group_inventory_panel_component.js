@@ -13,7 +13,6 @@ var GroupInventoryPanelComponent = function(screen, options)
   this.screen = screen;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
-  this.isGroupSelected = false;
   this.itemSpacing = 34;
   
   this.panel = new PanelComponent({
@@ -51,20 +50,27 @@ var GroupInventoryPanelComponent = function(screen, options)
 
 GroupInventoryPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
-GroupInventoryPanelComponent.prototype.select = function(groupId)
+GroupInventoryPanelComponent.prototype.selectGroup = function(groupId)
 {
-  if (this.isGroupSelected)
-  {
-    this.clearInventory();
-  }
-  
   this.groupId = groupId;
   this.group = this.groupSystem.getGroup(groupId);
-  this.buildInventory();
-  this.isGroupSelected = true;
+  this.rebuildGroupInventory();
 };
 
-GroupInventoryPanelComponent.prototype.clearInventory = function()
+GroupInventoryPanelComponent.prototype.deselectGroup = function()
+{
+  this.groupId = null;
+  this.group = null;
+  this.rebuildGroupInventory();
+};
+
+GroupInventoryPanelComponent.prototype.rebuildGroupInventory = function()
+{
+  this.clearGroupInventory();
+  this.buildGroupInventory();
+};
+
+GroupInventoryPanelComponent.prototype.clearGroupInventory = function()
 {
   for (var i = 0; i < this.itemSprites.length; i++)
   {
@@ -73,33 +79,36 @@ GroupInventoryPanelComponent.prototype.clearInventory = function()
   this.itemSprites.length = 0;
 };
 
-GroupInventoryPanelComponent.prototype.buildInventory = function()
+GroupInventoryPanelComponent.prototype.buildGroupInventory = function()
 {
-  var itemIds = this.equipmentSystem.getGroupInventory(this.groupId);
-  var numCols = Math.floor(this.itemsContainer.width / this.itemSpacing);
-  var totalContentHeight = 0;
-  
-  for (var i = 0; i < itemIds.length; i++)
+  if (this.group != null)
   {
-    var x = Math.floor(i % numCols) * this.itemSpacing;
-    var y = Math.floor(i / numCols) * this.itemSpacing;
-    
-    var itemSprite = new ItemComponent(
-      this.screen,
-      itemIds[i],
-      {
-        x: x,
-        y: y
-      });
-    this.itemSprites.push(itemSprite);
-    this.itemsContainer.addChild(itemSprite);
+    var itemIds = this.equipmentSystem.getGroupInventory(this.groupId);
+    var numCols = Math.floor(this.itemsContainer.width / this.itemSpacing);
+    var totalContentHeight = 0;
+
+    for (var i = 0; i < itemIds.length; i++)
+    {
+      var x = Math.floor(i % numCols) * this.itemSpacing;
+      var y = Math.floor(i / numCols) * this.itemSpacing;
+
+      var itemSprite = new ItemComponent(
+        this.screen,
+        itemIds[i],
+        {
+          x: x,
+          y: y
+        });
+      this.itemSprites.push(itemSprite);
+      this.itemsContainer.addChild(itemSprite);
+    }
+
+    totalContentHeight = Math.ceil(this.itemSprites.length / numCols) * this.itemSpacing;
+
+    this.itemsContainer.minScrollY = totalContentHeight < this.itemsContainer.height ? 16 : -totalContentHeight + this.itemsContainer.height;
+    this.itemsContainer.maxScrollY = 16;
+    this.scrollbar.setTargetScrollY(16);
   }
-  
-  totalContentHeight = Math.ceil(this.itemSprites.length / numCols) * this.itemSpacing;
-  
-  this.itemsContainer.minScrollY = totalContentHeight < this.itemsContainer.height ? 16 : -totalContentHeight + this.itemsContainer.height;
-  this.itemsContainer.maxScrollY = 16;
-  this.scrollbar.setTargetScrollY(16);
 };
 
 GroupInventoryPanelComponent.prototype.update = function()

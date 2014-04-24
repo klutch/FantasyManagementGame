@@ -147,9 +147,16 @@ GroupManagementScreen.prototype.onRemoveScreen = function()
 GroupManagementScreen.prototype.rebuildGroupRows = function()
 {
   var currentTargetScrollY = this.groupRowsContainer.targetScrollY;
+  var selectedGroupId = this.selectedGroupRow == null ? -1 : this.selectedGroupRow.groupId;
   
+  this.deselectGroupRow();
   this.clearGroupRows();
   this.buildGroupRows();
+  
+  if (selectedGroupId != -1)
+  {
+    this.selectGroupRow(this.getGroupRowComponent(selectedGroupId));
+  }
   
   this.groupRowsScrollbar.setTargetScrollY(currentTargetScrollY);
 };
@@ -252,19 +259,27 @@ GroupManagementScreen.prototype.buildCharacterPanel = function()
   this.panel.addChild(this.characterPanel);
 };
 
-GroupManagementScreen.prototype.deselectGroupRow = function()
-{
-  if (this.selectedGroupRow != null)
-  {
-    this.selectedGroupRow.setSelect(false);
-  }
-};
-
 GroupManagementScreen.prototype.selectGroupRow = function(groupRow)
 {
   this.selectedGroupRow = groupRow;
   this.selectedGroupRow.setSelect(true);
-  this.groupInventoryPanel.select(groupRow.groupId);
+  this.groupInventoryPanel.selectGroup(groupRow.groupId);
+};
+
+GroupManagementScreen.prototype.deselectGroupRow = function()
+{
+  if (this.selectedGroupRow != null)
+  {
+    var groupId = this.selectedGroupRow.groupId;
+    
+    this.selectedGroupRow.setSelect(false);
+    this.selectedGroupRow = null;
+    
+    if (groupId == this.groupInventoryPanel.groupId)
+    {
+      this.groupInventoryPanel.deselectGroup();
+    }
+  }
 };
 
 GroupManagementScreen.prototype.createGroup = function(text)
@@ -282,6 +297,11 @@ GroupManagementScreen.prototype.createGroup = function(text)
 
 GroupManagementScreen.prototype.disbandGroup = function(groupId)
 {
+  if (this.selectedGroupRow != null && this.selectedGroupRow.groupId == groupId)
+  {
+    this.deselectGroupRow();
+  }
+  
   this.groupSystem.disbandGroup(groupId);
   this.barracksPanel.rebuildPortraits();
   this.rebuildGroupRows();
@@ -294,6 +314,7 @@ GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, char
   this.groupSystem.removeCharacterFromGroup(groupId, characterId);
   this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
   this.barracksPanel.rebuildPortraits();
+  this.groupInventoryPanel.rebuildGroupInventory();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -305,6 +326,7 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, characterId);
   this.groupSystem.addCharacterToGroup(groupId, characterId);
   this.barracksPanel.rebuildPortraits();
+  this.groupInventoryPanel.rebuildGroupInventory();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
