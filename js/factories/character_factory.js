@@ -15,6 +15,7 @@ CharacterFactory.createArcher = function(powerLevel)
   var characterSystem = game.systemManager.getSystem(SystemType.Character);
   var character = characterSystem.createCharacter({
     type: CharacterType.Archer,
+    name: NameHelper.getCharacterName(),
     baseOffense: Math.ceil(0.85 * powerLevel),
     baseDefense: 0,
     baseSupport: Math.ceil(0.15 * powerLevel),
@@ -33,6 +34,7 @@ CharacterFactory.createKnight = function(powerLevel)
   var characterSystem = game.systemManager.getSystem(SystemType.Character);
   var character = characterSystem.createCharacter({
     type: CharacterType.Knight,
+    name: NameHelper.getCharacterName(),
     baseOffense: Math.ceil(0.5 * powerLevel),
     baseDefense: Math.ceil(0.5 * powerLevel),
     baseSupport: 0,
@@ -50,6 +52,7 @@ CharacterFactory.createHealer = function(powerLevel)
   var characterSystem = game.systemManager.getSystem(SystemType.Character);
   var character = characterSystem.createCharacter({
     type: CharacterType.Healer,
+    name: NameHelper.getCharacterName(),
     baseOffense: 0,
     baseDefense: 0,
     baseSupport: powerLevel,
@@ -68,6 +71,7 @@ CharacterFactory.createMinerWorker = function()
   
   return characterSystem.createCharacter({
     type: CharacterType.Worker,
+    name: NameHelper.getCharacterName(),
     isMiner: true,
     movementAbility: 130,
     description: "Miners mine for valuable resources, and can clear paths through mountainous terrain."
@@ -80,6 +84,7 @@ CharacterFactory.createLoggerWorker = function()
   
   return characterSystem.createCharacter({
     type: CharacterType.Worker,
+    name: NameHelper.getCharacterName(),
     isLogger: true,
     movementAbility: 140,
     description: "Loggers cut down forest terrain, and give you logs."
@@ -92,6 +97,7 @@ CharacterFactory.createLaborerWorker = function()
   
   return characterSystem.createCharacter({
     type: CharacterType.Worker,
+    name: NameHelper.getCharacterName(),
     isLaborer: true,
     movementAbility: 140,
     description: "Laborers perform more generic tasks, like building roads."

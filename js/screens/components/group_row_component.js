@@ -43,41 +43,7 @@ var GroupRowComponent = function(screen, groupId, options)
   
   this.portraits = [];
   this.buildPortraits();
-  /*
-  this.renameButton = new ResizableButtonComponent(
-    this.screen,
-    {
-      x: options.width - 152,
-      y: 20,
-      z: 1,
-      width: 120,
-      height: 28,
-      text: "Rename",
-      onClick: function(e)
-      {
-        root.openRenameConfirmBox();
-        game.inputManager.leftButtonHandled = true;
-      }
-    });
-  this.addChild(this.renameButton);
   
-  this.disbandButton = new ResizableButtonComponent(
-    this.screen,
-    {
-      x: options.width - 152,
-      y: 50,
-      z: 1,
-      width: 120,
-      height: 28,
-      text: "Disband",
-      onClick: function(e)
-      {
-        root.openDisbandConfirmBox();
-        game.inputManager.leftButtonHandled = true;
-      }
-    });
-  this.addChild(this.disbandButton);
-  */
   this.divider = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), options.width - 32, 4);
   this.divider.position.y = options.height - 10;
   this.divider.z = 1;
@@ -183,10 +149,11 @@ GroupRowComponent.prototype.buildPortraits = function()
         disabledTint: 0x999999,
         onClick: function(e) 
         {
+          /*
           if (this.enabled)
           {
             root.screen.moveCharacterToBarracks(root.groupId, this.characterId);
-          }
+          }*/
         }
       });
     this.portraits.push(portrait);

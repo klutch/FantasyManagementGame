@@ -29,6 +29,11 @@ CharacterSystem.prototype.getCharacterPowerLevel = function(characterId)
   return this.getCharacterOffense(characterId) + this.getCharacterDefense(characterId) + this.getCharacterSupport(characterId);
 };
 
+CharacterSystem.prototype.getCharacterMovementAbility = function(characterId)
+{
+  return this.characters[characterId].movementAbility;
+};
+
 CharacterSystem.prototype.getUnusedCharacterId = function()
 {
   for (var i = 0; i < this.characters.length; i++)

@@ -1,6 +1,7 @@
 var GroupManagementScreen = function()
 {
   var root = this;
+  var initialGroup = null;
   
   this.type = ScreenType.GroupManagement;
   this.inputEnabled = true;
@@ -35,8 +36,12 @@ var GroupManagementScreen = function()
   this.buildBarracksPanel();
   this.buildGroupRowsContainer();
   this.buildGroupOverview();
+  this.buildCharacterPanel();
+  this.buildTreasuryPanel();
   
-  this.selectGroupRow(this.groupRows[0].groupId);
+  initialGroup = this.groupSystem.getGroup(this.groupRows[0].groupId);
+  this.selectGroupRow(initialGroup.id);
+  this.selectCharacter(initialGroup.characterIds[0]);
   
   this.container.children.sort(depthCompare);
 };
@@ -132,7 +137,7 @@ GroupManagementScreen.prototype.buildBarracksPanel = function()
     {
       x: 16,
       y: 16,
-      width: 360,
+      width: 180,
       height: this.panel.height - 32
     });
   this.panel.addChild(this.barracksPanel);
@@ -174,10 +179,39 @@ GroupManagementScreen.prototype.buildGroupOverview = function()
     {
       x: x,
       y: 16,
-      width: this.panel.width - (x + 16),
-      height: this.panel.height - 32
+      width: 400,
+      height: 200
     });
   this.panel.addChild(this.groupOverview);
+};
+
+GroupManagementScreen.prototype.buildCharacterPanel = function()
+{
+  this.characterPanel = new CharacterPanelComponent(
+    this,
+    {
+      x: this.groupOverview.panel.x,
+      y: this.groupOverview.panel.y + this.groupOverview.panel.height + 16,
+      width: 400,
+      height: ((this.panel.height - 32) - this.groupOverview.panel.height) - 16
+    });
+  this.panel.addChild(this.characterPanel);
+};
+
+GroupManagementScreen.prototype.buildTreasuryPanel = function()
+{
+  var x = this.groupOverview.panel.x + this.groupOverview.panel.width + 16;
+  var y = 16;
+  
+  this.treasuryPanel = new TreasuryPanelComponent(
+    this,
+    {
+      x: x,
+      y: y,
+      width: (this.panel.width - 16) - x,
+      height: (this.panel.height - 16) - y
+    });
+  this.panel.addChild(this.treasuryPanel);
 };
 
 GroupManagementScreen.prototype.rebuildGroupRows = function()
@@ -280,6 +314,11 @@ GroupManagementScreen.prototype.disbandGroup = function(groupId)
   this.selectGroupRow(this.groupRows[newIndex].groupId);
 };
 
+GroupManagementScreen.prototype.selectCharacter = function(characterId)
+{
+  this.characterPanel.selectCharacter(characterId);
+};
+
 GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, characterId)
 {
   var groupRow = this.getGroupRow(groupId);
@@ -307,6 +346,7 @@ GroupManagementScreen.prototype.update = function()
   this.groupRowsScrollbar.update();
   this.barracksPanel.update();
   this.groupOverview.update();
+  this.characterPanel.update();
   this.createButton.update();
   this.doneButton.update();
   

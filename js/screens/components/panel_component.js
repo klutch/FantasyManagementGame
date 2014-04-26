@@ -1,6 +1,7 @@
 var PanelType = Object.freeze({
   Normal: 0,
-  Dark: 1
+  Dark: 1,
+  Black: 2
 });
 
 var PanelComponent = function(options)
@@ -37,7 +38,7 @@ var PanelComponent = function(options)
     this.assetPaths.push(game.assetManager.paths.ui.panelSides[3]);
     this.assetPaths.push(game.assetManager.paths.ui.panelBg);
   }
-  else
+  else if (this.type == PanelType.Dark)
   {
     this.assetPaths.push(game.assetManager.paths.ui.darkPanelCorners[0]);
     this.assetPaths.push(game.assetManager.paths.ui.darkPanelCorners[1]);
@@ -48,6 +49,18 @@ var PanelComponent = function(options)
     this.assetPaths.push(game.assetManager.paths.ui.darkPanelSides[2]);
     this.assetPaths.push(game.assetManager.paths.ui.darkPanelSides[3]);
     this.assetPaths.push(game.assetManager.paths.ui.darkPanelBg);
+  }
+  else if (this.type == PanelType.Black)
+  {
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelCorners[0]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelCorners[1]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelCorners[2]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelCorners[3]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelSides[0]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelSides[1]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelSides[2]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelSides[3]);
+    this.assetPaths.push(game.assetManager.paths.ui.blackPanelBg);
   }
   
   this.buildPanel();
