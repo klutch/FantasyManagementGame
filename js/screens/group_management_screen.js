@@ -8,8 +8,10 @@ var GroupManagementScreen = function()
   this.z = 50;
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
   this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
   this.selectedGroupId = -1;
+  this.itemDragSprite = null;
   
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
@@ -341,8 +343,36 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   groupRow.rebuildStatText();
 };
 
+GroupManagementScreen.prototype.startItemDragging = function(itemId)
+{
+  var item = this.equipmentSystem.getItem(itemId);
+  
+  this.itemDragSprite = PIXI.Sprite.fromImage(game.assetManager.paths.items[item.spriteType]);
+  this.itemDragSprite.anchor = new PIXI.Point(0.5, 0.5);
+  this.container.addChild(this.itemDragSprite);
+};
+
+GroupManagementScreen.prototype.handleItemDrag = function()
+{
+  this.itemDragSprite.position.x = game.inputManager.mousePosition.x;
+  this.itemDragSprite.position.y = game.inputManager.mousePosition.y;
+  
+  if (game.inputManager.leftButtonLastFrame && !game.inputManager.leftButton)
+  {
+    this.container.removeChild(this.itemDragSprite);
+    this.itemDragSprite = null;
+    game.inputManager.leftButtonHandled = true;
+    console.log("drag end");
+  }
+};
+
 GroupManagementScreen.prototype.update = function()
 {
+  if (this.itemDragSprite != null)
+  {
+    this.handleItemDrag();
+  }
+  
   this.groupRowsScrollbar.update();
   this.barracksPanel.update();
   this.groupOverview.update();

@@ -93,8 +93,9 @@ TreasuryPanelComponent.prototype.update = function()
     this.itemIcons[i].update();
   }
   
-  if (game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
+  if (this.itemIdToDrag != null && game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
   {
-    console.log("Should start dragging: " + this.itemIdToDrag);
+    this.screen.startItemDragging(this.itemIdToDrag);
+    this.itemIdToDrag = null;
   }
 };
