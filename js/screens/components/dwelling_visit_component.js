@@ -230,4 +230,9 @@ DwellingVisitComponent.prototype.update = function()
       this.confirmBox.okayButton.setEnabled(true);
     }
   }
+  
+  _.each(this.buttons, function(button)
+    {
+      button.update();
+    });
 };

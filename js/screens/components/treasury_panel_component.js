@@ -60,6 +60,7 @@ TreasuryPanelComponent.prototype.clear = function()
 
 TreasuryPanelComponent.prototype.build = function()
 {
+  var root = this;
   var itemSpacingX = 142;
   var itemSpacingY = 50;
   var numCols = Math.floor((this.panel.width - 32) / itemSpacingX);
@@ -71,7 +72,11 @@ TreasuryPanelComponent.prototype.build = function()
       this.equipmentSystem.treasuryItemIds[i],
       {
         x: Math.floor(i % numCols) * itemSpacingX,
-        y: Math.floor(i / numCols) * itemSpacingY
+        y: Math.floor(i / numCols) * itemSpacingY,
+        onMouseDown: function()
+        {
+          root.itemIdToDrag = this.itemId;
+        }
       });
     
     this.itemIcons.push(itemIcon);
@@ -82,4 +87,14 @@ TreasuryPanelComponent.prototype.build = function()
 TreasuryPanelComponent.prototype.update = function()
 {
   this.scrollbar.update();
+  
+  for (var i = 0; i < this.itemIcons.length; i++)
+  {
+    this.itemIcons[i].update();
+  }
+  
+  if (game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
+  {
+    console.log("Should start dragging: " + this.itemIdToDrag);
+  }
 };

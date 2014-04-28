@@ -4,6 +4,7 @@ var ItemComponent = function(screen, itemId, options)
   options.x = options.x || 0;
   options.y = options.y || 0;
   options.onClick = options.onClick || function() { };
+  options.onMouseDown = options.onMouseDown || function() { };
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
@@ -15,6 +16,7 @@ var ItemComponent = function(screen, itemId, options)
   this.enabled = true;
   
   this.onClick = options.onClick;
+  this.onMouseDown = options.onMouseDown;
   
   this.panel = new PanelComponent({
     x: options.x,
@@ -59,8 +61,8 @@ ItemComponent.prototype.update = function()
 {
   var isMouseInRect = false;
   
-  this.rectangle.x = this.worldTransform.tx;
-  this.rectangle.y = this.worldTransform.ty;
+  this.rectangle.x = this.panel.worldTransform.tx;
+  this.rectangle.y = this.panel.worldTransform.ty;
   
   isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
   
@@ -75,7 +77,11 @@ ItemComponent.prototype.update = function()
       this.onMouseOut();
     }
     
-    if (isMouseInRect && game.inputManager.singleLeftButton())
+    if (isMouseInRect && !game.inputManager.leftButtonHandled && game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame)
+    {
+      this.onMouseDown();
+    }
+    else if (isMouseInRect && game.inputManager.singleLeftButton())
     {
       this.onClick();
     }

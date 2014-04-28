@@ -279,4 +279,7 @@ HireCharacterPanelComponent.prototype.update = function()
   {
     this.buyButton.setEnabled(false);
   }
+  
+  this.cancelButton.update();
+  this.buyButton.update();
 };
