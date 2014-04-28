@@ -1,10 +1,16 @@
 var EquipmentSlotComponent = function(screen, equipmentSlotId, options)
 {
+  options = options || {};
+  options.width = options.width || 100;
+  options.height = options.height || 40;
+  
   this.base = PIXI.DisplayObjectContainer;
   this.base();
   this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
   this.slot = this.equipmentSystem.getEquipmentSlot(equipmentSlotId);
-  this.height = 40;
+  this.width = options.width;
+  this.height = options.height;
+  this.enabled = true;
   
   this.position.x = options.x;
   this.position.y = options.y;
@@ -13,6 +19,8 @@ var EquipmentSlotComponent = function(screen, equipmentSlotId, options)
   this.slotText.position.x = 40;
   this.slotText.position.y = 10;
   this.addChild(this.slotText);
+  
+  this.rectangle = new PIXI.Rectangle(0, 0, options.width, options.height);
   
   this.build();
 };
@@ -42,7 +50,9 @@ EquipmentSlotComponent.prototype.clear = function()
 
 EquipmentSlotComponent.prototype.build = function()
 {
-  if (this.slot.itemId)
+  console.log("building equipment slot: " + this.slot.id + ", itemId: " + this.slot.itemId);
+  
+  if (this.slot.itemId != null)
   {
     this.item = this.equipmentSystem.getItem(this.slot.itemId);
     this.itemBg = PIXI.Sprite.fromImage(game.assetManager.paths.items[this.item.spriteType]);
@@ -53,4 +63,10 @@ EquipmentSlotComponent.prototype.build = function()
     this.slotBg = PIXI.Sprite.fromImage(game.assetManager.paths.ui.equipmentSlotBg);
     this.addChild(this.slotBg);
   }
+};
+
+EquipmentSlotComponent.prototype.update = function()
+{
+  this.rectangle.x = this.worldTransform.tx;
+  this.rectangle.y = this.worldTransform.ty;
 };

@@ -49,7 +49,7 @@ EquipmentSystem.prototype.getEquipmentSlot = function(equipmentSlotId)
   return this.equipmentSlots[equipmentSlotId];
 };
 
-EquipmentSystem.prototype.getEquipmentSlotByIndex = function(characterId, slotIndex)
+EquipmentSystem.prototype.getEquipmentSlotByIndex = function(characterId, slotType, slotIndex)
 {
   var character = this.characterSystem.getCharacter(characterId);
   
@@ -57,7 +57,7 @@ EquipmentSystem.prototype.getEquipmentSlotByIndex = function(characterId, slotIn
   {
     var equipmentSlot = this.getEquipmentSlot(character.equipmentSlotIds[i]);
     
-    if (equipmentSlot.slotIndex == slotIndex)
+    if (equipmentSlot.type == slotType && equipmentSlot.slotIndex == slotIndex)
     {
       return equipmentSlot;
     }
@@ -178,7 +178,7 @@ EquipmentSystem.prototype.equipItem = function(itemId, characterId, slotIndex)
   
   slotIndex = slotIndex == undefined ? this.getFirstEmptySlotIndex(characterId, item.slotType) : slotIndex;
   
-  equipmentSlot = this.getEquipmentSlotByIndex(characterId, slotIndex);
+  equipmentSlot = this.getEquipmentSlotByIndex(characterId, item.slotType, slotIndex);
   equipmentSlot.itemId = itemId;
 };
 

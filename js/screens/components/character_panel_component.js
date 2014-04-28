@@ -49,6 +49,20 @@ var CharacterPanelComponent = function(screen, options)
 
 CharacterPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
+CharacterPanelComponent.prototype.getEquipmentSlotComponent = function(worldX, worldY)
+{
+  for (var i = 0; i < this.equipmentSlotComponents.length; i++)
+  {
+    var equipmentSlotComponent = this.equipmentSlotComponents[i];
+    
+    if (equipmentSlotComponent.enabled && equipmentSlotComponent.rectangle.contains(worldX, worldY))
+    {
+      return equipmentSlotComponent;
+    }
+  }
+  return null;
+};
+
 CharacterPanelComponent.prototype.selectCharacter = function(characterId)
 {
   this.characterId = characterId;
@@ -155,4 +169,9 @@ CharacterPanelComponent.prototype.build = function()
 CharacterPanelComponent.prototype.update = function()
 {
   this.scrollbar.update();
+  
+  for (var i = 0; i < this.equipmentSlotComponents.length; i++)
+  {
+    this.equipmentSlotComponents[i].update();
+  }
 };
