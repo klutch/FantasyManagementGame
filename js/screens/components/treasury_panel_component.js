@@ -22,6 +22,17 @@ var TreasuryPanelComponent = function(screen, options)
   this.container.position.y = 16;
   this.panel.addChild(this.container);
   
+  this.scrollbar = new ScrollbarComponent(
+    this.screen,
+    {
+      x: this.panel.width - 16,
+      y: 16,
+      height: this.panel.height - 32,
+      scrollAmount: 50
+    });
+  this.panel.addChild(this.scrollbar);
+  this.scrollbar.attachComponent(this.container, 16, 16, this.panel.width - 32, this.panel.height - 32);
+  
   this.build();
 };
 
@@ -44,17 +55,19 @@ TreasuryPanelComponent.prototype.clear = function()
 
 TreasuryPanelComponent.prototype.build = function()
 {
-  var spacing = 34;
-  var numCols = Math.floor((this.panel.width - 32) / spacing);
+  var itemSpacingX = 142;
+  var itemSpacingY = 50;
+  var numCols = Math.floor((this.panel.width - 32) / itemSpacingX);
   
+  // 
   for (var i = 0; i < this.equipmentSystem.treasuryItemIds.length; i++)
   {
     var itemIcon = new ItemComponent(
       this.screen,
       this.equipmentSystem.treasuryItemIds[i],
       {
-        x: Math.floor(i % numCols) * spacing,
-        y: Math.floor(i / numCols) * spacing
+        x: Math.floor(i % numCols) * itemSpacingX,
+        y: Math.floor(i / numCols) * itemSpacingY
       });
     
     this.itemIcons.push(itemIcon);

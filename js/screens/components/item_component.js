@@ -14,18 +14,36 @@ var ItemComponent = function(screen, itemId, options)
   this.isMouseOver = false;
   this.enabled = true;
   
-  this.position.x = options.x;
-  this.position.y = options.y;
-  
   this.onClick = options.onClick;
   
-  this.sprite = PIXI.Sprite.fromImage(game.assetManager.paths.items[this.item.spriteType]);
-  this.addChild(this.sprite);
+  this.panel = new PanelComponent({
+    x: options.x,
+    y: options.y,
+    width: 140,
+    height: 48,
+    type: PanelType.Normal
+  });
+  this.addChild(this.panel);
   
-  this.rectangle = new PIXI.Rectangle(0, 0, this.sprite.width, this.sprite.height);
+  this.sprite = PIXI.Sprite.fromImage(game.assetManager.paths.items[this.item.spriteType]);
+  this.sprite.position.x = 8;
+  this.sprite.position.y = 8;
+  this.panel.addChild(this.sprite);
+  
+  this.itemName = new PIXI.BitmapText(this.getShortenedName(this.item.name), {font: "10px big_pixelmix", tint: 0xCCCCCC});
+  this.itemName.position.x = 48;
+  this.itemName.position.y = 18;
+  this.panel.addChild(this.itemName);
+  
+  this.rectangle = new PIXI.Rectangle(0, 0, this.panel.width, this.panel.height);
 };
 
 ItemComponent.prototype = new PIXI.DisplayObjectContainer;
+
+ItemComponent.prototype.getShortenedName = function(name)
+{
+  return name.length > 10 ? (name.substring(0, 9) + "...") : name;
+};
 
 ItemComponent.prototype.onMouseOver = function()
 {
