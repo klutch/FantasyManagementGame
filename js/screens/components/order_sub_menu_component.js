@@ -169,6 +169,11 @@ OrderSubMenuComponent.prototype.update = function()
   var diffX;
   var diffY;
   
+  _.each(this.buttons, function(button)
+    {
+      button.update();
+    });
+  
   // Adjust position
   this.position.x = Math.floor(this.worldMap.convertWorldToScreenX(this.tileI + 0.5));
   this.position.y = Math.floor(this.worldMap.convertWorldToScreenY(this.tileJ + 0.5));
@@ -181,9 +186,4 @@ OrderSubMenuComponent.prototype.update = function()
   {
     this.close();
   }
-  
-  _.each(this.buttons, function(button)
-    {
-      button.update();
-    });
 };

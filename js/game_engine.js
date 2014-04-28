@@ -180,8 +180,8 @@ GameEngine.prototype.switchToNextState = function()
 GameEngine.prototype.update = function()
 {
   this.inputManager.update();
-  this.systemManager.update();
   this.screenManager.update();
+  this.systemManager.update();
   this.inputManager.postUpdate();
 };
 

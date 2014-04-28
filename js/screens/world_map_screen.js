@@ -8,6 +8,8 @@ var WorldMapScreen = function()
   this.isGroupMenuOpen = false;
   this.selectedGroupPanel = null;
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
+  this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  this.orderSystem = game.systemManager.getSystem(SystemType.Order);
   
   // Create button container
   this.mainButtonsContainer = new PIXI.DisplayObjectContainer();
@@ -229,9 +231,105 @@ WorldMapScreen.prototype.debugClick = function(tileI, tileJ)
   alert(string);
 };
 
+WorldMapScreen.prototype.getOrderContexts = function(groupId, i, j)
+{
+  var contexts = {};
+  var exploreContext = false;
+  var visitDwellingContext = false;
+  var visitGatheringContext = false;
+  var cutLogsContext = false;
+  var mineContext = false;
+  var raidContext = false;
+  var fightContext = false;
+  var returnContext = false;
+  var tile;
+  var canExplore = this.groupSystem.canGroupExplore(groupId);
+  var canMine = this.groupSystem.canGroupMine(groupId);
+  var canLog = this.groupSystem.canGroupLog(groupId);
+  var canVisitDwelling = this.groupSystem.canGroupVisitDwelling(groupId);
+  var canVisitGathering = this.groupSystem.canGroupVisitGathering(groupId);
+  var canRaid = this.groupSystem.canGroupRaid(groupId);
+  
+  // Check for undiscovered/non-existant tile
+  if (!this.worldSystem.doesTileExist(i, j) || !(tile = this.worldSystem.getTile(i, j)).discovered)
+  {
+    if (canExplore)
+    {
+      contexts[OrderType.Explore] = true;
+    }
+    return contexts;
+  }
+  
+  // Check for mining context
+  if (tile.type == TileType.Mountain)
+  {
+    if (canMine)
+    {
+      contexts[OrderType.Mine] = true;
+    }
+    return contexts;
+  }
+  
+  // Check for cut-logs context
+  if (tile.type == TileType.Forest)
+  {
+    if (canLog)
+    {
+      contexts[OrderType.CutLogs] = true;
+    }
+  }
+  
+  if (tile.featureId != undefined)
+  {
+    var feature = this.worldSystem.world.features[tile.featureId];
+    
+    // Check for castle
+    if (feature.type == FeatureType.Castle)
+    {
+      var obj = {};
+      
+      obj[OrderType.Return] = true;
+      return obj;
+    }
+    
+    // Check for dwelling context
+    if (feature.type == FeatureType.Dwelling && canVisitDwelling)
+    {
+      contexts[OrderType.VisitDwelling] = true;
+    }
+    
+    // Check for gathering context
+    if (feature.type == FeatureType.Gathering && canVisitGathering)
+    {
+      contexts[OrderType.VisitGathering] = true;
+    }
+    
+    // Check for raid context
+    if (feature.type == FeatureType.Dungeon && canRaid)
+    {
+      contexts[OrderType.Raid] = true;
+    }
+    
+    // TODO: Check for fight context
+  }
+  
+  // Check for explorable tiles
+  if (tile.type != TileType.Water && tile.type != TileType.Mountain)
+  {
+    if (canExplore)
+    {
+      contexts[OrderType.Explore] = true;
+    }
+  }
+  
+  return contexts;
+};
+
 WorldMapScreen.prototype.handleInput = function()
 {
-  // Handle input
+  var mouseI = this.worldMap.tileGridI;
+  var mouseJ = this.worldMap.tileGridJ;
+  
   if (game.inputManager.keysPressed[KeyCode.A])
   {
     this.worldMap.moveCamera(-5, 0);
@@ -252,9 +350,63 @@ WorldMapScreen.prototype.handleInput = function()
   {
     this.worldMap.zoomCamera(game.inputManager.mouseWheelDelta * 0.1);
   }
-  if (game.inputManager.singleLeftButton())
+  
+  // Handle order setup
+  if (this.orderSystem.settingUpOrder)
   {
-    this.debugClick(this.worldMap.tileGridI, this.worldMap.tileGridJ);
+    // Escape key -- cancel order setup
+    if (game.inputManager.simpleKey(KeyCode.Escape))
+    {
+      this.orderSystem.endOrderSetup();
+    }
+    
+    // Check for mouse
+    if (game.inputManager.singleLeftButton())
+    {
+      var contexts = this.getOrderContexts(this.groupSystem.selectedGroupId, mouseI, mouseJ);
+      var numContexts = _.size(contexts);
+      
+      game.inputManager.leftButtonHandled = true;
+      
+      if (numContexts > 1)
+      {
+        // Show sub menu
+        if (this.orderSubmenu == null)
+        {
+          this.openOrderSubmenu(contexts, this.groupSystem.selectedGroupId, mouseI, mouseJ);
+        }
+      }
+      else if (numContexts == 1)
+      {
+        var contextKey;
+        
+        for (var key in contexts)
+        {
+          if (contexts.hasOwnProperty(key))
+          {
+            contextKey = key;
+          }
+        }
+        
+        // Create order
+        if (contextKey == OrderType.Explore)
+        {
+          this.orderSystem.createExploreOrder(this.groupSystem.selectedGroupId, mouseI, mouseJ);
+        }
+        else if (contextKey == OrderType.Mine)
+        {
+          this.orderSystem.createMineOrder(this.groupSystem.selectedGroupId, mouseI, mouseJ);
+        }
+        if (!game.inputManager.keysPressed[KeyCode.Shift])
+        {
+          this.orderSystem.endOrderSetup();
+        }
+      }
+      else
+      {
+        console.log("no contexts");
+      }
+    }
   }
   
   // E key -- End turn
@@ -267,6 +419,11 @@ WorldMapScreen.prototype.handleInput = function()
   if (game.inputManager.simpleKey(KeyCode.G))
   {
     this.groupButton.onClick();
+  }
+  
+  if (game.inputManager.singleLeftButton())
+  {
+    this.debugClick(this.worldMap.tileGridI, this.worldMap.tileGridJ);
   }
 };
 

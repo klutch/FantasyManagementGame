@@ -507,100 +507,6 @@ OrderSystem.prototype.createVisitGatheringOrder = function(groupId, featureId)
   }
 };
 
-OrderSystem.prototype.getOrderContexts = function(groupId, i, j)
-{
-  var contexts = {};
-  var exploreContext = false;
-  var visitDwellingContext = false;
-  var visitGatheringContext = false;
-  var cutLogsContext = false;
-  var mineContext = false;
-  var raidContext = false;
-  var fightContext = false;
-  var returnContext = false;
-  var tile;
-  var canExplore = this.groupSystem.canGroupExplore(groupId);
-  var canMine = this.groupSystem.canGroupMine(groupId);
-  var canLog = this.groupSystem.canGroupLog(groupId);
-  var canVisitDwelling = this.groupSystem.canGroupVisitDwelling(groupId);
-  var canVisitGathering = this.groupSystem.canGroupVisitGathering(groupId);
-  var canRaid = this.groupSystem.canGroupRaid(groupId);
-  
-  // Check for undiscovered/non-existant tile
-  if (!this.worldSystem.doesTileExist(i, j) || !(tile = this.worldSystem.getTile(i, j)).discovered)
-  {
-    if (canExplore)
-    {
-      contexts[OrderType.Explore] = true;
-    }
-    return contexts;
-  }
-  
-  // Check for mining context
-  if (tile.type == TileType.Mountain)
-  {
-    if (canMine)
-    {
-      contexts[OrderType.Mine] = true;
-    }
-    return contexts;
-  }
-  
-  // Check for cut-logs context
-  if (tile.type == TileType.Forest)
-  {
-    if (canLog)
-    {
-      contexts[OrderType.CutLogs] = true;
-    }
-  }
-  
-  if (tile.featureId != undefined)
-  {
-    var feature = this.worldSystem.world.features[tile.featureId];
-    
-    // Check for castle
-    if (feature.type == FeatureType.Castle)
-    {
-      var obj = {};
-      
-      obj[OrderType.Return] = true;
-      return obj;
-    }
-    
-    // Check for dwelling context
-    if (feature.type == FeatureType.Dwelling && canVisitDwelling)
-    {
-      contexts[OrderType.VisitDwelling] = true;
-    }
-    
-    // Check for gathering context
-    if (feature.type == FeatureType.Gathering && canVisitGathering)
-    {
-      contexts[OrderType.VisitGathering] = true;
-    }
-    
-    // Check for raid context
-    if (feature.type == FeatureType.Dungeon && canRaid)
-    {
-      contexts[OrderType.Raid] = true;
-    }
-    
-    // TODO: Check for fight context
-  }
-  
-  // Check for explorable tiles
-  if (tile.type != TileType.Water && tile.type != TileType.Mountain)
-  {
-    if (canExplore)
-    {
-      contexts[OrderType.Explore] = true;
-    }
-  }
-  
-  return contexts;
-};
-
 OrderSystem.prototype.rebuildPaths = function(groupId)
 {
   var orders = this.groupOrders[groupId];
@@ -667,88 +573,6 @@ OrderSystem.prototype.rebuildPaths = function(groupId)
   }
 }
 
-OrderSystem.prototype.updateWaitingOnPlayerState = function()
-{
-  var mouseI = this.worldMap.tileGridI;
-  var mouseJ = this.worldMap.tileGridJ;
-  
-  this.hasMouseChangedTiles = mouseI != this.lastTileGridI || mouseJ != this.lastTileGridJ;
-  
-  // Pathfinding debug
-  if (DEBUG_PATHFINDER)
-  {
-    if (game.inputManager.simpleKey(KeyCode.Enter))
-    {
-      var startingGroup = this.groupSystem.groups[0];
-
-      game.pathfinderManager.findPath(startingGroup.tileI, startingGroup.tileJ, mouseI, mouseJ);
-    }
-    return;
-  }
-
-  // Handle order setup
-  if (this.settingUpOrder)
-  {
-    // Escape key -- cancel order setup
-    if (game.inputManager.simpleKey(KeyCode.Escape))
-    {
-      this.endOrderSetup();
-    }
-    
-    // Check for mouse
-    if (game.inputManager.singleLeftButton())
-    {
-      var contexts = this.getOrderContexts(this.groupSystem.selectedGroupId, mouseI, mouseJ);
-      var numContexts = _.size(contexts);
-      
-      game.inputManager.leftButtonHandled = true;
-      
-      if (numContexts > 1)
-      {
-        // Show sub menu
-        if (this.worldMapScreen.orderSubmenu == null)
-        {
-          this.worldMapScreen.openOrderSubmenu(contexts, this.groupSystem.selectedGroupId, mouseI, mouseJ);
-        }
-      }
-      else if (numContexts == 1)
-      {
-        var contextKey;
-        
-        for (var key in contexts)
-        {
-          if (contexts.hasOwnProperty(key))
-          {
-            contextKey = key;
-          }
-        }
-        
-        // Create order
-        if (contextKey == OrderType.Explore)
-        {
-          this.createExploreOrder(this.groupSystem.selectedGroupId, mouseI, mouseJ);
-        }
-        else if (contextKey == OrderType.Mine)
-        {
-          this.createMineOrder(this.groupSystem.selectedGroupId, mouseI, mouseJ);
-        }
-        if (!game.inputManager.keysPressed[KeyCode.Shift])
-        {
-          this.endOrderSetup();
-        }
-      }
-      else
-      {
-        console.log("no contexts");
-      }
-    }
-
-    // Cache mouse tile position
-    this.lastTileGridI = mouseI;
-    this.lastTileGridJ = mouseJ;
-  }
-};
-
 OrderSystem.prototype.updateOrderProcessingState = function()
 {
   var completedOrders = [];
@@ -775,11 +599,7 @@ OrderSystem.prototype.updateOrderProcessingState = function()
 
 OrderSystem.prototype.update = function()
 {
-  if (game.state == GameState.WaitingOnPlayer)
-  {
-    this.updateWaitingOnPlayerState();
-  }
-  else if (game.state == GameState.OrderProcessing)
+  if (game.state == GameState.OrderProcessing)
   {
     this.updateOrderProcessingState();
   }
