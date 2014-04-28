@@ -149,11 +149,10 @@ GroupRowComponent.prototype.buildPortraits = function()
         disabledTint: 0x999999,
         onClick: function(e) 
         {
-          /*
           if (this.enabled)
           {
-            root.screen.moveCharacterToBarracks(root.groupId, this.characterId);
-          }*/
+            root.screen.selectCharacter(this.characterId);
+          }
         }
       });
     this.portraits.push(portrait);

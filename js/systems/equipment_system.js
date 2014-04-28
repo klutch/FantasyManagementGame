@@ -3,12 +3,22 @@ var EquipmentSystem = function()
   this.type = SystemType.Equipment;
   this.items = {};
   this.equipmentSlots = {};
+  this.treasuryItemIds = [];
 };
 
 EquipmentSystem.prototype.initialize = function()
 {
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
+  
+  // Temporarily fill treasury
+  for (var i = 0; i < 50; i++)
+  {
+    var item = ItemFactory.createLeatherHat();
+    
+    this.addItem(item);
+    this.addItemToTreasury(item.id);
+  }
 };
 
 EquipmentSystem.prototype.getUnusedItemId = function()
@@ -139,6 +149,25 @@ EquipmentSystem.prototype.removeItemFromInventory = function(itemId, characterId
       break;
     }
   }
+};
+
+EquipmentSystem.prototype.addItemToTreasury = function(itemId)
+{
+  this.treasuryItemIds.push(itemId);
+};
+
+EquipmentSystem.prototype.removeItemFromTreasury = function(itemId)
+{
+  for (var i = 0; i < this.treasuryItemIds.length; i++)
+  {
+    if (this.treasuryItemIds[i] == itemId)
+    {
+      delete this.treasuryItemIds[i];
+      break;
+    }
+  }
+  
+  this.treasuryItemIds = _.compact(this.treasuryItemIds);
 };
 
 EquipmentSystem.prototype.equipItem = function(itemId, characterId, slotIndex)
