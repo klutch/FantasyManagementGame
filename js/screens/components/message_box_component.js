@@ -53,3 +53,8 @@ var MessageBoxComponent = function(screen, options)
 };
 
 MessageBoxComponent.prototype = new PIXI.DisplayObjectContainer;
+
+MessageBoxComponent.prototype.update = function()
+{
+  this.doneButton.update();
+};

@@ -440,5 +440,8 @@ WorldMapScreen.prototype.update = function()
   this.worldGroups.update();
   
   // Handle input
-  if (this.inputEnabled) { this.handleInput(); }
+  if (this.inputEnabled && game.state == GameState.WaitingOnPlayer)
+  {
+    this.handleInput();
+  }
 };

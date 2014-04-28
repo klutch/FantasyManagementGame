@@ -78,7 +78,7 @@ GameEventFactory.createDwellingVisitEvent = function(groupId, featureId)
       this.dwellingVisitComponent = new DwellingVisitComponent(notificationScreen, this, groupId, featureId);
       
       notificationScreen.showBackground();
-      notificationScreen.container.addChild(this.dwellingVisitComponent);
+      notificationScreen.addComponent(this.dwellingVisitComponent);
     },
     isComplete: function()
     {
@@ -89,7 +89,7 @@ GameEventFactory.createDwellingVisitEvent = function(groupId, featureId)
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
       notificationScreen.hideBackground();
-      notificationScreen.container.removeChild(this.dwellingVisitComponent);
+      notificationScreen.removeComponent(this.dwellingVisitComponent);
     }
   });
 };
@@ -134,7 +134,7 @@ GameEventFactory.createRaidEvent = function(groupId, featureId)
         });
       
       notificationScreen.showBackground();
-      notificationScreen.container.addChild(this.messageBox);
+      notificationScreen.addComponent(this.messageBox);
       
       worldMap.camera.targetPosition.x = (feature.tileI + feature.width * 0.5) * TILE_SIZE;
       worldMap.camera.targetPosition.y = (feature.tileJ + feature.height * 0.5) * TILE_SIZE;
@@ -150,7 +150,7 @@ GameEventFactory.createRaidEvent = function(groupId, featureId)
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
       notificationScreen.hideBackground();
-      notificationScreen.container.removeChild(this.messageBox);
+      notificationScreen.removeComponent(this.messageBox);
     }
   });
 };
@@ -182,7 +182,7 @@ GameEventFactory.createRaidVictoryEvent = function(groupId, featureId)
         });
       
       notificationScreen.showBackground();
-      notificationScreen.container.addChild(this.messageBox);
+      notificationScreen.addComponent(this.messageBox);
       
       if (returnPath != null)
       {
@@ -201,7 +201,7 @@ GameEventFactory.createRaidVictoryEvent = function(groupId, featureId)
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
       notificationScreen.hideBackground();
-      notificationScreen.container.removeChild(this.messageBox);
+      notificationScreen.removeComponent(this.messageBox);
     }
   });
 };
@@ -226,7 +226,7 @@ GameEventFactory.createRaidDefeatEvent = function(groupId, featureId)
         });
       
       notificationScreen.showBackground();
-      notificationScreen.container.addChild(this.messageBox);
+      notificationScreen.addComponent(this.messageBox);
       
       groupSystem.deleteGroup(groupId);
     },
@@ -239,7 +239,7 @@ GameEventFactory.createRaidDefeatEvent = function(groupId, featureId)
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
       notificationScreen.hideBackground();
-      notificationScreen.container.removeChild(this.messageBox);
+      notificationScreen.removeComponent(this.messageBox);
     }
   });
 };
@@ -268,7 +268,7 @@ GameEventFactory.createSubjugationVictoryEvent = function(groupId, featureId)
         });
       
       notificationScreen.showBackground();
-      notificationScreen.container.addChild(this.messageBox);
+      notificationScreen.addComponent(this.messageBox);
     },
     isComplete: function()
     {
@@ -279,7 +279,7 @@ GameEventFactory.createSubjugationVictoryEvent = function(groupId, featureId)
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
       notificationScreen.hideBackground();
-      notificationScreen.container.removeChild(this.messageBox);
+      notificationScreen.removeComponent(this.messageBox);
     }
   });
 };
@@ -307,7 +307,7 @@ GameEventFactory.createSubjugationDefeatEvent = function(groupId, featureId)
         });
       
       notificationScreen.showBackground();
-      notificationScreen.container.addChild(this.messageBox);
+      notificationScreen.addComponent(this.messageBox);
       
       groupSystem.deleteGroup(groupId);
     },
@@ -320,7 +320,7 @@ GameEventFactory.createSubjugationDefeatEvent = function(groupId, featureId)
       var notificationScreen = game.screenManager.screens[ScreenType.Notification];
       
       notificationScreen.hideBackground();
-      notificationScreen.container.removeChild(this.messageBox);
+      notificationScreen.removeComponent(this.messageBox);
     }
   });
 };

@@ -3,6 +3,7 @@ var NotificationScreen = function()
   this.type = ScreenType.Notification;
   this.inputEnabled = true;
   this.z = 50;
+  this.components = [];
   
   // Background
   this.background = PIXI.Sprite.fromImage(game.assetManager.paths.ui.black);
@@ -29,6 +30,28 @@ NotificationScreen.prototype.onRemoveScreen = function()
   game.stage.removeChild(this.container);
 };
 
+NotificationScreen.prototype.addComponent = function(component)
+{
+  this.container.addChild(component);
+  this.components.push(component);
+};
+
+NotificationScreen.prototype.removeComponent = function(component)
+{
+  this.container.removeChild(component);
+  
+  for (var i = 0; i < this.components.length; i++)
+  {
+    if (this.components[i] == component)
+    {
+      delete this.components[i];
+      break;
+    }
+  }
+  
+  this.components = _.compact(this.components);
+};
+
 NotificationScreen.prototype.showBackground = function()
 {
   this.container.addChild(this.background);
@@ -41,4 +64,8 @@ NotificationScreen.prototype.hideBackground = function()
 
 NotificationScreen.prototype.update = function()
 {
+  for (var i = 0; i < this.components.length; i++)
+  {
+    this.components[i].update();
+  }
 };

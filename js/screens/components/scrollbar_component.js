@@ -125,5 +125,8 @@ ScrollbarComponent.prototype.update = function(amount)
   
   this.component.position.y += (this.component.targetScrollY - this.component.position.y) / 8;
   
+  this.scrollDownButton.update();
+  this.scrollUpButton.update();
+  
   this.hackyCounter++;
 };
