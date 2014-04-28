@@ -252,7 +252,7 @@ WorldMapScreen.prototype.handleInput = function()
   {
     this.worldMap.zoomCamera(game.inputManager.mouseWheelDelta * 0.1);
   }
-  if (game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame && !game.inputManager.leftButtonHandled)
+  if (game.inputManager.singleLeftButton())
   {
     this.debugClick(this.worldMap.tileGridI, this.worldMap.tileGridJ);
   }
@@ -273,6 +273,8 @@ WorldMapScreen.prototype.handleInput = function()
 WorldMapScreen.prototype.update = function()
 {
   // Update components
+  this.groupButton.update();
+  this.endTurnButton.update();
   this.worldMap.update();
   if (this.isGroupMenuOpen) { this.groupMenu.update(); }
   _.each(this.resourceIndicators, function(indicator) { indicator.update(); });

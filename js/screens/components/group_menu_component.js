@@ -86,6 +86,8 @@ GroupMenuComponent.prototype.removeGroup = function(groupId)
 
 GroupMenuComponent.prototype.update = function()
 {
+  this.manageGroupsButton.update();
+  
   // Update text
   this.totalAdventurersRight.setText(this.groupSystem.getNumPlayerAdventurers().toString());
   this.totalAdventurersRight.position.x = this.width - (28 + this.totalAdventurersRight.textWidth);

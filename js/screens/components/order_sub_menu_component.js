@@ -181,4 +181,9 @@ OrderSubMenuComponent.prototype.update = function()
   {
     this.close();
   }
+  
+  _.each(this.buttons, function(button)
+    {
+      button.update();
+    });
 };

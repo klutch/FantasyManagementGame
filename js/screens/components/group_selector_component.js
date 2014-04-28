@@ -124,7 +124,7 @@ GroupSelectorComponent.prototype.handleInput = function()
   }
   
   // Handle mouse clicks
-  if (isOverButtonRect && game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame)
+  if (isOverButtonRect && game.inputManager.singleLeftButton())
   {
     game.inputManager.leftButtonHandled = true;
     this.select();

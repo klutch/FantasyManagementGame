@@ -149,4 +149,9 @@ SelectedGroupPanelComponent.prototype.update = function()
   {
     this.ordersMenuButton.setEnabled(false);
   }
+  
+  _.each(this.orderButtons, function(button)
+    {
+      button.update();
+    });
 };

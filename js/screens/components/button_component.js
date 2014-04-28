@@ -14,17 +14,17 @@ var ButtonComponent = function(screen, options)
   this.normalTexture = options.normalTexture;
   this.hoverTexture = options.hoverTexture;
   this.disabledTexture = options.disabledTexture;
-  this.interactive = true;
-  this.buttonMode = true;
-  this.onMouseOver = options.onMouseOver;
-  this.onMouseOut = options.onMouseOut;
-  this.onClick = options.onClick;
+  this.customOnMouseOver = options.onMouseOver;
+  this.customOnMouseOut = options.onMouseOut;
+  this.customOnClick = options.onClick;
   this.enabled = true;
+  this.isMouseOver = false;
   
   // Textures
   if (this.normalTexture != null)
   {
     this.textureSprite = new PIXI.Sprite(this.normalTexture);
+    this.rectangle = new PIXI.Rectangle(0, 0, this.textureSprite.width, this.textureSprite.height);
     this.addChild(this.textureSprite);
   }
   
@@ -34,6 +34,7 @@ var ButtonComponent = function(screen, options)
     this.bitmapText = new PIXI.BitmapText(options.text, {font: "12px big_pixelmix", tint: 0xCCCCCC});
     this.bitmapText.position.x -= Math.floor(this.bitmapText.textWidth * 0.5);
     this.bitmapText.position.y -= Math.floor(this.bitmapText.textHeight * 0.5);
+    this.rectangle = this.rectangle || new PIXI.Rectangle(0, 0, this.bitmapText.textWidth, this.bitmapText.textHeight);
     this.addChild(this.bitmapText);
   }
   
@@ -88,30 +89,20 @@ var ButtonComponent = function(screen, options)
 
 ButtonComponent.prototype = new PIXI.DisplayObjectContainer;
 
-ButtonComponent.prototype.click = function(interactionData)
+ButtonComponent.prototype.onClick = function()
 {
-  if (!this.screen.inputEnabled)
-  {
-    return;
-  }
-  
   game.inputManager.leftButtonHandled = true;
   
-  if (this.onClick != null)
+  if (this.customOnClick != null)
   {
-    this.onClick(interactionData);
+    this.customOnClick();
   }
 };
 
-ButtonComponent.prototype.touchstart = ButtonComponent.prototype.click;
+ButtonComponent.prototype.touchstart = ButtonComponent.prototype.mousedown;
 
-ButtonComponent.prototype.mouseover = function(interactionData)
+ButtonComponent.prototype.onMouseOver = function()
 {
-  if (!this.screen.inputEnabled)
-  {
-    return;
-  }
-  
   // Hover effects
   if (this.bitmapText != null)
   {
@@ -133,19 +124,16 @@ ButtonComponent.prototype.mouseover = function(interactionData)
   }
   
   // Callback
-  if (this.onMouseOver != null)
+  if (this.customOnMouseOver != null)
   {
-    this.onMouseOver(interactionData);
-  }
-};
-
-ButtonComponent.prototype.mouseout = function(interactionData)
-{
-  if (!this.screen.inputEnabled)
-  {
-    return;
+    this.customOnMouseOver();
   }
   
+  this.isMouseOver = true;
+};
+
+ButtonComponent.prototype.onMouseOut = function()
+{
   // Hover effects
   if (this.bitmapText != null)
   {
@@ -164,14 +152,43 @@ ButtonComponent.prototype.mouseout = function(interactionData)
   }
   
   // Callback
-  if (this.onMouseOut != null)
+  if (this.customOnMouseOut != null)
   {
-    this.onMouseOut(interactionData);
+    this.customOnMouseOut();
   }
+  
+  this.isMouseOver = false;
 };
 
 ButtonComponent.prototype.setEnabled = function(value)
 {
   this.enabled = value;
   this.textureSprite.setTexture(this.enabled ? this.normalTexture : this.disabledTexture);
+};
+
+ButtonComponent.prototype.update = function()
+{
+  if (this.screen.inputEnabled)
+  {
+    var isMouseInRect;
+    
+    this.rectangle.x = this.textureSprite.worldTransform.tx;
+    this.rectangle.y = this.textureSprite.worldTransform.ty;
+    
+    isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+    
+    if (!this.isMouseOver && isMouseInRect)
+    {
+      this.onMouseOver();
+    }
+    else if (this.isMouseOver && !isMouseInRect)
+    {
+      this.onMouseOut();
+    }
+    
+    if (isMouseInRect && game.inputManager.singleLeftButton())
+    {
+      this.onClick();
+    }
+  }
 };

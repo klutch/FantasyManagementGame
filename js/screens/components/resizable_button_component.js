@@ -241,7 +241,7 @@ ResizableButtonComponent.prototype.update = function()
   {
     var mousePosition = game.inputManager.mousePosition;
     var rectContainsMouse = false;
-    var clicked = game.inputManager.leftButton && !game.inputManager.leftButtonHandled && !game.inputManager.leftButtonHandled;
+    var clicked = game.inputManager.singleLeftButton();
 
     this.rectangle.x = this.worldTransform.tx;
     this.rectangle.y = this.worldTransform.ty;
@@ -261,6 +261,7 @@ ResizableButtonComponent.prototype.update = function()
     {
       document.body.style.cursor = "auto";
       this.onClick();
+      game.inputManager.leftButtonHandled = true;
     }
   }
 };

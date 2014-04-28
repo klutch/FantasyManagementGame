@@ -696,7 +696,7 @@ OrderSystem.prototype.updateWaitingOnPlayerState = function()
     }
     
     // Check for mouse
-    if (game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame && !game.inputManager.leftButtonHandled)
+    if (game.inputManager.singleLeftButton())
     {
       var contexts = this.getOrderContexts(this.groupSystem.selectedGroupId, mouseI, mouseJ);
       var numContexts = _.size(contexts);

@@ -120,4 +120,7 @@ ConfirmBoxComponent.prototype.update = function()
       this.okayButton.onClick(this.textfield.getText());
     }
   }
+  
+  this.okayButton.update();
+  this.cancelButton.update();
 };
