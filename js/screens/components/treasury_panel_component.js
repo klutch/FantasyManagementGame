@@ -20,6 +20,11 @@ var TreasuryPanelComponent = function(screen, options)
   this.container = new PIXI.DisplayObjectContainer();
   this.container.position.x = 16;
   this.container.position.y = 16;
+  this.container.width = this.panel.width - 32;
+  this.container.height = this.panel.height - 32;
+  this.container.targetScrollY = 16;
+  this.container.minScrollY = 16;
+  this.container.maxScrollY = 16;
   this.panel.addChild(this.container);
   
   this.scrollbar = new ScrollbarComponent(
@@ -59,7 +64,6 @@ TreasuryPanelComponent.prototype.build = function()
   var itemSpacingY = 50;
   var numCols = Math.floor((this.panel.width - 32) / itemSpacingX);
   
-  // 
   for (var i = 0; i < this.equipmentSystem.treasuryItemIds.length; i++)
   {
     var itemIcon = new ItemComponent(
@@ -73,4 +77,9 @@ TreasuryPanelComponent.prototype.build = function()
     this.itemIcons.push(itemIcon);
     this.container.addChild(itemIcon);
   }
+};
+
+TreasuryPanelComponent.prototype.update = function()
+{
+  this.scrollbar.update();
 };

@@ -347,6 +347,7 @@ GroupManagementScreen.prototype.update = function()
   this.barracksPanel.update();
   this.groupOverview.update();
   this.characterPanel.update();
+  this.treasuryPanel.update();
   this.createButton.update();
   this.doneButton.update();
   

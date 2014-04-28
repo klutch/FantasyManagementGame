@@ -353,6 +353,7 @@ var AssetManager = function()
     "img/ui/close_button.png",
     "img/ui/close_button_over.png"
   ];
+  this.paths.ui.equipmentSlotBg = ["img/ui/equipment_slot_bg.png"];
   this.paths.ui.submenuIcon = ["img/ui/submenu_icon.png"];
   this.paths.ui.pathfinderDebugTile = ["img/ui/pathfinder_debug_tile.png"];
   this.paths.ui.resourceIndicatorBg = ["img/ui/resource_indicator.png"];
