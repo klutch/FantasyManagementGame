@@ -363,8 +363,9 @@ GroupManagementScreen.prototype.handleItemDrag = function()
   {
     var equipmentSlotComponent = this.characterPanel.getEquipmentSlotComponent(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
     
-    if (equipmentSlotComponent != null && equipmentSlotComponent.slot.type == this.itemDrag.slotType)
+    if (equipmentSlotComponent != null && equipmentSlotComponent.slot.itemId == null && equipmentSlotComponent.slot.type == this.itemDrag.slotType)
     {
+      console.log("equipping");
       this.equipmentSystem.removeItemFromTreasury(this.itemDrag.id);
       this.equipmentSystem.equipItem(this.itemDrag.id, this.characterPanel.characterId, equipmentSlotComponent.slot.slotIndex);
       this.characterPanel.rebuild();

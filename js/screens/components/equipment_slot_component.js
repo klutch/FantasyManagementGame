@@ -50,8 +50,6 @@ EquipmentSlotComponent.prototype.clear = function()
 
 EquipmentSlotComponent.prototype.build = function()
 {
-  console.log("building equipment slot: " + this.slot.id + ", itemId: " + this.slot.itemId);
-  
   if (this.slot.itemId != null)
   {
     this.item = this.equipmentSystem.getItem(this.slot.itemId);
