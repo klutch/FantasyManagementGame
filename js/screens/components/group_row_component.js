@@ -154,6 +154,13 @@ GroupRowComponent.prototype.buildPortraits = function()
           {
             root.screen.selectCharacter(this.characterId);
           }
+        },
+        onMouseDown: function()
+        {
+          if (this.enabled)
+          {
+            root.characterIdToDrag = this.characterId;
+          }
         }
       });
     this.portraits.push(portrait);
@@ -237,8 +244,6 @@ GroupRowComponent.prototype.disable = function()
   {
     this.portraits[i].setEnabled(false);
   }
-  //this.renameButton.setEnabled(false);
-  //this.disbandButton.setEnabled(false);
 };
 
 GroupRowComponent.prototype.enable = function()
@@ -249,8 +254,6 @@ GroupRowComponent.prototype.enable = function()
   {
     this.portraits[i].setEnabled(true);
   }
-  //this.renameButton.setEnabled(true);
-  //this.disbandButton.setEnabled(true);
 };
 
 GroupRowComponent.prototype.update = function()
@@ -260,9 +263,12 @@ GroupRowComponent.prototype.update = function()
     this.portraits[i].update();
   }
   
-  //this.renameButton.update();
-  //this.disbandButton.update();
-  
   this.determineSelectionStatus();
   this.determineEnabledStatus();
+  
+  if (this.characterIdToDrag != null && game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
+  {
+    this.screen.startCharacterDragging(this.characterIdToDrag, this.groupId);
+    this.characterIdToDrag = null;
+  }
 };

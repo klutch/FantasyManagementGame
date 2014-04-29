@@ -84,6 +84,7 @@ PortraitComponent.prototype.update = function()
     else if (isMouseInRect && game.inputManager.singleLeftButton())
     {
       this.onClick();
+      game.inputManager.leftButtonHandled = true;
     }
   }
 };

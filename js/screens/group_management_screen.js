@@ -17,9 +17,9 @@ var GroupManagementScreen = function()
   this.itemDrag = null
   this.isDraggingToTreasury = false;
   
-  this.characterDragSprite = null;
-  this.characterDrag = null;
-  this.isDraggingToBarracks = false;
+  this.draggingCharacterSprite = null;
+  this.draggingCharacter = null;
+  this.draggingCharacterFromGroupId = null;
   
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
@@ -416,41 +416,41 @@ GroupManagementScreen.prototype.handleItemDrag = function()
   }
 };
 
-GroupManagementScreen.prototype.startCharacterDragging = function(characterId, isDraggingToBarracks)
+GroupManagementScreen.prototype.startCharacterDragging = function(characterId, draggingCharacterFromGroupId)
 {
   var character = this.characterSystem.getCharacter(characterId);
   
-  this.characterDrag = character;
-  this.isDraggingToBarracks = isDraggingToBarracks;
-  this.characterDragSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits[character.type]);
-  this.characterDragSprite.anchor = new PIXI.Point(0.5, 0.5);
-  this.container.addChild(this.characterDragSprite);
+  this.draggingCharacter = character;
+  this.draggingCharacterFromGroupId = draggingCharacterFromGroupId;
+  this.draggingCharacterSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits[character.type]);
+  this.draggingCharacterSprite.anchor = new PIXI.Point(0.5, 0.5);
+  this.draggingCharacterSprite.position.x = game.inputManager.mousePosition.x;
+  this.draggingCharacterSprite.position.y = game.inputManager.mousePosition.y;
+  this.container.addChild(this.draggingCharacterSprite);
 };
 
 GroupManagementScreen.prototype.handleCharacterDrag = function()
 {
-  this.characterDragSprite.position.x = game.inputManager.mousePosition.x;
-  this.characterDragSprite.position.y = game.inputManager.mousePosition.y;
+  this.draggingCharacterSprite.position.x = game.inputManager.mousePosition.x;
+  this.draggingCharacterSprite.position.y = game.inputManager.mousePosition.y;
   
   if (game.inputManager.leftButtonLastFrame && !game.inputManager.leftButton)
   {
-    if (this.isDraggingToBarracks)
+    var groupRow = this.getGroupRowAtPosition(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+    var isOverBarracks = this.barracksPanel.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+    
+    if (isOverBarracks || (groupRow != null && groupRow.enabled && !groupRow.group.isCapacityMet()))
     {
-    }
-    else
-    {
-      var groupRow = this.getGroupRowAtPosition(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+      var draggingCharacterToGroupId = isOverBarracks ? this.groupSystem.barracksGroup.id : groupRow.groupId;
       
-      if (groupRow != null && groupRow.enabled && !groupRow.group.isCapacityMet())
-      {
-        this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, this.characterDrag.id);
-        this.groupSystem.addCharacterToGroup(groupRow.group.id, this.characterDrag.id);
-      }
+      this.groupSystem.removeCharacterFromGroup(this.draggingCharacterFromGroupId, this.draggingCharacter.id);
+      this.groupSystem.addCharacterToGroup(draggingCharacterToGroupId, this.draggingCharacter.id);
     }
         
-    this.container.removeChild(this.characterDragSprite);
-    this.characterDragSprite = null;
-    this.characterDrag = null;
+    this.container.removeChild(this.draggingCharacterSprite);
+    this.draggingCharacterSprite = null;
+    this.draggingCharacter = null;
+    this.draggingCharacterFromGroupId = null;
     
     this.barracksPanel.rebuild();
     this.rebuildGroupRows();
@@ -461,11 +461,11 @@ GroupManagementScreen.prototype.handleCharacterDrag = function()
 
 GroupManagementScreen.prototype.update = function()
 {
-  if (this.itemDragSprite != null)
+  if (this.itemDrag != null)
   {
     this.handleItemDrag();
   }
-  if (this.characterDragSprite != null)
+  if (this.draggingCharacter != null)
   {
     this.handleCharacterDrag();
   }

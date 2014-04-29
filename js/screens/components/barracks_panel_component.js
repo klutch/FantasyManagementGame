@@ -42,6 +42,8 @@ var BarracksPanelComponent = function(screen, options)
     });
   this.panel.addChild(this.scrollbar);
   
+  this.rectangle = new PIXI.Rectangle(options.x, options.y, options.width, options.height);
+  
   this.build();
 };
 
@@ -140,7 +142,7 @@ BarracksPanelComponent.prototype.update = function()
   
   if (this.characterIdToDrag != null && game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
   {
-    this.screen.startCharacterDragging(this.characterIdToDrag, false);
+    this.screen.startCharacterDragging(this.characterIdToDrag, this.barracksGroup.id);
     this.characterIdToDrag = null;
   }
 };
