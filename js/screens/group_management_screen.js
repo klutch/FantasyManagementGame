@@ -13,6 +13,7 @@ var GroupManagementScreen = function()
   this.selectedGroupId = -1;
   this.itemDragSprite = null;
   this.itemDrag = null
+  this.isDraggingToTreasury = false;
   
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
@@ -344,11 +345,12 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   groupRow.rebuildStatText();
 };
 
-GroupManagementScreen.prototype.startItemDragging = function(itemId)
+GroupManagementScreen.prototype.startItemDragging = function(itemId, isDraggingToTreasury)
 {
   var item = this.equipmentSystem.getItem(itemId);
   
   this.itemDrag = item;
+  this.isDraggingToTreasury = isDraggingToTreasury;
   this.itemDragSprite = PIXI.Sprite.fromImage(game.assetManager.paths.items[item.spriteType]);
   this.itemDragSprite.anchor = new PIXI.Point(0.5, 0.5);
   this.container.addChild(this.itemDragSprite);
@@ -361,20 +363,32 @@ GroupManagementScreen.prototype.handleItemDrag = function()
   
   if (game.inputManager.leftButtonLastFrame && !game.inputManager.leftButton)
   {
-    var equipmentSlotComponent = this.characterPanel.getEquipmentSlotComponent(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
-    
-    if (equipmentSlotComponent != null && equipmentSlotComponent.slot.itemId == null && equipmentSlotComponent.slot.type == this.itemDrag.slotType)
+    if (this.isDraggingToTreasury)
     {
-      console.log("equipping");
-      this.equipmentSystem.removeItemFromTreasury(this.itemDrag.id);
-      this.equipmentSystem.equipItem(this.itemDrag.id, this.characterPanel.characterId, equipmentSlotComponent.slot.slotIndex);
-      this.characterPanel.rebuild();
-      this.treasuryPanel.rebuild();
+      if (this.treasuryPanel.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y))
+      {
+        this.equipmentSystem.unequipItem(this.itemDrag.id, this.characterPanel.characterId);
+        this.equipmentSystem.addItemToTreasury(this.itemDrag.id);
+      }
+    }
+    else
+    {
+      var equipmentSlotComponent = this.characterPanel.getEquipmentSlotComponent(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+
+      if (equipmentSlotComponent != null && equipmentSlotComponent.slot.itemId == null && equipmentSlotComponent.slot.type == this.itemDrag.slotType)
+      {
+        this.equipmentSystem.removeItemFromTreasury(this.itemDrag.id);
+        this.equipmentSystem.equipItem(this.itemDrag.id, this.characterPanel.characterId, equipmentSlotComponent.slot.slotIndex);
+      }
     }
         
     this.container.removeChild(this.itemDragSprite);
     this.itemDragSprite = null;
     this.itemDrag = null;
+    
+    this.characterPanel.rebuild();
+    this.treasuryPanel.rebuild();
+    
     game.inputManager.leftButtonHandled = true;
   }
 };

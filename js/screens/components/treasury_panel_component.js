@@ -27,6 +27,8 @@ var TreasuryPanelComponent = function(screen, options)
   this.container.maxScrollY = 16;
   this.panel.addChild(this.container);
   
+  this.rectangle = new PIXI.Rectangle(0, 0, options.width, options.height);
+  
   this.scrollbar = new ScrollbarComponent(
     this.screen,
     {
@@ -86,6 +88,9 @@ TreasuryPanelComponent.prototype.build = function()
 
 TreasuryPanelComponent.prototype.update = function()
 {
+  this.rectangle.x = this.panel.worldTransform.tx;
+  this.rectangle.y = this.panel.worldTransform.ty;
+  
   this.scrollbar.update();
   
   for (var i = 0; i < this.itemIcons.length; i++)
@@ -95,7 +100,7 @@ TreasuryPanelComponent.prototype.update = function()
   
   if (this.itemIdToDrag != null && game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
   {
-    this.screen.startItemDragging(this.itemIdToDrag);
+    this.screen.startItemDragging(this.itemIdToDrag, false);
     this.itemIdToDrag = null;
   }
 };

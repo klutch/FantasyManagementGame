@@ -15,6 +15,7 @@ var CharacterPanelComponent = function(screen, options)
   this.initialized = false;
   this.contentHeight = 0;
   this.equipmentSlotComponents = [];
+  this.itemToDrag = null;
   
   this.panel = new PanelComponent({
     x: options.x,
@@ -103,6 +104,7 @@ CharacterPanelComponent.prototype.build = function()
   var character = this.characterSystem.getCharacter(this.characterId);
   var statTextStyle = {font: "12px big_pixelmix", tint: 0xAAAAAA};
   var statTextSpacing = 4;
+  var root = this;
   
   this.title = new PIXI.BitmapText(character.name, {font: "20px big_pixelmix", tint: 0xFFFF00});
   this.title.position.x = 2;
@@ -142,7 +144,7 @@ CharacterPanelComponent.prototype.build = function()
   this.contentHeight = this.equipmentText.position.y + this.equipmentText.textHeight + 8;
   
   this.equipmentDiv = new PIXI.TilingSprite(PIXI.Texture.fromImage(game.assetManager.paths.ui.longDivider), this.panel.width - 48, 4);
-  this.equipmentDiv.y = this.contentHeight;
+  this.equipmentDiv.position.y = this.contentHeight;
   this.container.addChild(this.equipmentDiv);
   this.contentHeight = this.equipmentDiv.position.y + this.equipmentDiv.height + 8;
   
@@ -153,7 +155,14 @@ CharacterPanelComponent.prototype.build = function()
       character.equipmentSlotIds[i],
       {
         x: 0,
-        y: this.contentHeight
+        y: this.contentHeight,
+        onMouseDown: function()
+        {
+          if (this.slot.hasItem())
+          {
+            root.itemIdToDrag = this.slot.itemId;
+          }
+        }
       });
     this.equipmentSlotComponents.push(equipmentSlotComponent);
     this.container.addChild(equipmentSlotComponent);
@@ -173,5 +182,11 @@ CharacterPanelComponent.prototype.update = function()
   for (var i = 0; i < this.equipmentSlotComponents.length; i++)
   {
     this.equipmentSlotComponents[i].update();
+  }
+  
+  if (this.itemIdToDrag != null && game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
+  {
+    this.screen.startItemDragging(this.itemIdToDrag, true);
+    this.itemIdToDrag = null;
   }
 };

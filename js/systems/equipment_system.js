@@ -233,14 +233,31 @@ EquipmentSystem.prototype.equipItem = function(itemId, characterId, slotIndex)
   equipmentSlot.itemId = itemId;
 };
 
+EquipmentSystem.prototype.unequipItem = function(itemId, characterId)
+{
+  var character = this.characterSystem.getCharacter(characterId);
+  
+  for (var i = 0; i < character.equipmentSlotIds.length; i++)
+  {
+    var equipmentSlot = this.getEquipmentSlot(character.equipmentSlotIds[i]);
+    
+    if (equipmentSlot.itemId == itemId)
+    {
+      equipmentSlot.itemId = null;
+      return;
+    }
+  }
+};
+
+/*
 EquipmentSystem.prototype.unequipItem = function(itemId, characterId, slotIndex)
 {
   var character = this.characterSystem.getCharacter(itemId);
   var item = this.getItem(itemId);
-  var equipmentSlot = this.getEquipmentSlotByIndex(characterId, slotIndex);
+  var equipmentSlot = this.getEquipmentSlotByIndex(characterId, item.slotType, slotIndex);
   
   equipmentSlot.itemId = null;
-};
+};*/
 
 EquipmentSystem.prototype.canCharacterEquipItem = function(characterId, itemId)
 {

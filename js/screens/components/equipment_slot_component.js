@@ -3,14 +3,24 @@ var EquipmentSlotComponent = function(screen, equipmentSlotId, options)
   options = options || {};
   options.width = options.width || 100;
   options.height = options.height || 40;
+  options.onMouseOver = options.onMouseOver || function() { };
+  options.onMouseOut = options.onMouseOut || function() { };
+  options.onMouseDown = options.onMouseDown || function() { };
+  options.onClick = options.onClick || function() { };
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
   this.slot = this.equipmentSystem.getEquipmentSlot(equipmentSlotId);
   this.width = options.width;
   this.height = options.height;
   this.enabled = true;
+  
+  this.onMouseOver = options.onMouseOver;
+  this.onMouseOut = options.onMouseOut;
+  this.onMouseDown = options.onMouseDown;
+  this.onClick = options.onClick;
   
   this.position.x = options.x;
   this.position.y = options.y;
@@ -65,6 +75,31 @@ EquipmentSlotComponent.prototype.build = function()
 
 EquipmentSlotComponent.prototype.update = function()
 {
+  var isMouseInRect = false;
+  
   this.rectangle.x = this.worldTransform.tx;
   this.rectangle.y = this.worldTransform.ty;
+  
+  isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+  
+  if (this.screen.inputEnabled && this.enabled)
+  {
+    if (!this.isMouseOver && isMouseInRect)
+    {
+      this.onMouseOver();
+    }
+    else if (this.isMouseOver && !isMouseInRect)
+    {
+      this.onMouseOut();
+    }
+    
+    if (isMouseInRect && !game.inputManager.leftButtonHandled && game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame)
+    {
+      this.onMouseDown();
+    }
+    else if (isMouseInRect && game.inputManager.singleLeftButton())
+    {
+      this.onClick();
+    }
+  }
 };
