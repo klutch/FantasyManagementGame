@@ -4,6 +4,11 @@ var CharacterSystem = function()
   this.type = SystemType.Character;
 };
 
+CharacterSystem.prototype.initialize = function()
+{
+  this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
+};
+
 CharacterSystem.prototype.getCharacter = function(characterId)
 {
   return this.characters[characterId];
@@ -11,17 +16,17 @@ CharacterSystem.prototype.getCharacter = function(characterId)
 
 CharacterSystem.prototype.getCharacterOffense = function(characterId)
 {
-  return this.characters[characterId].baseOffense;
+  return this.characters[characterId].baseOffense + this.equipmentSystem.getEquipmentOffense(characterId);
 };
 
 CharacterSystem.prototype.getCharacterDefense = function(characterId)
 {
-  return this.characters[characterId].baseDefense;
+  return this.characters[characterId].baseDefense + this.equipmentSystem.getEquipmentDefense(characterId);
 };
 
 CharacterSystem.prototype.getCharacterSupport = function(characterId)
 {
-  return this.characters[characterId].baseSupport;
+  return this.characters[characterId].baseSupport + this.equipmentSystem.getEquipmentSupport(characterId);
 };
 
 CharacterSystem.prototype.getCharacterPowerLevel = function(characterId)

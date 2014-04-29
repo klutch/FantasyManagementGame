@@ -79,6 +79,57 @@ EquipmentSystem.prototype.getFirstEmptySlotIndex = function(characterId, slotTyp
   }
 };
 
+EquipmentSystem.prototype.getEquipmentOffense = function(characterId)
+{
+  var offense = 0;
+  var character = this.characterSystem.getCharacter(characterId);
+  
+  for (var i = 0; i < character.equipmentSlotIds.length; i++)
+  {
+    var equipmentSlot = this.getEquipmentSlot(character.equipmentSlotIds[i]);
+    
+    if (equipmentSlot.hasItem())
+    {
+      offense += this.getItem(equipmentSlot.itemId).offense;
+    }
+  }
+  return offense;
+};
+
+EquipmentSystem.prototype.getEquipmentDefense = function(characterId)
+{
+  var defense = 0;
+  var character = this.characterSystem.getCharacter(characterId);
+  
+  for (var i = 0; i < character.equipmentSlotIds.length; i++)
+  {
+    var equipmentSlot = this.getEquipmentSlot(character.equipmentSlotIds[i]);
+    
+    if (equipmentSlot.hasItem())
+    {
+      defense += this.getItem(equipmentSlot.itemId).defense;
+    }
+  }
+  return defense;
+};
+
+EquipmentSystem.prototype.getEquipmentSupport = function(characterId)
+{
+  var support = 0;
+  var character = this.characterSystem.getCharacter(characterId);
+  
+  for (var i = 0; i < character.equipmentSlotIds.length; i++)
+  {
+    var equipmentSlot = this.getEquipmentSlot(character.equipmentSlotIds[i]);
+    
+    if (equipmentSlot.hasItem())
+    {
+      support += this.getItem(equipmentSlot.itemId).support;
+    }
+  }
+  return support;
+};
+
 EquipmentSystem.prototype.getGroupInventory = function(groupId)
 {
   var itemIds = [];

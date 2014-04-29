@@ -20,3 +20,8 @@ var EquipmentSlot = function(id, type)
   this.slotIndex = -1;
   this.itemId = null;
 };
+
+EquipmentSlot.prototype.hasItem = function()
+{
+  return this.itemId != null;
+};

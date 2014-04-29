@@ -96,6 +96,7 @@ GameEngine.prototype.startNewGame = function()
   
   // Initialize systems
   this.systemManager.getSystem(SystemType.Equipment).initialize();
+  this.systemManager.getSystem(SystemType.Character).initialize();
   this.systemManager.getSystem(SystemType.World).initialize();
   this.systemManager.getSystem(SystemType.Group).initialize();
   this.systemManager.getSystem(SystemType.Shop).initialize();
