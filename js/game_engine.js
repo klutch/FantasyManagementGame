@@ -10,24 +10,24 @@ var DEFAULT_TILE_SELECTOR_COLOR = 0xCCCCCC;
 var MAX_GROUP_CAPACITY = 8;
 var MAX_BARRACKS_CAPACITY = 100;
 var DEFAULT_EQUIPMENT_SLOT_TYPES = [
+  EquipmentSlotType.Primary,
+  EquipmentSlotType.Secondary,
   EquipmentSlotType.Head,
-  EquipmentSlotType.Arm,
-  EquipmentSlotType.Arm,
-  EquipmentSlotType.Forearm,
-  EquipmentSlotType.Forearm,
-  EquipmentSlotType.Hand,
-  EquipmentSlotType.Hand,
-  EquipmentSlotType.Finger,
-  EquipmentSlotType.Finger,
-  EquipmentSlotType.Finger,
-  EquipmentSlotType.Finger,
+  EquipmentSlotType.Torso,
   EquipmentSlotType.Legs,
   EquipmentSlotType.Feet,
-  EquipmentSlotType.Torso,
-  EquipmentSlotType.Waist,
   EquipmentSlotType.Neck,
-  EquipmentSlotType.Primary,
-  EquipmentSlotType.Secondary
+  EquipmentSlotType.Waist,
+  EquipmentSlotType.Arm,
+  EquipmentSlotType.Arm,
+  EquipmentSlotType.Forearm,
+  EquipmentSlotType.Forearm,
+  EquipmentSlotType.Hand,
+  EquipmentSlotType.Hand,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Finger,
+  EquipmentSlotType.Finger
 ];
 var DEBUG_PATHFINDER = false;
 
