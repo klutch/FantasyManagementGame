@@ -249,16 +249,6 @@ EquipmentSystem.prototype.unequipItem = function(itemId, characterId)
   }
 };
 
-/*
-EquipmentSystem.prototype.unequipItem = function(itemId, characterId, slotIndex)
-{
-  var character = this.characterSystem.getCharacter(itemId);
-  var item = this.getItem(itemId);
-  var equipmentSlot = this.getEquipmentSlotByIndex(characterId, item.slotType, slotIndex);
-  
-  equipmentSlot.itemId = null;
-};*/
-
 EquipmentSystem.prototype.canCharacterEquipItem = function(characterId, itemId)
 {
   var item = this.getItem(itemId);
