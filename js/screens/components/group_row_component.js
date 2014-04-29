@@ -140,6 +140,7 @@ GroupRowComponent.prototype.buildPortraits = function()
   for (var i = 0; i < this.group.characterIds.length; i++)
   {
     var portrait = new PortraitComponent(
+      this.screen,
       this.group.characterIds[i],
       {
         x: this.portraits.length * 40,

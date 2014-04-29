@@ -9,11 +9,17 @@ var GroupManagementScreen = function()
   this.groupSystem = game.systemManager.getSystem(SystemType.Group);
   this.worldSystem = game.systemManager.getSystem(SystemType.World);
   this.equipmentSystem = game.systemManager.getSystem(SystemType.Equipment);
+  this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.confirmationScreen = game.screenManager.screens[ScreenType.Confirmation];
   this.selectedGroupId = -1;
+  
   this.itemDragSprite = null;
   this.itemDrag = null
   this.isDraggingToTreasury = false;
+  
+  this.characterDragSprite = null;
+  this.characterDrag = null;
+  this.isDraggingToBarracks = false;
   
   this.container = new PIXI.DisplayObjectContainer();
   this.container.z = this.z;
@@ -55,6 +61,18 @@ GroupManagementScreen.prototype.getGroupRow = function(groupId)
   for (var i = 0; i < this.groupRows.length; i++)
   {
     if (this.groupRows[i].groupId == groupId)
+    {
+      return this.groupRows[i];
+    }
+  }
+  return null;
+};
+
+GroupManagementScreen.prototype.getGroupRowAtPosition = function(worldX, worldY)
+{
+  for (var i = 0; i < this.groupRows.length; i++)
+  {
+    if (this.groupRows[i].rectangle.contains(worldX, worldY))
     {
       return this.groupRows[i];
     }
@@ -225,6 +243,11 @@ GroupManagementScreen.prototype.rebuildGroupRows = function()
   this.clearGroupRows();
   this.buildGroupRows();
   
+  if (this.selectedGroupId != -1)
+  {
+    this.selectGroupRow(this.selectedGroupId);
+  }
+  
   this.groupRowsScrollbar.setTargetScrollY(currentTargetScrollY);
 };
 
@@ -267,7 +290,7 @@ GroupManagementScreen.prototype.buildGroupRows = function()
 
 GroupManagementScreen.prototype.selectGroupRow = function(groupId)
 {
-  if (this.selectedGroupId != -1)
+  if (this.selectedGroupId != -1 && this.selectedGroupId != groupId)
   {
     this.getGroupRow(this.selectedGroupId).setSelect(false);
   }
@@ -310,7 +333,7 @@ GroupManagementScreen.prototype.disbandGroup = function(groupId)
   var newIndex;
   
   this.groupSystem.disbandGroup(groupId);
-  this.barracksPanel.rebuildPortraits();
+  this.barracksPanel.rebuild();
   this.selectedGroupId = -1;
   this.rebuildGroupRows();
   
@@ -329,7 +352,7 @@ GroupManagementScreen.prototype.moveCharacterToBarracks = function(groupId, char
   
   this.groupSystem.removeCharacterFromGroup(groupId, characterId);
   this.groupSystem.addCharacterToGroup(this.groupSystem.barracksGroup.id, characterId);
-  this.barracksPanel.rebuildPortraits();
+  this.barracksPanel.rebuild();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -340,7 +363,7 @@ GroupManagementScreen.prototype.moveCharacterToGroup = function(groupId, charact
   
   this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, characterId);
   this.groupSystem.addCharacterToGroup(groupId, characterId);
-  this.barracksPanel.rebuildPortraits();
+  this.barracksPanel.rebuild();
   groupRow.rebuildPortraits();
   groupRow.rebuildStatText();
 };
@@ -393,11 +416,58 @@ GroupManagementScreen.prototype.handleItemDrag = function()
   }
 };
 
+GroupManagementScreen.prototype.startCharacterDragging = function(characterId, isDraggingToBarracks)
+{
+  var character = this.characterSystem.getCharacter(characterId);
+  
+  this.characterDrag = character;
+  this.isDraggingToBarracks = isDraggingToBarracks;
+  this.characterDragSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits[character.type]);
+  this.characterDragSprite.anchor = new PIXI.Point(0.5, 0.5);
+  this.container.addChild(this.characterDragSprite);
+};
+
+GroupManagementScreen.prototype.handleCharacterDrag = function()
+{
+  this.characterDragSprite.position.x = game.inputManager.mousePosition.x;
+  this.characterDragSprite.position.y = game.inputManager.mousePosition.y;
+  
+  if (game.inputManager.leftButtonLastFrame && !game.inputManager.leftButton)
+  {
+    if (this.isDraggingToBarracks)
+    {
+    }
+    else
+    {
+      var groupRow = this.getGroupRowAtPosition(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+      
+      if (groupRow != null && groupRow.enabled && !groupRow.group.isCapacityMet())
+      {
+        this.groupSystem.removeCharacterFromGroup(this.groupSystem.barracksGroup.id, this.characterDrag.id);
+        this.groupSystem.addCharacterToGroup(groupRow.group.id, this.characterDrag.id);
+      }
+    }
+        
+    this.container.removeChild(this.characterDragSprite);
+    this.characterDragSprite = null;
+    this.characterDrag = null;
+    
+    this.barracksPanel.rebuild();
+    this.rebuildGroupRows();
+    
+    game.inputManager.leftButtonHandled = true;
+  }
+};
+
 GroupManagementScreen.prototype.update = function()
 {
   if (this.itemDragSprite != null)
   {
     this.handleItemDrag();
+  }
+  if (this.characterDragSprite != null)
+  {
+    this.handleCharacterDrag();
   }
   
   this.groupRowsScrollbar.update();

@@ -13,6 +13,7 @@ var BarracksPanelComponent = function(screen, options)
   this.barracksGroup = this.groupSystem.barracksGroup;
   this.portraits = [];
   this.scrollAmount = 58;
+  this.characterIdToDrag = null;
   
   this.panel = new PanelComponent({
     x: options.x,
@@ -41,21 +42,19 @@ var BarracksPanelComponent = function(screen, options)
     });
   this.panel.addChild(this.scrollbar);
   
-  this.buildCharacterIcons();
+  this.build();
 };
 
 BarracksPanelComponent.prototype = new PIXI.DisplayObjectContainer;
 
-BarracksPanelComponent.prototype.rebuildPortraits = function()
+BarracksPanelComponent.prototype.rebuild = function()
 {
-  var currentScrollY = this.portraitContainer.targetScrollY;
-  
-  this.clearCharacterIcons();
-  this.buildCharacterIcons();
-  this.scrollbar.setTargetScrollY(currentScrollY);
+  this.clear();
+  this.build();
+  this.scrollbar.setTargetScrollY(this.portraitContainer.targetScrollY);
 };
 
-BarracksPanelComponent.prototype.clearCharacterIcons = function()
+BarracksPanelComponent.prototype.clear = function()
 {
   for (var i = 0; i < this.portraits.length; i++)
   {
@@ -64,7 +63,7 @@ BarracksPanelComponent.prototype.clearCharacterIcons = function()
   this.portraits.length = 0;
 };
 
-BarracksPanelComponent.prototype.buildCharacterIcons = function()
+BarracksPanelComponent.prototype.build = function()
 {
   var root = this;
   var spacingX = 40;
@@ -79,6 +78,7 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
     var x = 16 + Math.floor(i % numRowX) * spacingX;
     var y = 16 + Math.floor(i / numRowX) * spacingY;
     var portrait = new PortraitComponent(
+      this.screen,
       this.barracksGroup.characterIds[i],
       {
         x: x,
@@ -89,17 +89,13 @@ BarracksPanelComponent.prototype.buildCharacterIcons = function()
           {
             root.screen.selectCharacter(this.characterId);
           }
-          
-          /*
+        },
+        onMouseDown: function()
+        {
           if (this.enabled)
           {
-            var group = root.groupSystem.getGroup(root.screen.selectedGroupId);
-
-            if (group.characterIds.length < group.capacity)
-            {
-              root.screen.moveCharacterToGroup(group.id, this.characterId);
-            }
-          }*/
+            root.characterIdToDrag = this.characterId;
+          }
         }
       });
         
@@ -140,5 +136,11 @@ BarracksPanelComponent.prototype.update = function()
   {
     this.determinePortraitEnabledStatus(this.portraits[i]);
     this.portraits[i].update();
+  }
+  
+  if (this.characterIdToDrag != null && game.inputManager.isDragging && !game.inputManager.isDraggingLastFrame)
+  {
+    this.screen.startCharacterDragging(this.characterIdToDrag, false);
+    this.characterIdToDrag = null;
   }
 };

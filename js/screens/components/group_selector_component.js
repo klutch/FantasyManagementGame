@@ -55,7 +55,7 @@ GroupSelectorComponent.prototype.buildPreviewPanel = function()
   for (var i = 0; i < this.group.characterIds.length; i++)
   {
     var character = this.characterSystem.getCharacter(this.group.characterIds[i]);
-    var portrait = new PortraitComponent(character.id, {x: 16, y: 16 + 64 * i});
+    var portrait = new PortraitComponent(this.screen, character.id, {x: 16, y: 16 + 64 * i});
     var typeText = new PIXI.BitmapText(character.type, {font: "14px big_pixelmix", tint: 0xFFFF00});
     var statText = new PIXI.BitmapText("...", {font: "12px big_pixelmix", tint: 0xCCCCCC});
     var editButton;

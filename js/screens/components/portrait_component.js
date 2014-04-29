@@ -1,4 +1,4 @@
-var PortraitComponent = function(characterId, options)
+var PortraitComponent = function(screen, characterId, options)
 {
   options = options || {};
   options.x = options.x || 0;
@@ -7,9 +7,11 @@ var PortraitComponent = function(characterId, options)
   options.disabledTint = options.disabledTint || 0x999999;
   options.enabled = options.enabled || true;
   options.onClick = options.onClick || function(e) { };
+  options.onMouseDown = options.onMouseDown || function() { };
   
   this.base = PIXI.DisplayObjectContainer;
   this.base();
+  this.screen = screen;
   this.characterSystem = game.systemManager.getSystem(SystemType.Character);
   this.characterId = characterId;
   this.character = this.characterSystem.getCharacter(characterId);
@@ -18,8 +20,10 @@ var PortraitComponent = function(characterId, options)
   this.z = options.z;
   this.normalTint = options.normalTint;
   this.disabledTint = options.disabledTint;
-  this.onClick = options.onClick;
   this.isMouseOver = false;
+  
+  this.onClick = options.onClick;
+  this.onMouseDown = options.onMouseDown;
   
   this.portraitSprite = PIXI.Sprite.fromImage(game.assetManager.paths.ui.portraits[this.character.type]);
   this.addChild(this.portraitSprite);
@@ -55,15 +59,15 @@ PortraitComponent.prototype.onMouseOut = function()
 
 PortraitComponent.prototype.update = function()
 {
-  if (this.enabled)
+  var isMouseInRect = false;
+  
+  this.rectangle.x = this.worldTransform.tx;
+  this.rectangle.y = this.worldTransform.ty;
+  
+  isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
+  
+  if (this.screen.inputEnabled && this.enabled)
   {
-    var isMouseInRect;
-
-    this.rectangle.x = this.worldTransform.tx;
-    this.rectangle.y = this.worldTransform.ty;
-
-    isMouseInRect = this.rectangle.contains(game.inputManager.mousePosition.x, game.inputManager.mousePosition.y);
-
     if (!this.isMouseOver && isMouseInRect)
     {
       this.onMouseOver();
@@ -72,10 +76,13 @@ PortraitComponent.prototype.update = function()
     {
       this.onMouseOut();
     }
-
-    if (isMouseInRect && game.inputManager.singleLeftButton())
+    
+    if (isMouseInRect && !game.inputManager.leftButtonHandled && game.inputManager.leftButton && !game.inputManager.leftButtonLastFrame)
     {
-      game.inputManager.leftButtonHandled = true;
+      this.onMouseDown();
+    }
+    else if (isMouseInRect && game.inputManager.singleLeftButton())
+    {
       this.onClick();
     }
   }

@@ -46,7 +46,7 @@ var SelectedGroupPanelComponent = function(screen, groupId, options)
   // Portraits
   for (var i = 0; i < this.group.characterIds.length; i++)
   {
-    var portrait = new PortraitComponent(this.group.characterIds[i], {x: 16 + 48 * i, y: 64});
+    var portrait = new PortraitComponent(this.screen, this.group.characterIds[i], {x: 16 + 48 * i, y: 64});
     
     this.panel.addChild(portrait);
   }

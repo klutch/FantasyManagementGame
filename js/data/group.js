@@ -35,3 +35,5 @@ var Group = function(id, options)
 };
 
 Group.prototype.isInFeature = function() { return this.featureId != -1; };
+
+Group.prototype.isCapacityMet = function() { return this.characterIds.length >= this.capacity; }
